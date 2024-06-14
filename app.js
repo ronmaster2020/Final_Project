@@ -47,3 +47,10 @@ app.post('/product/delete/:id', productController.deleteProduct);
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
+
+
+app.post('/cart/add', (req, res) => {
+    const inputValue = req.body.product_id; // Replace 'inputName' with the name of your input field
+    console.log(inputValue); // Print the value to the console  
+    res.sendStatus(200);
+})
