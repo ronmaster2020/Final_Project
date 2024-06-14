@@ -35,6 +35,13 @@ const productController = require('./controllers/product');
 
 app.post('/product/create', productController.createProduct);
 
+app.get('/product/all', productController.getProducts);
+
+app.get('/product/:id', productController.getProductById);
+
+app.post('/product/update/:id', productController.updateProduct);
+
+app.post('/product/delete/:id', productController.deleteProduct);
 
 // Start the server
 app.listen(PORT, () => {
