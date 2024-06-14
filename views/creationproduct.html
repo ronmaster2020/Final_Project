@@ -10,7 +10,7 @@
 <body>
     <div class="container text-center">
         <h1>Create a New Product</h1>
-        <form action="/create-product" method="POST">
+        <form action="/product/create" method="POST">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" class="form-control" id="title" name="title" placeholder="Enter product title" required>
@@ -22,10 +22,9 @@
             <div class="mb-3">
                 <label for="gender" class="form-label">Gender</label>
                 <select class="form-select" id="gender" name="gender" required>
-                    <option value="">Select gender</option>
-                    <option value="Men">Men</option>
-                    <option value="Women">Women</option>
-                    <option value="Unisex">Unisex</option>
+                    <option value="0">Men</option>
+                    <option value="1">Women</option>
+                    <option value="2" selected>Unisex</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>

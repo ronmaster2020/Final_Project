@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const Product = require('./models/product'); // Assuming 'product.js' is inside the 'models' directory
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -31,29 +30,10 @@ app.get('/creationproduct.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'creationproduct.html'));
 });
 
-// POST route to handle form submission
-app.post('/create-product', async (req, res) => {
-    try {
-        // Extract data from the request body
-        const { title, price, gender } = req.body;
+// all routes for products (CRUD)
+const productController = require('./controllers/product');
 
-        // Create a new Product document
-        const newProduct = new Product({
-            title,
-            price,
-            gender
-        });
-
-        // Save the product to MongoDB
-        await newProduct.save();
-
-        // Redirect or respond with a success message
-        res.status(201).send('Product created successfully!');
-    } catch (err) {
-        console.error('Error creating product:', err);
-        res.status(500).send('Server error');
-    }
-});
+app.post('/product/create', productController.createProduct);
 
 
 // Start the server
