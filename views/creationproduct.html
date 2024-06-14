@@ -16,6 +16,10 @@
                 <input type="text" class="form-control" id="title" name="title" placeholder="Enter product title" required>
             </div>
             <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="DESC" placeholder="Enter product description" required></textarea>
+            </div>
+            <div class="mb-3">
                 <label for="price" class="form-label">Price (in dollars)</label>
                 <input type="text" class="form-control" id="price" name="price" placeholder="Enter price" required>
             </div>
@@ -26,6 +30,11 @@
                     <option value="1">Women</option>
                     <option value="2" selected>Unisex</option>
                 </select>
+            </div>
+            <div class="mb-3">
+                <!-- size ml -->
+                <label for="size" class="form-label">Size (in ml)</label>
+                <input type="text" class="form-control" id="size" name="size" placeholder="Enter size" required>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

@@ -9,11 +9,13 @@ exports.createProduct = async (req, res) => {
     }
 
     try {
-        const { title, price, gender } = req.body;
+        const { title, DESC, price, gender, size } = req.body;
         const newProduct = new Product({
             title,
+            DESC,
             price,
-            gender
+            gender,
+            size
         });
         await newProduct.save();
         res.status(201).send('Product created successfully!');
@@ -73,14 +75,16 @@ exports.updateProduct = async (req, res) => {
     }
 
     try {
-        const { title, price, gender} = req.body;
+        const { title, price, gender, size} = req.body;
         const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).send('Product not found');
         }
         product.title = title;
+        product.DESC = DESC;
         product.price = price;
         product.gender = gender;
+        product.size = size;
         await product.save();
         res.send('Product updated successfully');
     }

@@ -10,6 +10,13 @@ const ProductScheme = new Schema({
         minlength: [3, 'Title must be at least 3 characters long'],
         maxlength: [100, 'Title must be less than 100 characters']
     },
+    DESC: {
+        type: String,
+        // Remove leading and trailing whitespace
+        trim: true,
+        minlength: [10, 'Description must be at least 10 characters long'],
+        maxlength: [1000, 'Description must be less than 1000 characters']
+    },
     price: {
         type: Number,
         required: [true, 'Product price is required'],
@@ -27,6 +34,13 @@ const ProductScheme = new Schema({
             values: [0, 1, 2],
             message: 'Gender must be 0 (male), 1 (female), or 2 (unisex)'
         }
+    },
+    size: {
+        // ml
+        type: Number,
+        required: [true, 'Product size is required'],
+        min: [1, 'Size must be at least 1'],
+        max: [1000, 'Size must be below 1000']
     }
 });
 
