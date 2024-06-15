@@ -1,15 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>shop</title>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        try {
+            if (!window.jQuery) {
+                throw "jQuery is not loaded";
+            }
+        } catch (e) {
+            console.error(e);
+        }
+        // Load common head content
+        try {
+            $(function() {
+                $("head").load("/partials/head.html", function() {
+                    console.log("Common head content loaded successfully.");
+                });
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    </script>
 </head>
 <body>
+    <!-- navbar -->
+    <div id="navbar-placeholder"></div>
+
     <h1>Home</h1>
     <a href="/product/new-form">
 
     <button>Create Product</button>
     </a>
 </body>
+<script>
+    $("document").ready(function() {
+        $("#navbar-placeholder").load("/partials/navbar.html"); // Adjust the path to your head.html
+    });
+</script>
 </html>

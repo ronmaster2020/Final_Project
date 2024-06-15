@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 8080;
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/partials', express.static(__dirname + '/views/partials'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 
 // MongoDB connection
@@ -43,9 +44,9 @@ app.post('/product/update/:id', productController.updateProduct);
 
 app.post('/product/delete/:id', productController.deleteProduct);
 
-app.use('*', (request, response) => {
-    response.sendFile(path.join(__dirname, 'views', '404.html'));
-});
+// app.use('*', (request, response) => {
+//     response.sendFile(path.join(__dirname, 'views', '404.html'));
+// });
 
 // Start the server
 app.listen(PORT, () => {
