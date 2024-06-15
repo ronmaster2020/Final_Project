@@ -5,3 +5,10 @@ body {
     padding: 0;
 }
 
+body > .container-fluid {
+    width: 100vw; 
+    height: 100vh; 
+    background-color: lightgray; 
+    overflow-y: hidden; 
+    overflow-x: hidden;
+}

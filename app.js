@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://mike:12345678$@cluster0.emzh3yv.mongodb.net/alatzhagasha', {
+mongoose.connect('mongodb+srv://mike:12345678$@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -26,8 +26,8 @@ app.get('/', (req, res) => {
 });
 
 // Route for the create product page
-app.get('/creationproduct.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'creationproduct.html'));
+app.get('/product/new-form', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
 });
 
 // all routes for products (CRUD)
@@ -42,6 +42,10 @@ app.get('/product/:id', productController.getProductById);
 app.post('/product/update/:id', productController.updateProduct);
 
 app.post('/product/delete/:id', productController.deleteProduct);
+
+app.use('*', (request, response) => {
+    response.sendFile(path.join(__dirname, 'views', '404.html'));
+});
 
 // Start the server
 app.listen(PORT, () => {
