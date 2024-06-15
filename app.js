@@ -10,7 +10,7 @@ app.use('/partials', express.static(__dirname + '/views/partials'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://mike:12345678$@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect('mongodb+srv://mike:12345678$@cluster0.emzh3yv.mongodb.net/alatzhagasha', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -56,9 +56,9 @@ app.post('/product/update/:id', productController.updateProduct);
 
 app.post('/product/delete/:id', productController.deleteProduct);
 
-// app.use('*', (request, response) => {
-//     response.sendFile(path.join(__dirname, 'views', '404.html'));
-// });
+app.use('*', (request, response) => {
+    response.sendFile(path.join(__dirname, 'views', '404.html'));
+});
 
 // Start the server
 app.listen(PORT, () => {

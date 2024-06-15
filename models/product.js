@@ -42,7 +42,8 @@ const ProductScheme = new Schema({
         min: [1, 'Size must be at least 1'],
         max: [1000, 'Size must be below 1000']
     }
-});
+}, {collection: 'products', timestamps: true}); // timestamps: 'true' adds createdAt and updatedAt fields
+
 
 
 const Product = mongoose.model('product', ProductScheme);
