@@ -9,9 +9,9 @@ exports.createProduct = async (req, res) => {
     }
 
     try {
-        const { title, DESC, price, gender, size } = req.body;
+        const { name, price, gender, size, DESC } = req.body;
         const newProduct = new Product({
-            title,
+            name,
             DESC,
             price,
             gender,
@@ -75,12 +75,12 @@ exports.updateProduct = async (req, res) => {
     }
 
     try {
-        const { title, price, gender, size} = req.body;
+        const { name, price, gender, size, DESC } = req.body;
         const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).send('Product not found');
         }
-        product.title = title;
+        product.name = name;
         product.DESC = DESC;
         product.price = price;
         product.gender = gender;
@@ -126,7 +126,7 @@ exports.searchProducts = async (req, res) => {
     const query = {};
 
     if (req.query.fLetter && req.query.fLetter.length === 1) {
-        query.title = { $regex: new RegExp(`^${req.query.fLetter}`), $options: 'i' }; // Ensure it starts with the specified letter, case-insensitive
+        query.name = { $regex: new RegExp(`^${req.query.fLetter}`), $options: 'i' }; // Ensure it starts with the specified letter, case-insensitive
     }
     if (req.query.price) {
         const priceCategory = parseInt(req.query.price, 10); // Convert to number
@@ -156,13 +156,13 @@ exports.searchProducts = async (req, res) => {
     if (req.query.gender) {
         const genderCategory = parseInt(req.query.gender, 10); // Convert to number
         switch (genderCategory) {
-            case 0:
+            case 1:
                 query.gender = genderCategory;
                 break;
-            case 1:
+            case 2:
                 query.gender = genderCategory;                
                 break;
-            case 2:
+            case 3:
                 query.gender = genderCategory;
                 break;
             default:

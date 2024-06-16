@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ProductScheme = new Schema({
-    title: {
+    name: {
         type: String,
-        required: [true, 'Product title is required'],
+        required: [true, 'Product name is required'],
         // Remove leading and trailing whitespace
         trim: true,
-        minlength: [3, 'Title must be at least 3 characters long'],
-        maxlength: [100, 'Title must be less than 100 characters']
+        minlength: [3, 'name must be at least 3 characters long'],
+        maxlength: [100, 'name must be less than 100 characters']
     },
     DESC: {
         type: String,
@@ -27,12 +27,12 @@ const ProductScheme = new Schema({
         type: String,
         required: [true, 'Product gender is required'],
         // one of the values in the enum array
-        // 0 - male
-        // 1 - female
-        // 2 - unisex
+        // 1 - male
+        // 2 - female
+        // 3 - unisex
         enum: {
-            values: [0, 1, 2],
-            message: 'Gender must be 0 (male), 1 (female), or 2 (unisex)'
+            values: [1, 2, 3],
+            message: 'Gender must be 1 (male), 2 (female), or 3 (unisex)'
         }
     },
     size: {
