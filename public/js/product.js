@@ -1,6 +1,21 @@
 async function loadProducts(query = {}) {
     // initialize the products table
     $('#productsTable table tbody').empty();
+
+    // Start loading indicator
+    let loadingText = 'loading';
+    const loadingIndicator = $('#loadingIndicator');
+    const table = $('#productsTable table');
+    const loadTxt = $('#loadTxt');
+    loadTxt.text(loadingText);
+
+    loadingIndicator.removeClass('d-none');
+    table.addClass('d-none');
+
+    const interval = setInterval(() => {
+        loadingText = loadingText.length < 10 ? loadingText + '.' : 'loading';
+        loadTxt.text(loadingText);
+    }, 500);
     
     // get products data from the server route
     const queryParams = new URLSearchParams(query).toString();
@@ -11,6 +26,11 @@ async function loadProducts(query = {}) {
         },
     });
     const products = await response.json();
+
+    // Stop loading indicator
+    clearInterval(interval);
+    loadingIndicator.addClass('d-none');
+    table.removeClass('d-none');
     
     // display the products data in the products table
     $('#productsTable h2').text('Products - ' + products.length + ' items')
