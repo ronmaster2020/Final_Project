@@ -121,7 +121,85 @@ exports.deleteProduct = async (req, res) => {
     }
 };
 
-// Search for products by attributes (title, price, )
+// Search for products by attributes (name, price, gender, size)
 exports.searchProducts = async (req, res) => {
-    //sprint 2
+    const query = {};
+
+    if (req.query.title) {
+        query.title = { $regex: `/^${req.query.title}/` }; // Ensure it starts with the specified letter
+    }
+    if (req.query.price) {
+        const priceCategory = parseInt(req.query.price, 10); // Convert to number
+        switch (priceCategory) {
+            case 1:
+                query.price = { $gte: 0, $lte: 19 };
+                break;
+            case 2:
+                query.price = { $gte: 20, $lte: 49 };
+                break;
+            case 3:
+                query.price = { $gte: 50, $lte: 99 };
+                break;
+            case 4:
+                query.price = { $gte: 100, $lte: 149 };
+                break;
+            case 5:
+                query.price = { $gte: 150, $lte: 199 };
+                break;
+            case 6:
+                query.price = { $gte: 200 };
+                break;
+            default:
+                break;
+        }
+    }
+    if (req.query.gender) {
+        const genderCategory = parseInt(req.query.gender, 10); // Convert to number
+        switch (genderCategory) {
+            case 0:
+                query.gender = genderCategory;
+                break;
+            case 1:
+                query.gender = genderCategory;                
+                break;
+            case 2:
+                query.gender = genderCategory;
+                break;
+            default:
+                break;
+        }
+            
+    }
+    if (req.query.size) {
+        const sizeCategory = parseInt(req.query.size, 10); // Convert to number
+        switch (sizeCategory) {
+            case 1:
+                query.size = { $gte: 0, $lte: 19 };
+                break;
+            case 2:
+                query.size = { $gte: 20, $lte: 49 };
+                break;
+            case 3:
+                query.size = { $gte: 50, $lte: 99 };
+                break;
+            case 4:
+                query.size = { $gte: 100, $lte: 149 };
+                break;
+            case 5:
+                query.size = { $gte: 150, $lte: 199 };
+                break;
+            case 6:
+                query.size = { $gte: 200 };
+                break;
+            default:
+                break;
+        }
+    }
+    try {
+        const products = await Product.find(query);
+        res.json(products);
+    } catch (err) {
+        console.error('Error searching products:', err);
+        res.status(500).send('Server error');
+    }
 };

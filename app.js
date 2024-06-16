@@ -50,11 +50,13 @@ app.post('/product/create', productController.createProduct);
 
 app.get('/product/all', productController.getProducts);
 
-app.get('/product/:id', productController.getProductById);
+app.get('/products/search', productController.searchProducts);
 
 app.post('/product/update/:id', productController.updateProduct);
 
 app.post('/product/delete/:id', productController.deleteProduct);
+
+app.get('/product/:id', productController.getProductById);
 
 app.use('*', (request, response) => {
     response.sendFile(path.join(__dirname, 'views', '404.html'));

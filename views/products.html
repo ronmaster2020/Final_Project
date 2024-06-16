@@ -11,5 +11,22 @@
     <div id="navbar-placeholder"></div>
 
     <h1>Products</h1>
+    <!-- search by -->
+    <div class="container">
+        <form action="/products/search" method="GET">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search by letter" name="title">
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search by price" name="price">
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search by gender" name="gender">
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search by size" name="size">
+            </div>
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </form>
 </body>
 </html>
