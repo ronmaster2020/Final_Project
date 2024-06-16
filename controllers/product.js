@@ -121,12 +121,12 @@ exports.deleteProduct = async (req, res) => {
     }
 };
 
-// Search for products by attributes (name, price, gender, size)
+// Search for products by attributes (f-letter, price, gender, size)
 exports.searchProducts = async (req, res) => {
     const query = {};
 
-    if (req.query.title) {
-        query.title = { $regex: `/^${req.query.title}/` }; // Ensure it starts with the specified letter
+    if (req.query.fLetter && req.query.fLetter.length === 1) {
+        query.title = { $regex: new RegExp(`^${req.query.fLetter}`), $options: 'i' }; // Ensure it starts with the specified letter, case-insensitive
     }
     if (req.query.price) {
         const priceCategory = parseInt(req.query.price, 10); // Convert to number
