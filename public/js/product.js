@@ -1,6 +1,7 @@
 async function loadProducts(query = {}) {
     // initialize the products table
     $('#productsTable table tbody').empty();
+    $('#tableTitle h2').text('Products - ');
 
     // Start loading indicator
     let loadingText = 'loading';
@@ -33,7 +34,7 @@ async function loadProducts(query = {}) {
     table.removeClass('d-none');
     
     // display the products data in the products table
-    $('#productsTable h2').text('Products - ' + products.length + ' items')
+    $('#tableTitle h2').text('Products - ' + products.length + ' items')
     for (let i = 0; i < products.length; i++) {
         let product = products[i];
         let gender = parseInt(product.gender, 10);

@@ -20,3 +20,16 @@ body > .container-fluid {
 .d-none {
     display: none !important;
 }
+
+#loadingIndicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(235, 235, 235); 
+    height: 100%;
+}
+
+#productsTable {
+    width: 100%;
+    height: 100%;
+}
