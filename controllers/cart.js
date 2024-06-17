@@ -6,11 +6,12 @@ exports.AddToCart = async(req, res) => {
     if (mongoose.connection.readyState !== 1) {
         return res.status(503).send('Service unavailable. Please try again later.');
     }
-
+    
     try {
+        const { customer_id, product_id } = req.body;
         const cart = new Cart({
-            customer_id: req.body.customer_id,
-            //product_id: req.body.product_id
+            customer_id,
+            product_id,
         });
         await cart.save();
         res.send(cart.customer_id + ' was added to cart successfully');
@@ -18,5 +19,4 @@ exports.AddToCart = async(req, res) => {
         console.error('Error adding product to cart:', err);
         res.status(500).send('Server error');
     }
-
 }

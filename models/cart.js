@@ -7,8 +7,8 @@ const CartScheme = new Schema({
         required: [true, 'Product title is required'],
         // Remove leading and trailing whitespace
         trim: true,
-        minlength: [3, 'Customer id must be at least 3 characters long'],
-        maxlength: [100, 'Customer id must be less than 100 characters']
+        minlength: [3, 'Title must be at least 3 characters long'],
+        maxlength: [100, 'Title must be less than 100 characters']
     },
     product_id: {
         type: [String],
