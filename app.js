@@ -116,8 +116,6 @@ app.listen(PORT, () => {
 });
 
 
-app.post('/cart/add', (req, res) => {
-    const inputValue = req.body.product_id; // Replace 'inputName' with the name of your input field
-    console.log(inputValue); // Print the value to the console  
-    res.sendStatus(200);
-})
+const cartController = require('./controllers/cart');
+
+app.post('/cart/add/:id', cartController.AddToCart);
