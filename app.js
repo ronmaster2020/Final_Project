@@ -125,3 +125,8 @@ app.use('*', (request, response) => {
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
+
+
+const cartController = require('./controllers/cart');
+
+app.post('/cart/add/:id', cartController.AddToCart);
