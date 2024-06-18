@@ -106,6 +106,17 @@ app.post('/product/delete/:id', productController.deleteProduct);
 
 app.get('/product/:id', productController.getProductById);
 
+// all routes for orders (CRUD)
+const orderController = require('./controllers/order');
+
+app.post('/order/create', orderController.createOrder);
+
+app.get('/order/all', orderController.getOrders);
+
+app.get('/order/:id', orderController.getOrderById);
+
+
+// catch-all route for any other requests
 app.use('*', (request, response) => {
     response.sendFile(path.join(__dirname, 'views', '404.html'));
 });
@@ -114,10 +125,3 @@ app.use('*', (request, response) => {
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
-
-
-app.post('/cart/add', (req, res) => {
-    const inputValue = req.body.product_id; // Replace 'inputName' with the name of your input field
-    console.log(inputValue); // Print the value to the console  
-    res.sendStatus(200);
-})
