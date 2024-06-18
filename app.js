@@ -118,7 +118,11 @@ app.get('/order/:id', orderController.getOrderById);
 // all routes for cart (CRUD)
 const cartController = require('./controllers/cart');
 
-app.post('/cart/add/:id', cartController.AddToCart);
+app.post('/cart/create', cartController.createCart);
+
+app.post('/cart/add/:productId', cartController.AddToCart);
+
+app.get('/cart/all', cartController.getAllCarts);
 
 
 // catch-all route for any other requests

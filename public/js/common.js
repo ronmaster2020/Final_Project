@@ -1,6 +1,7 @@
 // loads common head content to all pages
 $(function() {
-    $("head").load("/partials/head.html", function() {
+    $.get("/partials/head.html", function(data) {
+        $("head").prepend(data);
         console.log("Common head content loaded successfully.");
     });
 });
@@ -35,3 +36,19 @@ $(function() {
         console.log("Bootstrap JS loaded successfully.");
     });
 });
+
+// add to cart
+function addToCart(productId) {
+    $.ajax({
+        url: `/cart/add/${productId}`,
+        body: JSON.stringify({ id: '6671c47201450ff3e03b16e3' }),
+        method: 'POST',
+        contentType: 'application/json',
+        success: function(response) {
+            console.log('Product added to cart', response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error adding product to cart', error);
+        }
+    });
+}
