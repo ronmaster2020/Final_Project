@@ -115,6 +115,11 @@ app.get('/order/all', orderController.getOrders);
 
 app.get('/order/:id', orderController.getOrderById);
 
+// all routes for cart (CRUD)
+const cartController = require('./controllers/cart');
+
+app.post('/cart/add/:id', cartController.AddToCart);
+
 
 // catch-all route for any other requests
 app.use('*', (request, response) => {
@@ -125,8 +130,3 @@ app.use('*', (request, response) => {
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
-
-
-const cartController = require('./controllers/cart');
-
-app.post('/cart/add/:id', cartController.AddToCart);
