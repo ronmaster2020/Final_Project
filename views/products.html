@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>shop</title>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <script type="text/javascript" src="/js/product.js"></script>
+    <link rel="stylesheet" href="/css/products.css">
+</head>
+<body>
+    <!-- navbar -->
+    <div id="navbar-placeholder"></div>
+
+    <h1>Products</h1>
+    <!-- search by -->
+    <div class="container-fluid">
+        <form method="GET" class="d-flex align-content-around flex-wrap" style="height: 300px;">
+            <div class="input-group mb-3 mt-3">
+                <input type="text" class="form-control" placeholder="Search by first letter" name="fLetter">
+            </div>
+            <div class="input-group mb-3" >
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="priceRange">Price Range</label>
+                </div>
+                <select class="form-select" id="priceRange">
+                    <option value="" selected>all</option>
+                    <option value="1">0-19</option>
+                    <option value="2">20-49</option>
+                    <option value="3">50-99</option>
+                    <option value="4">100-149</option>
+                    <option value="5">150-199</option>
+                    <option value="6">200+</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="genderCategory">Gender category</label>
+                </div>
+                <select class="form-select" id="genderCategory">
+                    <option value="" selected>all</option>
+                    <option value="1">male</option>
+                    <option value="2">female</option>
+                    <option value="3">unisex</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="sizeRange">Size Range</label>
+                </div>
+                <select class="form-select" id="sizeRange">
+                    <option value="" selected>all</option>
+                    <option value="1">0-19 ml</option>
+                    <option value="2">20-49 ml</option>
+                    <option value="3">50-99 ml</option>
+                    <option value="4">100-149 ml</option>
+                    <option value="5">150-199 ml</option>
+                    <option value="6">200+ ml</option>
+                </select>
+            </div>
+            <div class="d-flex p-2">
+                <button class="btn btn-outline-secondary" type="submit">Filter</button>
+                <button class="btn btn-outline-secondary" id="resetBtn">Reset</button>
+            </div>
+        </form>
+        <div class="container mb-5">
+            <div class="row pt-3 pb-3">
+                <div class="col" style="min-height: 200px;">
+                    <div id="tableTitle" class="mb-3">
+                        <h2>Products</h2>
+                    </div>
+                    <div id="productsTable">
+                        <div id="loadingIndicator" class="shadow d-none">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div id="loadTxt" style="font-size: x-large; margin-left: 10px;">Loading</div>
+                        </div>
+                        <table class="table table-striped shadow">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Product ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Gender</th>
+                                    <th scope="col">Size</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
