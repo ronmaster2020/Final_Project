@@ -52,3 +52,21 @@ function addToCart(productId) {
         }
     });
 }
+
+// delete product
+function deleteProduct(productId) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/product/delete/${productId}`,
+            method: 'POST',
+            success: function(response) {
+                console.log('Product deleted', response);
+                resolve(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error deleting a product', error);
+                reject(error);
+            }
+        });
+    });
+}
