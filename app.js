@@ -91,6 +91,11 @@ app.get('/product/new-form', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
 });
 
+app.get('/viewCart', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'cart.html'));
+});
+
+
 // all routes for products (CRUD)
 const productController = require('./controllers/product');
 
@@ -105,6 +110,8 @@ app.post('/product/update/:id', productController.updateProduct);
 app.post('/product/delete/:id', productController.deleteProduct);
 
 app.get('/product/:id', productController.getProductById);
+
+
 
 // all routes for orders (CRUD)
 const orderController = require('./controllers/order');
