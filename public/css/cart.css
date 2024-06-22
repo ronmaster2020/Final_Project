@@ -1,0 +1,21 @@
+.empty_bag {
+    text-align: center;
+    margin: 0 auto;  /* Center horizontally */
+    position: absolute;
+    top: calc(30vh);  /* 30% viewport height from the top */
+    left: 50%;
+    transform: translateX(-50%);  /* Center horizontally */
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+a {
+    color: rgb(47, 52, 54); /* Change the color to red */
+}
+  
+a:hover { /* Style for hover state (optional) */
+    color: rgb(86, 86, 93);
+    text-decoration: underline;
+}
+  

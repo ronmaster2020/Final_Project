@@ -1,16 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/common.js"></script>
-</head>
+    <head>
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css" integrity="sha384-GLhlTQ8iCT9pYPzIGXnOMil8BtKUgl+EVwnPMwQvSMuG7GkBPKdGyQzUxhjcXDlOo" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ogxbZ9+{XL8lLhw5bBWr2aSfBQQE5+yiTEFzkeIW+xkxpBYonSxNWNexDWbzn8T9" crossorigin="anonymous"></script>
+        
+        <!-- JQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/common.js"></script>
 
-<body>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/cart.css">
+    </head>
+
+    <body onload="getCartItems()">
+        <!-- navbar -->
+        <nav id="navbar-placeholder">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                </ul>
+        </nav>
+        <br>
+        <br>
+        <br>
+        
+
+        <form action="/order/create" method="post">
+            <input type="hidden" name="order_items[]" value="66754afa008577e463e3062b">
+            <input type="hidden" name="order_items[]" value="667567b72642681c6b5397ac">
+            <button type="submit">Make an Order</button>
+        </form>
+
+        <form action="/cart/all" method="get">
+            <button onclick="getCartItems()">Get items</button>
+        </form>
+          
+        
+
+        <div class="empty_bag">
+            <h2>Your shopping bag is empty</h2>
+            <a href="/">Continue shopping</a>
+        </div>
+
+        <div id="cart-list"></div>
 
 
-    <h1>My cart</h1>
+    </body>
+    
+</html>
+
+<script>
+
+    async function getCartItems() {
+        try {
+            const response = await fetch('/cart/all');
+            console.log(response);
+            if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const cartData = await response.json();
+            //return cartData; // Return the cart data
+        } catch (error) {
+            console.error('Error fetching cart data:', error);
+            // Handle errors gracefully (e.g., display an error message)
+        }
+    }
+
+    async function displayCartItems() {
+        const cartItems = await getCartItems();
+
+        const cartList = document.getElementById('cart-list');
+        cartList.innerHTML = ''; // Clear existing content
+
+        if (cartItems.length === 0) {
+            cartList.innerHTML = '<li>Your cart is empty!</li>';
+        } else {
+            cartItems.forEach(item => {
+            const listItem = document.createElement('li');
+            // Add item details to the list item (name, price, quantity, etc.) based on your data structure
+            listItem.textContent = `Quntity: ${item.quantity}`; // Example
+            cartList.appendChild(listItem);
+            });
+        }
+    }
+
+// Call the display function (e.g., on page load)
+//displayCartItems();
 
 
-
-</body>
+</script>

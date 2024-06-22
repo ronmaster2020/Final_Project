@@ -53,6 +53,8 @@ exports.getAllCarts = async(req, res) => {
     try {
         const carts = await Cart.find();
         res.json(carts);
+        //console.log(carts);
+        //return carts;
     } catch (err) {
         console.error('Error getting carts:', err);
         res.status(500).send('Server error');
