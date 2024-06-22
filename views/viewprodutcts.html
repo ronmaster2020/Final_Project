@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="/css/viewproduct.css">
+</head>
+<body>
+    <header>
+        <h1>Our Products</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/products">Products</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="sort-container">
+            <label for="sort-by">Sort by:</label>
+            <select id="sort-by">
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+                <option value="price-asc">Price (Low to High)</option>
+                <option value="price-desc">Price (High to Low)</option>
+            </select>
+        </div>
+        <div class="product-container" id="product-container">
+            <!-- Product cards will be injected here by JavaScript -->
+        </div>
+    </div>
+    <script>
+        // Function to fetch and display products
+        function fetchAndDisplayProducts(sortBy = 'name-asc') {
+            fetch('/product/all')
+                .then(response => response.json())
+                .then(products => {
+                    // Sort products based on sortBy value
+                    products.sort((a, b) => {
+                        switch (sortBy) {
+                            case 'name-asc':
+                                return a.name.localeCompare(b.name);
+                            case 'name-desc':
+                                return b.name.localeCompare(a.name);
+                            case 'price-asc':
+                                return a.price - b.price;
+                            case 'price-desc':
+                                return b.price - a.price;
+                            default:
+                                return 0;
+                        }
+                    });
+
+                    // Clear previous products
+                    const container = document.getElementById('product-container');
+                    container.innerHTML = '';
+
+                    // Add sorted products to the container
+                    products.forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.innerHTML = `
+                            <img src="/images/${product.name.replace(/ /g, '_')}.jpg" alt="${product.name}">
+                            <h2>${product.name}</h2>
+                            <p>${product.DESC}</p>
+                            <p class="price">$${product.price}</p>
+                            <button>Add to Cart</button>
+                        `;
+                        container.appendChild(productCard);
+                    });
+                })
+                .catch(error => console.error('Error loading products:', error));
+        }
+
+        // Event listener for sort dropdown change
+        document.getElementById('sort-by').addEventListener('change', function() {
+            fetchAndDisplayProducts(this.value);
+        });
+
+        // Initial fetch and display products
+        fetchAndDisplayProducts();
+    </script>
+</body>
+</html>
