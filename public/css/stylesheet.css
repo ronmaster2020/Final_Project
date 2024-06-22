@@ -51,7 +51,7 @@ body > .container-fluid, #main-content {
     position: relative; 
     padding: 0;
     overflow-y: hidden;
-    background-color: white;
+    background-color: lightgray;
     background-size: cover;
     background-position: center;
     max-width: 100%;
@@ -70,6 +70,10 @@ body > .container-fluid, #main-content {
 }
 #unisexCollection.section {
     background-image: url("https://images.pexels.com/photos/5721327/pexels-photo-5721327.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+}
+#allCollection.section {
+    height: 60vh;
+    background-image: url("https://cdn4.beautinow.com/wp-content/uploads/2024/04/niche-scaled.jpg");
 }
 .section .section-text {
     position: absolute;
@@ -91,6 +95,9 @@ body > .container-fluid, #main-content {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-radius: 0;
+}
+#allCollection.section .section-text button {
+    font-size: 1.5rem;
 }
 .section .section-text button:hover {
     background-color: rgba(0, 0, 0, 0.7);
