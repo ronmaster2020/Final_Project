@@ -18,4 +18,54 @@ a:hover { /* Style for hover state (optional) */
     color: rgb(86, 86, 93);
     text-decoration: underline;
 }
+
+/* Customize these styles as needed */
+
+.cart-list {
+    list-style: none; /* Remove default list style */
+    padding: 1rem; /* Add some padding for better spacing */
+    margin: 0;
+    border: 1px solid #ddd; /* Optional: Add a subtle border */
+    border-radius: 5px; /* Add a slight rounded corner for a more modern look */
+    background-color: #561212; /* Light background color */
+}
+  
+.cart-item {
+    display: flex; /* Arrange items horizontally */
+    align-items: center; /* Vertically align content within the item */
+    border-bottom: 1px solid #ddd; /* Optional: Add a subtle border between items */
+    padding: 0.75rem 1rem; /* Adjust padding for better spacing within the item */
+    background-color: #8f7676; /* White background for each item */
+    transition: all 0.2s ease-in-out; /* Add a smooth transition effect on hover */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+    border-right: 1px solid #ddd; /* Add a right border for spacing */
+    margin: 0;
+}
+  
+.cart-item:hover {
+    background-color: #eee; /* Change background color slightly on hover */
+    cursor: pointer; /* Indicate hover interaction with a pointer cursor */
+}
+  
+.cart-item img {
+    width: 80px; /* Adjust width as needed for your image size */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Crop image to fit container */
+    margin-right: 1rem;
+    border-radius: 5px; /* Add a slight rounded corner for the image */
+}
+  
+.cart-item details {
+    flex: 1; /* Expand details to fill remaining space */
+    margin: 0; /* Remove default margin for better spacing */
+}
+  
+.product-id
+.quantity {
+    font-weight: bold;
+    font-family: Arial, sans-serif; /* Change font family as desired */
+    font-size: 16px; /* Adjust font size */
+    margin-bottom: 0.5rem; /* Adjust spacing between product ID and quantity */
+}
+  
   

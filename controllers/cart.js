@@ -12,7 +12,24 @@ exports.createCart = async(req, res) => {
 
     try {
         const newCart = new Cart();
-        await newCart.save();
+
+        //const newProduct1 = {
+            //productId: '66754afa008577e463e3062b',
+            //quantity: 3 // Adjust quantity as needed
+        //};
+        //const newProduct2 = {
+            //productId: '667567b72642681c6b5397ac',
+            //quantity: 2 // Adjust quantity as needed
+        //};
+          
+        //newCart.products.push(newProduct1);
+        //newCart.products.push(newProduct2);
+          
+        newCart.save()
+            .then(() => {
+              console.log('Products added to cart successfully!');
+        })
+          
         res.status(201).send('Cart created successfully!');
     } catch (err) {
         console.error('Error creating cart:', err);

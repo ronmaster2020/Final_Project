@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <title>shop</title>
         <!-- Bootstrap -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css" integrity="sha384-GLhlTQ8iCT9pYPzIGXnOMil8BtKUgl+EVwnPMwQvSMuG7GkBPKdGyQzUxhjcXDlOo" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ogxbZ9+{XL8lLhw5bBWr2aSfBQQE5+yiTEFzkeIW+xkxpBYonSxNWNexDWbzn8T9" crossorigin="anonymous"></script>
-        
+        <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
         <!-- JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script type="text/javascript" src="/js/common.js"></script>
@@ -13,7 +14,93 @@
         <link rel="stylesheet" href="/css/cart.css">
     </head>
 
-    <body onload="getCartItems()">
+    
+
+    <body>
+        <script>
+
+            async function getCartItems() {
+                
+                try {
+                    const response = await fetch('/cart/all');
+                    if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const cartData = await response.json();
+                    return cartData; // Return the cart data
+                } catch (error) {
+                    console.error('Error fetching cart data:', error);
+                    // Handle errors gracefully (e.g., display an error message)
+                }
+            }
+        
+            async function displayCartItems() {
+                const cartItems = await getCartItems();
+                console.log(cartItems);
+
+                const cartList = document.getElementById('cart-list');
+                cartList.innerHTML = ''; // Clear existing content
+
+                if (!cartItems[0].products) {
+                    // Handle case where cartItems or cartItems.products is missing or empty
+                    cartList.innerHTML = '<li>Error: Cart data unavailable.</li>';
+                    return;
+                }
+
+                if (cartItems[0].products.length === 0) {
+                    cartList.innerHTML = '<div class="empty_bag"><h2>Your shopping bag is empty</h2><a href="/">Continue shopping</a></div>';
+                    return;
+                }
+
+                const cartListContainer = document.createElement('ul'); // Use an unordered list for cart items
+                cartListContainer.classList.add('cart-list'); // Apply the cart-list class
+
+                cartItems[0].products.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('cart-item', 'row'); // Apply cart-item and row classes
+
+                    const imageContainer = document.createElement('div');
+                    imageContainer.classList.add('col-md-3'); // Use Bootstrap grid for layout
+
+                    // Assuming you have a product image URL property in item:
+                    //const image = document.createElement('img');
+                    //image.src = item.imageUrl;
+                    //image.classList.add('img-fluid'); // Responsive image
+                    //imageContainer.appendChild(image);
+
+                    const detailsContainer = document.createElement('div');
+                    detailsContainer.classList.add('col-md-9');
+
+                    const productIdSpan = document.createElement('span');
+                    productIdSpan.classList.add('product-id');
+                    productIdSpan.textContent = `Product ID: ${item.productId}  `;
+                    detailsContainer.appendChild(productIdSpan);
+
+                    const quantitySpan = document.createElement('span');
+                    quantitySpan.classList.add('quantity');
+                    quantitySpan.textContent = `Quantity: ${item.quantity}`;
+                    detailsContainer.appendChild(quantitySpan);
+
+                    // Add more details as needed (e.g., product name, price)
+
+                    listItem.appendChild(imageContainer);
+                    listItem.appendChild(detailsContainer);
+
+                    cartListContainer.appendChild(listItem);
+                });
+
+                cartList.appendChild(cartListContainer);
+                }
+
+
+        
+        // Call the display function (e.g., on page load)
+        //displayCartItems();
+        
+        
+        </script>
+
+
         <!-- navbar -->
         <nav id="navbar-placeholder">
             <ul class="navbar-nav">
@@ -33,16 +120,24 @@
             <button type="submit">Make an Order</button>
         </form>
 
-        <form action="/cart/all" method="get">
-            <button onclick="getCartItems()">Get items</button>
+
+        <button onclick="displayCartItems()">Get items</button>
+        
+        <form action="/cart/create" method="post">
+            <input type="hidden" name="productId" value="12345">
+            <button type="submit">Create a cart</button>
         </form>
+
+        <br>
+        
+        <div id="cart-list"></div>
           
         
-
-        <div class="empty_bag">
+        <!--<div class="empty_bag">
             <h2>Your shopping bag is empty</h2>
             <a href="/">Continue shopping</a>
-        </div>
+        </div>-->
+        
 
         <div id="cart-list"></div>
 
@@ -51,43 +146,3 @@
     
 </html>
 
-<script>
-
-    async function getCartItems() {
-        try {
-            const response = await fetch('/cart/all');
-            console.log(response);
-            if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const cartData = await response.json();
-            //return cartData; // Return the cart data
-        } catch (error) {
-            console.error('Error fetching cart data:', error);
-            // Handle errors gracefully (e.g., display an error message)
-        }
-    }
-
-    async function displayCartItems() {
-        const cartItems = await getCartItems();
-
-        const cartList = document.getElementById('cart-list');
-        cartList.innerHTML = ''; // Clear existing content
-
-        if (cartItems.length === 0) {
-            cartList.innerHTML = '<li>Your cart is empty!</li>';
-        } else {
-            cartItems.forEach(item => {
-            const listItem = document.createElement('li');
-            // Add item details to the list item (name, price, quantity, etc.) based on your data structure
-            listItem.textContent = `Quntity: ${item.quantity}`; // Example
-            cartList.appendChild(listItem);
-            });
-        }
-    }
-
-// Call the display function (e.g., on page load)
-//displayCartItems();
-
-
-</script>
