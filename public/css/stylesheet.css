@@ -2,13 +2,15 @@
 /* 1. global styles */
 /* 2. sections */
 /* 3. products */
+/* 4. slidebar */
+/* 5. navbar */
 
 /*********************/
 /* 1.    global      */
 /*********************/
 body {
     background-color: white;
-    font-family: Arial, sans-serif;
+    font-family: Merriweather, serif;
     margin: 0;
     padding: 0;
     width: 100vw; 
@@ -150,7 +152,7 @@ body > .container-fluid, #main-content {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
+    font-size: 3rem;
     color: black;
     text-decoration: none;
     transition: 0.3s;
@@ -158,6 +160,22 @@ body > .container-fluid, #main-content {
 
 .sidebar .closebtn i {
     font-size: 3rem;
+}
+
+.sidebar .brandBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    padding: 1rem;
+    width: 4rem;
+    height: 4rem;
+    font-size: 2rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 50%;
 }
 
 .sidebar .closebtn:hover {
@@ -177,4 +195,11 @@ body > .container-fluid, #main-content {
     .sidebar-content {
         padding: 80px 20px;
     }
+}
+
+/**********************/
+/* 5.   navbar        */
+/**********************/
+.navbar {
+    font-family: Helvetica, Arial, sans-serif;
 }
