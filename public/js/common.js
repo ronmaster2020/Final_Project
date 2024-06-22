@@ -23,6 +23,12 @@ $(function() {
                 $("#nav-contact").addClass("active");
             }
             console.log("Navbar loaded successfully.");
+
+            // Fetch and add the sidebar content to #main-content without replacing existing content
+            $.get("/partials/contactSidebar.html", function(data) {
+                $("body").append(data); // You can use .append(), .prepend(), or .html() depending on the desired effect
+                console.log("Sidebar loaded successfully into body.");
+            });
         });
     });
 });
@@ -69,4 +75,15 @@ function deleteProduct(productId) {
             }
         });
     });
+}
+
+function openSidebar() {
+    $("#contactSidebar").css("width", "500px");
+    $("#main-content").css("filter", "blur(8px)");
+    $("#main-content").one('click', closeSidebar);
+}
+
+function closeSidebar() {
+    $("#contactSidebar").css("width", "0");
+    $("#main-content").css("filter", "none");
 }
