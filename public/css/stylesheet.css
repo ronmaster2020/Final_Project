@@ -1,13 +1,3 @@
-/* table of contents */
-/* 1. global styles */
-/* 2. sections */
-/* 3. products */
-/* 4. slidebar */
-/* 5. navbar */
-
-/*********************/
-/* 1.    global      */
-/*********************/
 body {
     background-color: white;
     font-family: Merriweather, serif;
@@ -18,10 +8,8 @@ body {
     overflow: hidden;
 }
 
-body > .container-fluid, #main-content {
-    width: 100%; 
-    margin-top: 56px;
-    padding: 0;
+body > .container-fluid {
+    width: 100vw; 
     height: calc(100vh - 56px); /* 56px is the height of the navbar */
     background-color: white; 
     overflow-y: auto; 
@@ -37,78 +25,6 @@ body > .container-fluid, #main-content {
 .d-none {
     display: none !important;
 }
-
-.text-decoration-underline {
-    text-underline-offset: 0.3em;
-}
-
-/*********************/
-/* 2.  sections      */
-/*********************/
-.section {
-    height: 40vh;
-    position: relative; 
-    padding: 0;
-    overflow-y: hidden;
-    background-color: white;
-    background-size: cover;
-    background-position: center;
-    max-width: 100%;
-}
-.section.banner {
-    height: calc(90vh - 56px);
-}
-#summerCollection.section {
-    background-image: url("https://images.pexels.com/photos/8760675/pexels-photo-8760675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
-}
-#menCollection.section {
-    background-image: url("https://images.pexels.com/photos/4110074/pexels-photo-4110074.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
-}
-#womenCollection.section {
-    background-image: url("https://images.pexels.com/photos/8422522/pexels-photo-8422522.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
-}
-#unisexCollection.section {
-    background-image: url("https://images.pexels.com/photos/5721327/pexels-photo-5721327.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
-}
-.section .section-text {
-    position: absolute;
-    width: 100%;
-    bottom: 2rem;
-    left: 0;
-    transform: none;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    text-align: center;
-}
-.section .section-text button {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: 1px solid white;
-    padding: 15px 30px;
-    font-size: 1rem;
-    cursor: pointer;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 0;
-}
-.section .section-text button:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-    transform: scale(0.90);
-    transition: transform 0.2s ease-in-out;
-}
-.section.banner .section-text h1 {
-    font-size: 4rem;
-}
-@media (min-width: 768px) {
-    #menCollection.section,
-    #womenCollection.section {
-        height: 70vh;
-    }
-}
-
-/**********************/
-/* 3.   products      */
-/**********************/
 
 #loadingIndicator {
     display: flex;
