@@ -5,14 +5,82 @@
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
+    <link rel="stylesheet" href="/public/css/about_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- navbar -->
     <div id="navbar-placeholder"></div>
-    
-    <h1>About Us</h1>
-    <p>Our company sells the best products at the best prices.</p>
-    <p>Phone: 123-456-7890</p>
-    <p>Email:
+
+    <div class="desctiptions">
+        <h1>Welcome to GlobalScentsations</h1>
+        <p>At GlobalScentsations, we believe in the power of scent to evoke memories, inspire emotions, and create unforgettable experiences...</p>
+        <hr>
+        <div class="section" id="vision">
+            <i class="fa fa-eye"></i>
+            <h2>Our Vision</h2>
+            <p>Our vision is to become the foremost global brand synonymous with luxury, innovation, and the art of perfumery. We aspire to transform the way people...</p>
+            <span class="read-more" onclick="toggleContent('vision')">Read More</span>
+            <div class="section-content">
+                <p>experience and enjoy scents, making the world a more fragrant place. By continuously pushing the boundaries of creativity and quality, we aim to delight our customers with exceptional fragrances that tell a story and resonate on a deeply personal level.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="mission">
+            <i class="fa fa-bullseye"></i>
+            <h2>Our Mission</h2>
+            <p>GlobalScentsations is dedicated to the art and science of perfumery. Our mission is to create and distribute the finest fragrances, ensuring that each bottle encapsulates the richness of its origin. We strive to:</p>
+            <span class="read-more" onclick="toggleContent('mission')">Read More</span>
+            <div class="section-content">
+                <ul>
+                    <li>
+                        <b>Deliver Excellence:</b> Every perfume we create is a masterpiece, crafted with meticulous attention to detail and the highest quality ingredients.
+                    </li>
+                    <li>
+                        <b>Diversity:</b> We celebrate the beauty of different cultures by incorporating unique elements from various parts of the world into our scents.
+                    </li>
+                    <li>
+                        <b>Sustainability:</b> We are committed to ethical practices and sustainability, sourcing our ingredients responsibly and ensuring that our processes are environmentally friendly.
+                    </li>
+                    <li>
+                        <b>Customer Satisfaction:</b> Our customers are at the heart of everything we do. We are dedicated to providing exceptional service and ensuring a delightful experience with every purchase.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="team">
+            <i class="fa fa-users"></i>
+            <h2>Our Team</h2>
+            <p>Our team comprises experienced perfumers, creative designers, and dedicated professionals who share a common passion for excellence...</p>
+            <span class="read-more" onclick="toggleContent('team')">Read More</span>
+            <div class="section-content">
+                <p>Together, we work tirelessly to bring our vision to life, ensuring that every GlobalScentsations product is a true reflection of our commitment to quality and artistry.</p>
+            </div>
+        </div>
+
+        <div class="section" id="global_reach">
+            <i class="fa fa-globe"></i>
+            <h2>Global Reach</h2>
+            <p>With a robust distribution network, GlobalScentsations has a presence in major markets around the world. Our perfumes are...</p>
+            <span class="read-more" onclick="toggleContent('global_reach')">Read More</span>
+            <div class="section-content">
+                <p>available in exclusive boutiques, high-end department stores, and through our online platform, making it easy for fragrance lovers everywhere to indulge in our luxurious scents.</p>
+            </div>
+        </div>
+
+        <div class="section" id="join_us">
+            <i class="fa fa-globe"></i>
+            <h2>Join Us on Our Journey</h2>
+            <p>We invite you to explore the world of GlobalScentsations and discover the perfect scent that resonates with your spirit. Experience the...</p>
+            <span class="read-more" onclick="toggleContent('join_us')">Read More</span>
+            <div class="section-content">
+                <p>art of perfumery like never before and let our fragrances become a part of your story.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

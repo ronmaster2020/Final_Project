@@ -1,7 +1,6 @@
 body {
     background-color: white;
     font-family: Arial, sans-serif;
-* {
     margin: 0;
     padding: 0;
     width: 100vw; 
@@ -61,6 +60,8 @@ body {
 
 ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .footer-col h4 {
@@ -117,7 +118,7 @@ hr {
 
 .socials {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .socials a {
@@ -132,5 +133,5 @@ hr {
 }
 
 .map {
-    padding-right: 100px;
+    padding-right: 200px;
 }
