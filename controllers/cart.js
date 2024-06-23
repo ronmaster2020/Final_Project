@@ -78,6 +78,32 @@ exports.getAllCarts = async(req, res) => {
     }
 };
 
+
+exports.deleteCart = async (req, res) => {
+    //check if the database is connected
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
+    try {
+        //find cart id from req body
+        const cartId = req.body.cartId;
+        const cart = await Cart.findByIdAndDelete(cartId);
+
+        //check if the cart is found
+        if (!cart) {
+            return res.status(404).send('Cart not found');
+        }
+
+        res.status(200).send('Cart deleted successfully!');
+    } catch (err) {
+        console.error('Error deleting cart:', err);
+        res.status(500).send('Server error');
+    }
+};
+
+  
+  
 // !!!!!!!!!!! sprint 2 - because we need users first !!!!!
 
 // exports.getCartById = async(req, res) => {
