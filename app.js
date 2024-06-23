@@ -95,6 +95,10 @@ app.get('/viewCart', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'cart.html'));
 });
 
+app.get('/viewprodcuts', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'viewprodcuts.html'));
+  });
+
 
 // all routes for products (CRUD)
 const productController = require('./controllers/product');

@@ -1,0 +1,124 @@
+/* styles.css */
+
+body {
+    background-color: #f5f3f1; /* Light beige */
+    color: #333; /* Darker text for better legibility */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc; /* Lighter border */
+    padding: 20px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #333; /* Darker text */
+}
+
+nav {
+    margin: 20px 0;
+    text-align: center;
+}
+
+nav a {
+    color: #333;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #888; /* Darker shade on hover */
+}
+
+.container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sort-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.sort-container label {
+    margin-right: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.sort-container select {
+    padding: 5px;
+    font-size: 1em;
+    border: 1px solid #ccc; /* Lighter border */
+    border-radius: 5px;
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product-card {
+    background-color: #fff;
+    border: 1px solid #ccc; /* Lighter border */
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    width: calc(25% - 40px); /* Adjust to control number of products per row */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1.03; /* 1:2 aspect ratio */
+    border-bottom: 1px solid #ddd; /* Lighter gray */
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+.product-card h2 {
+    color: #333;
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+.product-card p {
+    color: #666; /* Darker gray for better contrast */
+    margin: 10px 0;
+}
+
+.product-card .price {
+    color: #333;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.product-card button {
+    background-color: #999; /* Muted button color */
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    margin-top: auto; /* Push button to the bottom */
+}
+
+.product-card button:hover {
+    background-color: #888; /* Darker shade on hover */
+}

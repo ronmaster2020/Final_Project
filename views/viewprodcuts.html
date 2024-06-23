@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Products</title>
+    <link rel="stylesheet" href="/css/viewproducts.css"> <!-- Corrected path -->
+</head>
+<body>
+    <header>
+        <h1>Our Products</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/products">Products</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </nav>
+    </header>
+    <main class="container">
+        <div class="sort-container">
+            <label for="sort">Sort by:</label>
+            <select id="sort" onchange="sortProducts()">
+                <option value="name">Name</option>
+                <option value="price">Price</option>
+                <option value="gender">Gender</option>
+                <option value="size">Size</option>
+            </select>
+        </div>
+        <div class="product-container" id="productsContainer">
+            <!-- Products will be dynamically loaded here -->
+        </div>
+    </main>
+    <script src="/js/viewproduct.js"></script> <!-- Corrected path -->
+</body>
+</html>
