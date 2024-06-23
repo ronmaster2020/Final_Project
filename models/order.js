@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 // Define a schema for the items in the order
 const orderItemSchema = new Schema({
   product: {
-    type: Schema.Types.ObjectId, // Assuming you're referencing a Product model
+    type: mongoose.Schema.Types.ObjectId, // Assuming you're referencing a Product model
     ref: 'Product',
     required: [true, 'Product ID is required']
   }//,
@@ -31,7 +31,7 @@ const orderItemSchema = new Schema({
 
 const orderSchema = new Schema({
   order_items: {
-    type: [orderItemSchema],
+    type: [String],
     required: [true, 'Order items are required']
   }//,
   // status: {

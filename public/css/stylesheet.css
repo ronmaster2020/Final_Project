@@ -1,25 +1,122 @@
+
+/* table of contents */
+/* 1. global styles */
+/* 2. sections */
+/* 3. products */
+/* 4. slidebar */
+/* 5. navbar */
+
+/*********************/
+/* 1.    global      */
+/*********************/
 body {
     background-color: white;
-    font-family: Arial, sans-serif;
+    font-family: Merriweather, serif;
     margin: 0;
     padding: 0;
     width: 100vw; 
     height: 100vh; 
-    overflow-y: hidden;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
-body > .container-fluid {
-    width: 100vw; 
+body > .container-fluid, #main-content {
+    width: 100%; 
+    margin-top: 56px;
+    padding: 0;
     height: calc(100vh - 56px); /* 56px is the height of the navbar */
     background-color: white; 
     overflow-y: auto; 
     overflow-x: hidden;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+}
+
+#main-content {
+    transition: filter 0.5s ease;
 }
 
 .d-none {
     display: none !important;
 }
+
+.text-decoration-underline {
+    text-underline-offset: 0.3em;
+}
+
+/*********************/
+/* 2.  sections      */
+/*********************/
+.section {
+    height: 40vh;
+    position: relative; 
+    padding: 0;
+    overflow-y: hidden;
+    background-color: lightgray;
+    background-size: cover;
+    background-position: center;
+    max-width: 100%;
+}
+.section.banner {
+    height: calc(90vh - 56px);
+}
+#summerCollection.section {
+    background-image: url("https://images.pexels.com/photos/8760675/pexels-photo-8760675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+}
+#menCollection.section {
+    background-image: url("https://images.pexels.com/photos/4110074/pexels-photo-4110074.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+}
+#womenCollection.section {
+    background-image: url("https://images.pexels.com/photos/8422522/pexels-photo-8422522.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+}
+#unisexCollection.section {
+    background-image: url("https://images.pexels.com/photos/5721327/pexels-photo-5721327.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+}
+#allCollection.section {
+    height: 60vh;
+    background-image: url("https://cdn4.beautinow.com/wp-content/uploads/2024/04/niche-scaled.jpg");
+}
+.section .section-text {
+    position: absolute;
+    width: 100%;
+    bottom: 2rem;
+    left: 0;
+    transform: none;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+.section .section-text button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 1px solid white;
+    padding: 15px 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 0;
+}
+#allCollection.section .section-text button {
+    font-size: 1.5rem;
+}
+.section .section-text button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    transform: scale(0.90);
+    transition: transform 0.2s ease-in-out;
+}
+.section.banner .section-text h1 {
+    font-size: 4rem;
+}
+@media (min-width: 768px) {
+    #menCollection.section,
+    #womenCollection.section {
+        height: 70vh;
+    }
+}
+
+/**********************/
+/* 3.   products      */
+/**********************/
 
 #loadingIndicator {
     display: flex;
@@ -134,4 +231,85 @@ hr {
 
 .map {
     padding-right: 200px;
+}
+
+/**********************/
+/* 4.   slidebar      */
+/**********************/
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 0;
+    max-width: 100vw;
+    padding-top: 56px;
+    background-color: white;
+    color: black;
+    overflow-x: hidden;
+    z-index: 1;
+    transition: 0.5s;
+}
+
+.sidebar .closebtn {
+    position: absolute;
+    top: 56px;
+    right: 10px;
+    width: 5rem;
+    height: 5rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: black;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.sidebar .closebtn i {
+    font-size: 3rem;
+}
+
+.sidebar .brandBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    padding: 1rem;
+    width: 4rem;
+    height: 4rem;
+    font-size: 2rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.sidebar .closebtn:hover {
+    transform: scale(0.90);
+    transition: transform 0.2s ease-in-out;
+}
+
+.sidebar-content {
+    padding: 80px 50px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    font-family: Merriweather, serif;
+}
+
+@media (max-width: 500px) {
+    .sidebar-content {
+        padding: 80px 20px;
+    }
+}
+
+/**********************/
+/* 5.   navbar        */
+/**********************/
+.navbar {
+    font-family: Helvetica, Arial, sans-serif;
 }

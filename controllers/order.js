@@ -8,9 +8,14 @@ exports.createOrder = async (req, res) => {
     }
 
     try {
-        const { order_items } = req.body;
+        // Access the order_items value (assuming only one product)
+        const selectedProductIds = req.body.order_items; 
+        console.log(selectedProductIds);
 
-        const order = new Order({ order_items });
+        // Save the order
+        const order = new Order({
+            order_items: selectedProductIds,
+        });
         await order.save();
         res.json(order);
     } catch (err) {
