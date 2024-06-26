@@ -14,6 +14,7 @@ body {
     font-family: Merriweather, serif;
     margin: 0;
     padding: 0;
+    padding-top: 72px;
     width: 100vw; 
     height: 100vh; 
     overflow: hidden;
@@ -21,9 +22,10 @@ body {
 
 body > .container-fluid, #main-content {
     width: 100%; 
-    margin-top: 56px;
+    max-width: 100vw;
     padding: 0;
-    height: calc(100vh - 56px); /* 56px is the height of the navbar */
+    margin: 0;
+    height: calc(100vh - 72px); /* 56px is the height of the navbar */
     background-color: white; 
     overflow-y: auto; 
     overflow-x: hidden;
@@ -142,7 +144,7 @@ body > .container-fluid, #main-content {
     height: 100%;
     width: 0;
     max-width: 100vw;
-    padding-top: 56px;
+    padding-top: 72px;
     background-color: white;
     color: black;
     overflow-x: hidden;
@@ -152,7 +154,7 @@ body > .container-fluid, #main-content {
 
 .sidebar .closebtn {
     position: absolute;
-    top: 56px;
+    top: 72px;
     right: 10px;
     width: 5rem;
     height: 5rem;
@@ -210,4 +212,7 @@ body > .container-fluid, #main-content {
 /**********************/
 .navbar {
     font-family: Helvetica, Arial, sans-serif;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    min-height: 72px;
+    background-color: white;
 }
