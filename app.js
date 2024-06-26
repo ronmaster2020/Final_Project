@@ -130,6 +130,8 @@ app.post('/cart/create', cartController.createCart);
 app.post('/cart/add/:productId', cartController.AddToCart);
 
 app.get('/cart/all', cartController.getAllCarts);
+app.post('/cart/delete', cartController.deleteCart);
+
 
 
 // catch-all route for any other requests
