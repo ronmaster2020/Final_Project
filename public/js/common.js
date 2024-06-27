@@ -11,18 +11,8 @@ $(function() {
     $(document).ready(function() {
         // Load the navbar
         try {
-            $("#navbar-placeholder").load("/partials/navbar.html", function() {
-                // After the navbar is loaded, determine the active nav-item
-                var path = window.location.pathname;
-                if (path === "/") {
-                    $("#nav-home").addClass("active");
-                } else if (path.startsWith("/products")) {
-                    $("#nav-products").addClass("active");
-                } else if (path.startsWith("/about")) {
-                    $("#nav-about").addClass("active");
-                } else if (path.startsWith("/contact")) {
-                    $("#nav-contact").addClass("active");
-                }
+            $.get("/partials/navbar.html", function(data) {
+                $("#navbar-placeholder").append(data);
                 console.log("Navbar loaded successfully.");
             });
         } catch (error) {
