@@ -36,6 +36,15 @@ $(function() {
         } catch (error) {
             console.error("Error loading 'account' sidebar", error);
         }
+        try {
+            // Fetch and add the sidebar content to #main-content without replacing existing content
+            $.get("/partials/menuSidebar.html", function(data) {
+                $("body").append(data);
+                console.log("Menu sidebar loaded successfully into body.");
+            });
+        } catch (error) {
+            console.error("Error loading 'menu' sidebar", error);
+        }
 
 
         // !!! must be loaded just before the closing body tag !!!

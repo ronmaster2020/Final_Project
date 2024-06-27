@@ -262,7 +262,7 @@ body > .container-fluid, #main-content {
     padding-right: 1rem;
     margin-left: auto;
 }
-.navbar .nav-right .nav-item {
+.navbar .nav-item {
     margin-left: 12px;
 }
 .navbar .nav-item span {
