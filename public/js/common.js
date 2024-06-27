@@ -32,10 +32,19 @@ $(function() {
             // Fetch and add the sidebar content to #main-content without replacing existing content
             $.get("/partials/contactSidebar.html", function(data) {
                 $("body").append(data);
-                console.log("Sidebar loaded successfully into body.");
+                console.log("Contact sidebar loaded successfully into body.");
             });
         } catch (error) {
             console.error("Error loading 'contact' sidebar", error);
+        }
+        try {
+            // Fetch and add the sidebar content to #main-content without replacing existing content
+            $.get("/partials/accountSidebar.html", function(data) {
+                $("body").append(data);
+                console.log("Account sidebar loaded successfully into body.");
+            });
+        } catch (error) {
+            console.error("Error loading 'account' sidebar", error);
         }
 
 
@@ -88,12 +97,13 @@ function deleteProduct(productId) {
 }
 
 function openSidebar(type) {
+    closeSidebar();
     $(`#${type}`).css("width", "500px");
     $("#main-content").css("filter", "blur(8px)");
     $("#main-content").one('click', closeSidebar);
 }
 
 function closeSidebar() {
-    $("#contactSidebar").css("width", "0");
+    $(".sidebar").css("width", "0");
     $("#main-content").css("filter", "none");
 }
