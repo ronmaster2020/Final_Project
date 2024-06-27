@@ -195,9 +195,11 @@ body > .container-fluid, #main-content {
     text-decoration: none;
     cursor: pointer;
     border-radius: 50%;
+    transition: 0.3s;
 }
 
-.sidebar .closebtn:hover {
+.sidebar .closebtn:hover,
+.sidebar .brandBtn:hover{
     transform: scale(0.90);
     transition: transform 0.2s ease-in-out;
 }
@@ -210,27 +212,36 @@ body > .container-fluid, #main-content {
     font-family: "Raleway", sans-serif;
 }
 
+.sidebar .sidebar-content h2 {
+    font-size: 2rem;
+}
+
+.sidebar .sidebar-content a {
+    color: black;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    text-decoration: none;
+}
+
+.sidebar .sidebar-content .label {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.sidebar .sidebar-content a:hover {
+    color: black;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.sidebar .sidebar-content a:active {
+    text-decoration: underline;
+}
+
 @media (max-width: 500px) {
     .sidebar-content {
         padding: 80px 20px;
     }
-}
-
-#accountSidebar .sidebar-content h2 {
-    font-size: 2rem;
-}
-
-#accountSidebar .sidebar-content a {
-    color: black;
-    font-weight: 600;
-    font-size: 1.5rem;
-    padding: 6px 12px;
-    text-decoration: none;
-}
-
-#accountSidebar .sidebar-content a:hover {
-    color: black;
-    text-decoration: underline;
 }
 
 /**********************/
