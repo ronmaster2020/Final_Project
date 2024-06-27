@@ -105,14 +105,14 @@ app.get('/login', (req, res) => {
 
 // Route for user registration
 
-const User = require('./models/user');
 const authController = require('./controllers/auth');
+
 app.post('/register', authController.register);
+
 app.post('/login', authController.login);
 
-
-
 // all routes for products (CRUD)
+
 const productController = require('./controllers/product');
 
 app.post('/product/create', productController.createProduct);
@@ -126,15 +126,6 @@ app.post('/product/update/:id', productController.updateProduct);
 app.post('/product/delete/:id', productController.deleteProduct);
 
 app.get('/product/:id', productController.getProductById);
-
-
-
-
-
-
-
-
-
 
 // all routes for orders (CRUD)
 const orderController = require('./controllers/order');
@@ -153,9 +144,8 @@ app.post('/cart/create', cartController.createCart);
 app.post('/cart/add/:productId', cartController.AddToCart);
 
 app.get('/cart/all', cartController.getAllCarts);
+
 app.post('/cart/delete', cartController.deleteCart);
-
-
 
 // catch-all route for any other requests
 app.use('*', (request, response) => {
