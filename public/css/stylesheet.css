@@ -280,7 +280,7 @@ body > .container-fluid, #main-content {
 } 
 
 @media (max-width: 768px) {
-    #nav-contact {
+    #nav-contact, #nav-menu-text {
         display: none;
     }
     .navbar-brand {
