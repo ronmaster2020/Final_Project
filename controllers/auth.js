@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { ObjectId } = require('mongodb');
+const Cart = require('../models/cart');
 
 exports.register = async (req, res) => {
     const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
@@ -22,9 +23,17 @@ exports.register = async (req, res) => {
             password: hashedPassword, // Store hashed password
             cartId: newCartId,
         });
+
+        
         
         // Save the user to the database
         await user.save();
+
+        // New empty cart
+        const newCart = new Cart();
+        newCart._id = newCartId;
+        console.log(newCart._id);
+        await newCart.save();
         
         res.status(201).json({ message: 'User registered successfully' });
     } catch (err) {
@@ -51,7 +60,8 @@ exports.login = async (req, res) => {
 
         // User authenticated, can set up a session or token for authentication
 
-        res.status(200).json({ message: 'Login successful' });
+        // res.status(200).json({ message: 'Login successful' });
+        return user;
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
