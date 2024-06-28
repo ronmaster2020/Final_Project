@@ -322,7 +322,7 @@ body > .container-fluid, #main-content {
     max-width: 400px;
 }
 
-.auth form button {
+.auth form > button {
     width: 100%;
     padding: 1rem;
     margin: 0.5rem 0;
@@ -334,8 +334,8 @@ body > .container-fluid, #main-content {
     cursor: pointer;
     transition: 0;
 }
-.auth form button:hover,
-.auth form button:active {
+.auth form > button:hover,
+.auth form > button:active {
     background-color: black;
     color: white;
 }
@@ -423,4 +423,25 @@ body > .container-fluid, #main-content {
     top: 5px;
     font-size: 0.7rem;
     color: #666;
+}
+
+.form-input .material-symbols-sharp {
+    font-size: 2rem;
+}
+.form-input #password {
+    padding-right: 2.5rem;
+}
+.form-input #show-password {
+    position: absolute;
+    top: calc(0.7rem + 15px);
+    right: 0.25rem;
+    height: 3rem;
+    width: 3rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    margin: 0;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: none;
 }
