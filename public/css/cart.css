@@ -1,3 +1,5 @@
+
+
 .empty_bag {
     text-align: center;
     margin: 0 auto;  /* Center horizontally */
@@ -19,6 +21,137 @@ a:hover { /* Style for hover state (optional) */
     text-decoration: underline;
 }
 
+/* Cart title */
+.cart-title {
+    height: 250px;
+    font-family: 'Pacifico', cursive; /* Use the chosen font */
+    font-size: 2rem; /* Adjust font size */
+    color: #333; /* Adjust color if needed */
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+    padding: 1rem 2rem; /* Maintain padding for potential text spacing */
+    color: rgb(3, 3, 3); /* Adjust text color if needed */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Add a subtle shadow for depth (optional) */
+    /* background-image: url("https://i.pinimg.com/564x/d4/8b/14/d48b146b01dc83163eb832e76331ae3a.jpg");  */
+    background-image: url("https://i.pinimg.com/564x/b2/1e/7b/b21e7b5885acf57e06631675b7f3bc5f.jpg"); 
+    background-image: url("https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+    background-repeat: no-repeat; /* Prevent image from repeating */
+    background-position: center; /* Center the image horizontally */
+    background-size: cover; /* Resize image to cover the entire element */
+    color: #fff; /* White text color (optional) */
+    padding: 1rem 2rem; /* Add some padding (optional) */
+    text-align: center; /* Center the text within the element */
+    display: flex; /* Make the cart-title a flex container */
+    align-items: center; /* Align items vertically in the center */
+    justify-content: center; /* Align items horizontally in the center */
+}
+
+/*Cart info */
+
+.cart-info {
+    width: 100%;  /* Adjust the width as desired (e.g., 500px) */
+    height: 100px;  /* Adjust the height as desired */
+    display: flex; /* Make the container a flexbox */
+    background-color: #f5f5f5; /* Light gray background */
+    border-radius: 5px; /* Rounded corners */
+    padding: 1rem; /* Inner padding */
+    font-family: Arial, sans-serif; /* Base font family */
+}
+  
+.left-part,
+.right-part {
+    flex: 1; /* Make both parts equally sized */
+}
+  
+.left-part {
+    background-color: #e0e0e0; /* Light gray background for left part */
+    text-align: center; /* Center text in left part */
+    display: flex; /* Make the right-part a flex container */
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex; /* Align items at the end (right) */
+    justify-content: space-around; 
+    font-family: Open Sans, sans-serif;
+    text-transform: uppercase; /* Make text uppercase */
+    /* align-self: center; */
+}
+  
+.left-part p {
+    font-weight: bold; /* Bold text for "Continue Shopping" */
+    color: #333; /* Darker text color */
+    margin-bottom: 0rem;
+}
+  
+.left-part a {
+    color: inherit; /* Inherit text color from parent */
+    /* text-decoration: none; /* Remove underline from link */
+}
+  
+.right-part {
+    text-align: right; /* Right-align text in right part */
+    color: #666; /* Lighter text color */
+    display: flex; /* Make the right-part a flex container */
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-end; /* Align items at the end (right) */
+    justify-content: space-around;
+}
+
+.right-part p {
+    margin-bottom: 0rem;
+}
+  
+  
+.right-part p:first-child { /* Style the first paragraph in right part */
+    font-style: italic; /* Italicize "NEED ASSISTANCE?" */
+    /* margin-bottom: 5px; /* Add some margin below */
+}
+  
+
+/* List title */
+  
+.list-title {
+    margin-top: 20px;
+    font-family: Arial, sans-serif; /* Base font family */
+    font-size: 25px; /* Adjust font size as desired */
+    color: #333; /* Darker text color */
+    padding: 10px 15px; /* Add some padding */
+    border-bottom: 1px solid #ddd; /* Add a subtle bottom border */
+    margin-bottom: 15px; /* Add some margin below */
+    display: flex; /* Make it a flex container for potential icons */
+    justify-content: space-between; /* Space content horizontally */
+    text-transform: uppercase; /* Make text uppercase */
+}
+  
+.list-title #list-title { /* Target the element with id within .list-title */
+    font-weight: bold; /* Make the title part bold */
+    text-transform: uppercase; /* Make text uppercase */
+}
+
+/* List Params */
+.params {
+    font-size: large;
+    display: grid; /* Make it a flex container */
+    grid-template-columns: repeat(4, 1fr);
+    /* justify-content: space-around; /* Distribute items evenly */
+    align-items: center; /* Align items vertically in the center */
+    font-family: Arial, sans-serif; /* Base font family */
+    font-weight: bold; /* Bold font for headings */
+    color: #333; /* Darker text color */
+    padding: 5px 10px; /* Add some padding */
+    border-bottom: 1px solid #ddd; /* Add a bottom border */
+    margin-bottom: 10px; /* Add some margin below */
+    text-transform: uppercase;
+}
+  
+.params p {
+    margin: 0; /* Remove default margins for better spacing */
+    padding: 0 5px; /* Add some space between elements */
+    text-align: center;
+}
+  
+
+
+  
 /* Customize these styles as needed */
 
 .cart-list {
@@ -27,23 +160,33 @@ a:hover { /* Style for hover state (optional) */
     margin: 0;
     border: 1px solid #ddd; /* Optional: Add a subtle border */
     border-radius: 5px; /* Add a slight rounded corner for a more modern look */
-    background-color: #561212; /* Light background color */
+    background-color: #f5f5f5; /* Light background color */
 }
   
 .cart-item {
-    display: flex; /* Arrange items horizontally */
-    align-items: center; /* Vertically align content within the item */
+    display: grid; /* Make .cart-item a grid container */
+    grid-template-columns: repeat(4, 1fr); /* Define grid columns */
+    /* justify-content: center; */
     border-bottom: 1px solid #ddd; /* Optional: Add a subtle border between items */
     padding: 0.75rem 1rem; /* Adjust padding for better spacing within the item */
-    background-color: #8f7676; /* White background for each item */
+    background-color:   #e0e0e0; /* White background for each item */
+    /* background-color: #b3dffe; /* White background for each item */
     transition: all 0.2s ease-in-out; /* Add a smooth transition effect on hover */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
     border-right: 1px solid #ddd; /* Add a right border for spacing */
-    margin: 0;
+    border-radius: 5px;
+    margin-bottom: 1px;
+    align-items: center;
+}
+
+.cart-item span { /* Target all span elements within .cart-item */
+    flex: 1; /* Allow each span to grow and fill available space horizontally */
+    text-align: center; /* Align text within each span to the left */
+    /* Optional: Adjust other styling for individual spans (e.g., font-size) */
 }
   
 .cart-item:hover {
-    background-color: #eee; /* Change background color slightly on hover */
+    background-color: #d6e1f8; /* Change background color slightly on hover */
     cursor: pointer; /* Indicate hover interaction with a pointer cursor */
 }
   
@@ -51,7 +194,7 @@ a:hover { /* Style for hover state (optional) */
     width: 80px; /* Adjust width as needed for your image size */
     height: auto; /* Maintain aspect ratio */
     object-fit: cover; /* Crop image to fit container */
-    margin-right: 1rem;
+    /*margin-right: 1rem;*/
     border-radius: 5px; /* Add a slight rounded corner for the image */
 }
   
@@ -60,12 +203,102 @@ a:hover { /* Style for hover state (optional) */
     margin: 0; /* Remove default margin for better spacing */
 }
   
-.product-id
-.quantity {
+.product-id, .quantity, .price, .total {
+    /* Individual styles for each element (e.g., font-size, margin) */
+    text-align: center; /* Optional: Center text within each div */
+}
+
+.total {
     font-weight: bold;
-    font-family: Arial, sans-serif; /* Change font family as desired */
+}
+
+.quantity-button {
+    /* Styles for the quantity button */
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Add rounded corners */
     font-size: 16px; /* Adjust font size */
-    margin-bottom: 0.5rem; /* Adjust spacing between product ID and quantity */
+    cursor: pointer; /* Indicate interactivity on hover */
+    background-color: #f5f5f5; /* Light background color */
+    color: #333; /* Text color */
+}
+
+/* Cart footer */ 
+
+.cart-footer {
+    margin-top: 20px; 
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Distribute content horizontally */
+    align-items: center; /* Align content vertically */
+    padding: 10px 20px; /* Add some padding */
+    background-color: #f5f5f5; /* Light gray background */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
   
+.footer-left,
+.footer-right {
+    flex: 1; /* Make left and right sections equally sized */
+}
+  
+.footer-left p {
+    /* margin: 0 -0px 10px 0; /* Remove default margin for paragraph */
+    font-size: 18px;
+    margin-bottom: 0.5rem;
+}
+  
+.footer-right {
+    text-align: left; /* Align elements within the right section to the right */
+    margin-left: 350px;
+}
+  
+.footer-right h3 {
+    margin: 5px 0; /* Add some space between headings */
+}
+  
+/* Optional styles to further customize the look */
+  
+ .footer-left a {
+    color: #333; /* Darker text color for the link */
+    /* text-decoration: none; /* Remove underline from link */
+}
+  
+.footer-left a:hover {
+    text-decoration: underline; /* Underline link on hover */
+}
+  
+.footer-right h3 {
+    color: #333; /* Darker text color for headings */
+}
+  
+
+/* Button */ 
+
+form {
+    /* Style the form container if needed (optional) */
+    /* Example: */
+    display: flex;
+    justify-content: center;
+}
+  
+button[type="submit"] {
+    /* Base styles for the button */
+    margin-top: 25px;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: rgb(0, 0, 128); /* Navy blue */
+    color: #fff; /* White text */
+    cursor: pointer; /* Indicate hover interaction */
+    transition: all 0.2s ease-in-out; /* Smooth hover transition */
+    font-family: 'Montserrat', sans-serif; /* Cool font */
+    text-transform: uppercase; /* Make all text uppercase */
+    /* font-weight: bold; /* Optional: Add boldness for emphasis */
+}
+
+  
+button[type="submit"]:hover {
+    /* Hover styles for the button */
+    background-color: rgb(30, 30, 100); /* Slightly darker blue on hover */
+}
   
