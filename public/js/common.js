@@ -97,12 +97,23 @@ function deleteProduct(productId) {
 
 function openSidebar(type) {
     closeSidebar();
-    $(`#${type}`).css("width", "500px");
-    $("#main-content").css("filter", "blur(8px)");
-    $("#main-content").one('click', closeSidebar);
+    $(`#${type}`).css("width", "600px");
+
+    $('#main-content').css({
+        'filter': 'blur(8px) brightness(50%)',
+        '-webkit-filter': 'blur(8px) brightness(50%)'
+    });
+
+    $('#main-content').click(function() {
+        closeSidebar();
+    });
 }
 
 function closeSidebar() {
     $(".sidebar").css("width", "0");
-    $("#main-content").css("filter", "none");
+
+    $('#main-content').css({
+        'filter': 'blur(0px) brightness(100%)',
+        '-webkit-filter': 'blur(0px) brightness(100%)'
+    });
 }
