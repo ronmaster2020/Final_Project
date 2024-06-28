@@ -43,10 +43,20 @@
             <h2 class="mb-4">CONTINUE WITH YOUR EMAIL ADDRESS</h2>
 
             <form action="/login" method="post">
+                <div class="error-message"></div>
+
                 <!-- email -->
-                <input id="email" type="email" name="email" placeholder="EMAIL*" required>
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="email" id="email" name="email" required>
+                    <label for="email">EMAIL*</label>
+                </div>
+
                 <!-- password -->
-                <input id="password" type="password" name="password" placeholder="PASSWORD*" required>
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="password" id="password" name="password" required minlength="8">
+                    <label for="password">PASSWORD*</label>
+                </div>
+
                 <!-- forgot password -->
                 <div class="d-flex justify-content-end align-items-center mt-2 mb-3">
                     <a class="p-1" href="/forgot-password" style="text-decoration: none;">Forgot Password?</a>

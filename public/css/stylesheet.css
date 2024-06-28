@@ -6,6 +6,7 @@
 /* 4. slidebar */
 /* 5. navbar */
 /* 6. auth */
+/* 7. form-input */
 
 /*********************/
 /* 1.    global      */
@@ -320,19 +321,7 @@ body > .container-fluid, #main-content {
     width: 100%; 
     max-width: 400px;
 }
-.auth form input,
-.auth form textarea,
-.auth form select {
-    width: 100%;
-    max-width: 400px;
-    padding: 1rem;
-    margin: 0.5rem 0;
-    background-color: white;
-    color: black;
-    border: 1px solid black;
-    border-radius: 0;
-    font-size: 1rem;
-}
+
 .auth form button {
     width: 100%;
     padding: 1rem;
@@ -386,8 +375,52 @@ body > .container-fluid, #main-content {
 }
 
 @media (max-width: 400px) {
-    .auth .auth .brandBtn,
-    .auth .auth input {
+    .auth .brandBtn {
         padding: 0.5rem 1rem;
     }
+}
+
+/**********************/
+/* 7.   form-input    */
+/**********************/
+.form-input {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    padding-top: calc(0.7rem + 10px);
+  }
+  
+.form-input input,
+.form-input textarea,
+.form-input select {
+    width: 100%;
+    padding: 1rem;
+    margin: 0;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 0;
+    font-size: 1rem;
+}
+
+.form-input label {
+    position: absolute;
+    top: calc(1.7rem + 10px);
+    left: 1rem;
+    color: #999;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Active/filled state styles */
+.form-input input:not(:placeholder-shown) + label,
+.form-input textarea:not(:placeholder-shown) + label,
+.form-input select:not(:placeholder-shown) + label,
+.form-input input:focus + label,
+.form-input textarea:focus + label,
+.form-input select:focus + label {
+    top: 5px;
+    font-size: 0.7rem;
+    color: #666;
 }
