@@ -316,7 +316,9 @@ body > .container-fluid, #main-content {
     width: 100%; 
     max-width: 400px;
 }
-.auth form input {
+.auth form input,
+.auth form textarea,
+.auth form select {
     width: 100%;
     max-width: 400px;
     padding: 1rem;

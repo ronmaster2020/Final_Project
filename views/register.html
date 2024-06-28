@@ -1,44 +1,67 @@
-<!-- register.html -->
+<!-- login.html -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>shop</title>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body>
-    <h2>User Registration</h2>
-    <form action="/register" method="POST">
-        <label for="firstName">First Name:</label><br>
-        <input type="text" id="firstName" name="firstName" required><br><br>
-        
-        <label for="lastName">Last Name:</label><br>
-        <input type="text" id="lastName" name="lastName" required><br><br>
+    <!-- navbar -->
+    <div id="navbar-placeholder"></div>
 
-        <label for="bio">Bio:</label><br>
-        <textarea id="bio" name="bio" required></textarea><br><br>
+    <div id="main-content" class="container-fluid" style="padding-top: 3rem; font-family: 'Ralewa', sans-serif;">
+        <!-- auth page -->
+        <div class="auth px-3 px-md-5">
+            <h1 class="py-3">CREATE YOUR ACCOUNT</h1>
+            <h4 class="mb-5">Have an account? <a href="/login" style="text-decoration: none; text-wrap: nowrap;">Log in now</a></h4>
+            <button class="brandBtn mb-4">
+                <img 
+                    src="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png" 
+                    alt="google">
+                <span>CONTINUE WITH GOOGLE</span>
+            </button>
+            <button class="brandBtn mb-4">
+                <img 
+                    src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-1024.png" 
+                    alt="google">
+                <span>CONTINUE WITH FACEBOOK</span>
+            </button>
+            <button class="brandBtn">
+                <img 
+                    src="https://cdn2.iconfinder.com/data/icons/black-white-social-media/32/online_social_media_apple-1024.png" 
+                    alt="google">
+                <span>CONTINUE WITH APPLE</span>
+            </button>
+            <h5 class="my-4">OR</h5>
+            <h2 class="mb-4">CONTINUE WITH YOUR EMAIL ADDRESS</h2>
+            <form action="/register" method="POST">
+                <!-- email -->
+                <input placeholder="EMAIL*" type="email" id="email" name="email" required>
+                <!-- password -->
+                <input placeholder="PASSWORD*" aria-placeholder="PASSWORD*" type="password" id="password" name="password" required minlength="8">
+                <!-- first name -->
+                <input placeholder="FIRST NAME*" type="text" id="firstName" name="firstName" required>
+                <!-- last name -->
+                <input placeholder="LAST NAME*" type="text" id="lastName" name="lastName" required>
+                <!-- bio -->
+                <textarea placeholder="BIO*" id="bio" name="bio" required></textarea>
+                <!-- address -->
+                <input placeholder="ADDRESS*" type="text" id="address" name="address" required>
+                <!-- access -->
+                <select aria-placeholder="ACCESS*" id="access" name="access" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <!-- phone number -->
+                <input placeholder="PHONE NUMBER*" type="tel" id="phoneNumber" name="phoneNumber" required>
 
-        <label for="address">Address:</label><br>
-        <input type="text" id="address" name="address" required><br><br>
-        
-        <label for="access">Access:</label><br>
-        <select id="access" name="access" required>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-        </select><br><br>
-
-        <label for="phoneNumber">Phone Number:</label><br>
-        <input type="tel" id="phoneNumber" name="phoneNumber" required><br><br>
-
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
-
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required minlength="8"><br><br>
-
-        <button type="submit">Register</button>
-    </form>
+                <button type="submit">CREATE MY PROFILE</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
