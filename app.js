@@ -10,7 +10,8 @@ app.use('/partials', express.static(__dirname + '/views/partials'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://mike:12345678$@cluster0.emzh3yv.mongodb.net/test', {
+mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+ , {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -130,6 +131,7 @@ app.post('/cart/create', cartController.createCart);
 app.post('/cart/add/:productId', cartController.AddToCart);
 
 app.get('/cart/all', cartController.getAllCarts);
+
 app.post('/cart/delete', cartController.deleteCart);
 
 
