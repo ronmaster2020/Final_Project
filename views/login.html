@@ -3,21 +3,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>shop</title>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body>
-    <h2>User Login</h2>
-    <form action="/login" method="POST">
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+    <!-- navbar -->
+    <div id="navbar-placeholder"></div>
 
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
+    <div id="main-content" class="container-fluid" style="padding-top: 3rem; font-family: 'Ralewa', sans-serif;">
+        <!-- auth page -->
+        <div class="auth px-3 px-md-5">
+            <h1 class="py-3">MY ACCOUNT</h1>
+            <h4 class="mb-5">Don't have an account? <a href="/register" style="text-decoration: none; text-wrap: nowrap;">Sign Up</a></h4>
+            <!-- google -->
+            <button class="brandBtn mb-4">
+                <img 
+                    src="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png" 
+                    alt="google">
+                <span>CONTINUE WITH GOOGLE</span>
+            </button>
+            <!-- facebook -->
+            <button class="brandBtn mb-4">
+                <img 
+                    src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-1024.png" 
+                    alt="google">
+                <span>CONTINUE WITH FACEBOOK</span>
+            </button>
+            <!-- apple -->
+            <button class="brandBtn">
+                <img 
+                    src="https://cdn2.iconfinder.com/data/icons/black-white-social-media/32/online_social_media_apple-1024.png" 
+                    alt="google">
+                <span>CONTINUE WITH APPLE</span>
+            </button>
+            <h5 class="my-4">OR</h5>
+            <h2 class="mb-4">CONTINUE WITH YOUR EMAIL ADDRESS</h2>
 
-        <button type="submit">Login</button>
-    </form>
+            <form action="/login" method="post">
+                <!-- email -->
+                <input id="email" type="email" name="email" placeholder="EMAIL*" required>
+                <!-- password -->
+                <input id="password" type="password" name="password" placeholder="PASSWORD*" required>
+                <!-- forgot password -->
+                <div class="d-flex justify-content-end align-items-center mt-2 mb-3">
+                    <a class="p-1" href="/forgot-password" style="text-decoration: none;">Forgot Password?</a>
+                </div>
+
+                <button type="submit">CONTINUE</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

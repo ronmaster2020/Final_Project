@@ -5,13 +5,14 @@
 /* 3. products */
 /* 4. slidebar */
 /* 5. navbar */
+/* 6. auth */
 
 /*********************/
 /* 1.    global      */
 /*********************/
 body {
     background-color: white;
-    font-family: Merriweather, serif;
+    font-family: "Raleway", sans-serif;
     margin: 0;
     padding: 0;
     padding-top: 72px;
@@ -29,12 +30,17 @@ body > .container-fluid, #main-content {
     background-color: white; 
     overflow-y: auto; 
     overflow-x: hidden;
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
+    filter: blur(0px);
+    -webkit-filter: blur(0px) brightness(100%);
+    transition: filter 0.3s, -webkit-filter 0.3s;
 }
 
-#main-content {
-    transition: filter 0.5s ease;
+#main-content * {
+    letter-spacing: 2px;
+}
+
+#main-content h1 {
+    letter-spacing: .2rem;
 }
 
 .d-none {
@@ -64,6 +70,7 @@ body > .container-fluid, #main-content {
     background-color: lightgray;
     background-size: cover;
     background-position: center;
+    box-shadow: none;
     max-width: 100%;
 }
 .section.banner {
@@ -98,7 +105,6 @@ body > .container-fluid, #main-content {
 .section .section-text button {
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
-    font-family: "Raleway", sans-serif;
     border: 1px solid white;
     padding: 15px 30px;
     font-size: 1rem;
@@ -106,6 +112,7 @@ body > .container-fluid, #main-content {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-radius: 0;
+    transition: 0.3s;
 }
 #allCollection.section .section-text button {
     font-size: 1.5rem;
@@ -156,6 +163,8 @@ body > .container-fluid, #main-content {
     padding-top: 72px;
     background-color: white;
     color: black;
+    box-shadow: none;
+    border: none;
     overflow-x: hidden;
     z-index: 1;
     transition: 0.5s;
@@ -209,7 +218,6 @@ body > .container-fluid, #main-content {
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    font-family: "Raleway", sans-serif;
 }
 
 .sidebar .sidebar-content h2 {
@@ -248,7 +256,6 @@ body > .container-fluid, #main-content {
 /* 5.   navbar        */
 /**********************/
 .navbar {
-    font-family: "Raleway", sans-serif;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     min-height: 72px;
     background-color: white;
@@ -256,6 +263,7 @@ body > .container-fluid, #main-content {
 .navbar-brand {
     position: absolute; 
     left: 50%;
+    transition: 0.3s;
     transform: translateX(-50%);
 }
 .nav-right {
@@ -280,11 +288,102 @@ body > .container-fluid, #main-content {
 } 
 
 @media (max-width: 768px) {
-    #nav-contact {
+    #nav-contact, #nav-menu-text {
         display: none;
     }
     .navbar-brand {
         left: 12px;
         transform: translateX(0%);
+    }
+}
+
+/**********************/
+/* 6.   auth          */
+/**********************/
+.auth {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    background-color: white;
+}
+.auth form {
+    width: 100%; 
+    max-width: 400px;
+}
+.auth form input,
+.auth form textarea,
+.auth form select {
+    width: 100%;
+    max-width: 400px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 0;
+    font-size: 1rem;
+}
+.auth form button {
+    width: 100%;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background-color: rgb(27, 27, 27);
+    color: rgb(232, 232, 232);
+    border: none;
+    border-radius: 0;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0;
+}
+.auth form button:hover,
+.auth form button:active {
+    background-color: black;
+    color: white;
+}
+
+.auth .brandBtn {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 0;
+    transition: 0.3s;
+}
+
+.auth .brandBtn:hover, 
+.auth .brandBtn:active{
+    background-color: rgb(231, 231, 231);
+}
+
+.auth .brandBtn img {
+    display: inline-block; 
+    width: 2rem; 
+    height: 2rem; 
+    margin: auto 1rem;
+}
+
+.auth .brandBtn span {
+    display: inline-block; 
+    margin: auto 0;
+}
+
+@media (max-width: 400px) {
+    .auth .auth .brandBtn,
+    .auth .auth input {
+        padding: 0.5rem 1rem;
     }
 }
