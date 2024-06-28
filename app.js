@@ -10,8 +10,7 @@ app.use('/partials', express.static(__dirname + '/views/partials'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
- , {
+mongoose.connect('mongodb+srv://mike:12345678$@cluster0.emzh3yv.mongodb.net/test', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -96,23 +95,8 @@ app.get('/viewCart', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'cart.html'));
 });
 
-app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'register.html'));
-});
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
-});
-
-// Route for user registration
-
-const authController = require('./controllers/auth');
-
-app.post('/register', authController.register);
-
-app.post('/login', authController.login);
 
 // all routes for products (CRUD)
-
 const productController = require('./controllers/product');
 
 app.post('/product/create', productController.createProduct);
@@ -126,6 +110,8 @@ app.post('/product/update/:id', productController.updateProduct);
 app.post('/product/delete/:id', productController.deleteProduct);
 
 app.get('/product/:id', productController.getProductById);
+
+
 
 // all routes for orders (CRUD)
 const orderController = require('./controllers/order');
@@ -144,8 +130,9 @@ app.post('/cart/create', cartController.createCart);
 app.post('/cart/add/:productId', cartController.AddToCart);
 
 app.get('/cart/all', cartController.getAllCarts);
-
 app.post('/cart/delete', cartController.deleteCart);
+
+
 
 // catch-all route for any other requests
 app.use('*', (request, response) => {

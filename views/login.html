@@ -15,41 +15,36 @@
 
     <div id="main-content" class="container-fluid" style="padding-top: 3rem; font-family: 'Ralewa', sans-serif;">
         <!-- auth page -->
-        <div class="auth d-flex flex-column justify-content-center align-items-center text-center mx-auto px-3 px-md-5" style="max-width: 800px;">
-            <h1 class="py-3 mb-5">MY ACCOUNT</h1>
-            <div class="d-flex flex-column justify-content-center align-items-center my-3" style="max-width: 400px;">
-                <button class="brandBtn mb-4">
-                    <img 
-                        style="width: 2rem; height: 2rem; margin: auto 1rem; display: inline-block; vertical-align: middle;"
-                        src="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png" 
-                        alt="google">
-                    <span style="display: inline-block; margin: auto 0;">CONTINUE WITH GOOGLE</span>
-                </button>
-                <button class="brandBtn mb-4">
-                    <img 
-                        style="width: 2rem; height: 2rem; margin: auto 1rem; display: inline-block; vertical-align: middle;"
-                        src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-1024.png" 
-                        alt="google">
-                    <span style="display: inline-block; margin: auto 0;">CONTINUE WITH FACEBOOK</span>
-                </button>
-                <button class="brandBtn">
-                    <img 
-                        style="width: 2rem; height: 2rem; margin: auto 1rem; display: inline-block;"
-                        src="https://cdn2.iconfinder.com/data/icons/black-white-social-media/32/online_social_media_apple-1024.png" 
-                        alt="google">
-                    <span style="display: inline-block; margin: auto 0;">CONTINUE WITH APPLE</span>
-                </button>
-            </div>
-            <h5 class="my-3">OR</h5>
+        <div class="auth px-3 px-md-5">
+            <h1 class="py-3 mb-4">MY ACCOUNT</h1>
+            <button class="brandBtn mb-4">
+                <img 
+                    src="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png" 
+                    alt="google">
+                <span>CONTINUE WITH GOOGLE</span>
+            </button>
+            <button class="brandBtn mb-4">
+                <img 
+                    src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-1024.png" 
+                    alt="google">
+                <span>CONTINUE WITH FACEBOOK</span>
+            </button>
+            <button class="brandBtn">
+                <img 
+                    src="https://cdn2.iconfinder.com/data/icons/black-white-social-media/32/online_social_media_apple-1024.png" 
+                    alt="google">
+                <span>CONTINUE WITH APPLE</span>
+            </button>
+            <h5 class="my-4">OR</h5>
             <h2>CONTINUE WITH YOUR EMAIL ADDRESS</h2>
-            <p style="font-weight: 550;">Sign in with your email and password or create a profile if you are new.</p>
-
-            <form action="/login" method="POST">
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" name="email" required><br><br>
-
-                <label for="password">Password:</label><br>
-                <input type="password" id="password" name="password" required><br><br>
+            <p class="mb-4">Sign in with your email and password or create a profile if you are new.</p>
+            <form action="/login" method="post">
+                <div id="email">
+                    <input type="email" name="email" placeholder="EMAIL*" required>
+                </div>
+                <div id="password">
+                    <input type="password" name="password" placeholder="PASSWORD*" required>
+                </div>
 
                 <button type="submit">CONTINUE</button>
             </form>

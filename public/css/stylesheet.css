@@ -263,6 +263,7 @@ body > .container-fluid, #main-content {
 .navbar-brand {
     position: absolute; 
     left: 50%;
+    transition: 0.3s;
     transform: translateX(-50%);
 }
 .nav-right {
@@ -299,11 +300,57 @@ body > .container-fluid, #main-content {
 /**********************/
 /* 6.   auth          */
 /**********************/
+.auth {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    background-color: white;
+}
+.auth form {
+    width: 100%; 
+    max-width: 400px;
+}
+.auth form input {
+    width: 100%;
+    max-width: 400px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 0;
+    font-size: 1rem;
+}
+.auth form button {
+    width: 100%;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background-color: rgb(27, 27, 27);
+    color: rgb(232, 232, 232);
+    border: none;
+    border-radius: 0;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0;
+}
+.auth form button:hover,
+.auth form button:active {
+    background-color: black;
+    color: white;
+}
+
 .auth .brandBtn {
     display: flex;
     justify-content: start;
     align-items: center;
     width: 100%;
+    max-width: 400px;
     background-color: white;
     color: black;
     border: 2px solid black;
@@ -313,4 +360,28 @@ body > .container-fluid, #main-content {
     cursor: pointer;
     border-radius: 0;
     transition: 0.3s;
+}
+
+.auth .brandBtn:hover, 
+.auth .brandBtn:active{
+    background-color: rgb(231, 231, 231);
+}
+
+.auth .brandBtn img {
+    display: inline-block; 
+    width: 2rem; 
+    height: 2rem; 
+    margin: auto 1rem;
+}
+
+.auth .brandBtn span {
+    display: inline-block; 
+    margin: auto 0;
+}
+
+@media (max-width: 400px) {
+    .auth .auth .brandBtn,
+    .auth .auth input {
+        padding: 0.5rem 1rem;
+    }
 }
