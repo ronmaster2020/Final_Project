@@ -67,7 +67,7 @@ const products = [
     }
   }
   
-  initializeData();
+//initializeData();
 // complete load product model //
 
 // Route for the sending pages
@@ -111,6 +111,8 @@ app.post('/register', authController.register);
 
 app.post('/login', authController.login);
 
+
+
 // all routes for products (CRUD)
 
 const productController = require('./controllers/product');
@@ -127,7 +129,10 @@ app.post('/product/delete/:id', productController.deleteProduct);
 
 app.get('/product/:id', productController.getProductById);
 
+
+
 // all routes for orders (CRUD)
+
 const orderController = require('./controllers/order');
 
 app.post('/order/create', orderController.createOrder);
@@ -136,7 +141,10 @@ app.get('/order/all', orderController.getOrders);
 
 app.get('/order/:id', orderController.getOrderById);
 
+
+
 // all routes for cart (CRUD)
+
 const cartController = require('./controllers/cart');
 
 app.post('/cart/create', cartController.createCart);

@@ -248,8 +248,9 @@ a:hover { /* Style for hover state (optional) */
 }
   
 .footer-right {
-    text-align: left; /* Align elements within the right section to the right */
+    text-align: right; /* Align elements within the right section to the right */
     margin-left: 350px;
+    margin-right: 110px;
 }
   
 .footer-right h3 {

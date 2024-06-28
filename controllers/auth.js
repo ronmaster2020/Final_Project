@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const { ObjectId } = require('mongodb');
 
 exports.register = async (req, res) => {
     const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
@@ -7,6 +8,7 @@ exports.register = async (req, res) => {
     try {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+        const newCartId = new ObjectId();
         
         // Create a new user instance with hashed password
         const user = new User({ 
@@ -17,7 +19,8 @@ exports.register = async (req, res) => {
             access, 
             phoneNumber, 
             email, 
-            password: hashedPassword // Store hashed password
+            password: hashedPassword, // Store hashed password
+            cartId: newCartId,
         });
         
         // Save the user to the database
