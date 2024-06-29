@@ -9,6 +9,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/partials', express.static(__dirname + '/views/partials'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 
+// Middleware to parse JSON bodies
+app.use(express.json());
+
 // MongoDB connection
 mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
  , {

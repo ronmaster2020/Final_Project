@@ -41,28 +41,29 @@ exports.register = async (req, res) => {
     }
 };
 
-
+isLogedIn = false;
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
+    console.log('Received login request for email:', email); // Add logging
     try {
-        // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
+            console.error('User not found:', email);
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Validate password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
+            console.error('Invalid credentials for user:', email);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // User authenticated, can set up a session or token for authentication
-
-        // res.status(200).json({ message: 'Login successful' });
-        return user;
+        const cart = await Cart.findById(user.cartId);
+        isLogedIn = true;
+        res.json({ message: 'Login successful!', user, cart, isLogedIn });
     } catch (err) {
+        console.error('Error during login:', err);
         res.status(500).json({ error: err.message });
     }
 };

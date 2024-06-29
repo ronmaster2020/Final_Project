@@ -9,6 +9,7 @@
         <!-- JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script type="text/javascript" src="/js/common.js"></script>
+        <script type="text/javascript" src="/js/login.js"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" href="/css/cart.css">
@@ -57,6 +58,12 @@
             }
 
             async function getCartItems() {
+                const cartId = localStorage.getItem('cartId');
+                if (!cartId) {
+                    console.error('No cart ID found. Please log in first.');
+                    return [];
+                }
+                console.log('Cart ID from localStorage:', cartId);
                 
                 try {
                     const response = await fetch('/cart/all');
@@ -64,7 +71,12 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     const cartData = await response.json();
-                    return cartData[0].products; // Return the cart data
+                    for(i = 0; i < cartData.length; i++) {
+                        if(cartId === cartData[i]._id) {
+                            console.log(cartData[i]);
+                            return cartData[i].products || [];
+                        }
+                    }
                 } catch (error) {
                     console.error('Error fetching cart data:', error);
                     // Handle errors gracefully (e.g., display an error message)
@@ -77,13 +89,13 @@
                 const prices = await getPrices();
                 console.log(prices);
                 console.log(cartItems);
-                console.log(num_of_cart_products);
 
                 const listTitle = document.getElementById('list-title');
                 listTitle.innerHTML = '';
                 listTitle.textContent = "Shopping bag  (" + num_of_cart_products + ")";
 
                 const cartList = document.getElementById('cart-list');
+                const mainContent = document.getElementById('main-content');
 
                 if (!cartItems) {
                     // Handle case where cartItems or cartItems.products is missing or empty
@@ -92,6 +104,7 @@
                 }
 
                 if (cartItems.length === 0) {
+                    mainContent.style.display = 'none';
                     cartList.innerHTML = '<div class="empty_bag"><h2>Your shopping bag is empty</h2><a href="/">Continue shopping</a></div>';
                     return;
                 }
