@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Product = require('../models/product');
+const fs = require('fs');
 
 // Create a new product
 exports.createProduct = async (req, res) => {
@@ -114,6 +115,15 @@ exports.deleteProduct = async (req, res) => {
     }
 
     try {
+        const product = await Product.findById(req.params.id);
+        // Delete the product images from the file system
+        for (const imagePath of product.images) {
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error('Error deleting product image:', err);
+                }
+            });
+        }
         await Product.deleteOne( { _id: `${req.params.id}` } );
         res.send('Product deleted successfully');
     } catch (err) {

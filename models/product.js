@@ -16,7 +16,7 @@ const ProductScheme = new Schema({
     },
     price: {
         type: Number,
-        default: 1000,
+        default: 999,
         min: [0.01, 'Price must be at least 0.01'],
         max: [1000, 'Price must be below 1000']
     },
@@ -30,7 +30,7 @@ const ProductScheme = new Schema({
     },
     size: {
         type: Number,
-        default: 1000,
+        default: 999,
         min: [1, 'Size must be at least 1'],
         max: [1000, 'Size must be below 1000']
     },
