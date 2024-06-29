@@ -39,25 +39,62 @@
             <h5 class="my-4">OR</h5>
             <h2 class="mb-4">CONTINUE WITH YOUR EMAIL ADDRESS</h2>
             <form action="/register" method="POST">
+                <div class="error-message"></div>
+
                 <!-- email -->
-                <input placeholder="EMAIL*" type="email" id="email" name="email" required>
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="email" id="email" name="email" required>
+                    <label for="email">EMAIL*</label>
+                </div>
+
                 <!-- password -->
-                <input placeholder="PASSWORD*" aria-placeholder="PASSWORD*" type="password" id="password" name="password" required minlength="8">
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="password" id="password" name="password" required minlength="8">
+                    <label for="password">PASSWORD*</label>
+                    <button id="show-password" type="button" onclick="showPassword()">
+                        <span class="material-symbols-sharp">
+                            visibility
+                        </span>
+                    </button>
+                </div>
+
                 <!-- first name -->
-                <input placeholder="FIRST NAME*" type="text" id="firstName" name="firstName" required>
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="text" id="firstName" name="firstName" required>
+                    <label for="firstName">FIRST NAME*</label>
+                </div>
+                
                 <!-- last name -->
-                <input placeholder="LAST NAME*" type="text" id="lastName" name="lastName" required>
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="text" id="lastName" name="lastName" required>
+                    <label for="lastName">LAST NAME*</label>
+                </div>
+                
                 <!-- bio -->
-                <textarea placeholder="BIO*" id="bio" name="bio" required></textarea>
+                <div class="mb-3 form-input">
+                    <textarea placeholder=" " id="bio" name="bio" required></textarea>
+                    <label for="bio">BIO*</label>
+                </div>
+                
                 <!-- address -->
-                <input placeholder="ADDRESS*" type="text" id="address" name="address" required>
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="text" id="address" name="address" required>
+                    <label for="address">ADDRESS*</label>
+                </div>
+
                 <!-- access -->
-                <select aria-placeholder="ACCESS*" id="access" name="access" required>
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
+                <div class="mb-3 form-input">
+                    <select aria-placeholder="ACCESS*" id="access" name="access" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                
                 <!-- phone number -->
-                <input placeholder="PHONE NUMBER*" type="tel" id="phoneNumber" name="phoneNumber" required>
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="tel" id="phoneNumber" name="phoneNumber" required>
+                    <label for="phoneNumber">PHONE NUMBER*</label>
+                </div>
 
                 <button type="submit">CREATE MY PROFILE</button>
             </form>

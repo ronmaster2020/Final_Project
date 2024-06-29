@@ -117,3 +117,14 @@ function closeSidebar() {
         '-webkit-filter': 'blur(0px) brightness(100%)'
     });
 }
+
+function showPassword() {
+    var passwordInput = $('#password');
+    if (passwordInput.attr('type') === 'password') {
+        passwordInput.attr('type', 'text');
+        $('#show-password').html('<span class="material-symbols-sharp">visibility_off</span>')
+    } else {
+        passwordInput.attr('type', 'password');
+        $('#show-password').html('<span class="material-symbols-sharp">visibility</span>');
+    }
+}

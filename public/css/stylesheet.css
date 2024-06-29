@@ -6,10 +6,15 @@
 /* 4. slidebar */
 /* 5. navbar */
 /* 6. auth */
+/* 7. form-input */
 
 /*********************/
 /* 1.    global      */
 /*********************/
+::selection {
+    background-color: rgb(0, 72, 255, 0.7);
+    color: white;
+}
 body {
     background-color: white;
     font-family: "Raleway", sans-serif;
@@ -316,20 +321,8 @@ body > .container-fluid, #main-content {
     width: 100%; 
     max-width: 400px;
 }
-.auth form input,
-.auth form textarea,
-.auth form select {
-    width: 100%;
-    max-width: 400px;
-    padding: 1rem;
-    margin: 0.5rem 0;
-    background-color: white;
-    color: black;
-    border: 1px solid black;
-    border-radius: 0;
-    font-size: 1rem;
-}
-.auth form button {
+
+.auth form > button {
     width: 100%;
     padding: 1rem;
     margin: 0.5rem 0;
@@ -341,8 +334,8 @@ body > .container-fluid, #main-content {
     cursor: pointer;
     transition: 0;
 }
-.auth form button:hover,
-.auth form button:active {
+.auth form > button:hover,
+.auth form > button:active {
     background-color: black;
     color: white;
 }
@@ -382,8 +375,73 @@ body > .container-fluid, #main-content {
 }
 
 @media (max-width: 400px) {
-    .auth .auth .brandBtn,
-    .auth .auth input {
+    .auth .brandBtn {
         padding: 0.5rem 1rem;
     }
+}
+
+/**********************/
+/* 7.   form-input    */
+/**********************/
+.form-input {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    padding-top: calc(0.7rem + 10px);
+  }
+  
+.form-input input,
+.form-input textarea,
+.form-input select {
+    width: 100%;
+    padding: 1rem;
+    margin: 0;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 0;
+    font-size: 1rem;
+}
+
+.form-input label {
+    position: absolute;
+    top: calc(1.7rem + 10px);
+    left: 1rem;
+    color: #999;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Active/filled state styles */
+.form-input input:not(:placeholder-shown) + label,
+.form-input textarea:not(:placeholder-shown) + label,
+.form-input select:not(:placeholder-shown) + label,
+.form-input input:focus + label,
+.form-input textarea:focus + label,
+.form-input select:focus + label {
+    top: 5px;
+    font-size: 0.7rem;
+    color: #666;
+}
+
+.form-input .material-symbols-sharp {
+    font-size: 2rem;
+}
+.form-input #password {
+    padding-right: 2.5rem;
+}
+.form-input #show-password {
+    position: absolute;
+    top: calc(0.7rem + 15px);
+    right: 0.25rem;
+    height: 3rem;
+    width: 3rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    margin: 0;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: none;
 }
