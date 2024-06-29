@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const multer  = require('multer')
+const upload = multer()
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -21,6 +23,18 @@ mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.n
 .catch(err => {
     console.error('MongoDB connection error:', err);
 });
+
+// Configure storage options
+const product_file_storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, path.join(__dirname, 'file_uploads', 'products_files'));
+    },
+    filename: function(req, file, cb) {
+        cb(null, `${Date.now()}.${file.originalname.split('.').pop()}`); // Set the file name
+    }
+});
+
+const product_file_upload = multer({ storage: product_file_storage, limits: { fileSize: 10 * 1024 * 1024 } }); // 10 MB file size limit
 
 // load the Product model //
 const Product = require('./models/product');
@@ -115,7 +129,7 @@ app.post('/login', authController.login);
 
 const productController = require('./controllers/product');
 
-app.post('/product/create', productController.createProduct);
+app.post('/product/create', product_file_upload.array('productImage', 10), productController.createProduct);
 
 app.get('/product/all', productController.getProducts);
 

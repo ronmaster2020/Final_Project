@@ -9,13 +9,18 @@ exports.createProduct = async (req, res) => {
     }
 
     try {
-        const { name, price, gender, size, DESC } = req.body;
+        // Extract file paths from the uploaded files
+        const imagePaths = req.files.map(file => file.path);
+        // Extract the product data from the request body
+        const { name, DESC, price, gender, size, stock } = req.body;
         const newProduct = new Product({
             name,
             DESC,
             price,
             gender,
-            size
+            size,
+            stock,
+            images: imagePaths
         });
         await newProduct.save();
         res.status(201).send('Product created successfully!');
