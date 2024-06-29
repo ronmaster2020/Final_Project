@@ -16,11 +16,13 @@ const ProductScheme = new Schema({
     },
     price: {
         type: Number,
+        default: 1000,
         min: [0.01, 'Price must be at least 0.01'],
         max: [1000, 'Price must be below 1000']
     },
     gender: {
         type: String,
+        default: '3',
         enum: {
             values: [1, 2, 3],
             message: 'Gender must be 1 (male), 2 (female), or 3 (unisex)'
@@ -28,11 +30,13 @@ const ProductScheme = new Schema({
     },
     size: {
         type: Number,
+        default: 1000,
         min: [1, 'Size must be at least 1'],
         max: [1000, 'Size must be below 1000']
     },
     stock: {
         type: Number,
+        default: 0,
         min: [0, 'Stock must be at least 0'],
     },
     images: {
