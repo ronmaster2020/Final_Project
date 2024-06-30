@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Product = require('../models/product');
+const fs = require('fs');
 
 // Create a new product
 exports.createProduct = async (req, res) => {
@@ -9,13 +10,18 @@ exports.createProduct = async (req, res) => {
     }
 
     try {
-        const { name, price, gender, size, DESC } = req.body;
+        // Extract file paths from the uploaded files
+        const imagePaths = req.files.map(file => file.path);
+        // Extract the product data from the request body
+        const { name, DESC, price, gender, size, stock } = req.body;
         const newProduct = new Product({
             name,
             DESC,
             price,
             gender,
-            size
+            size,
+            stock,
+            images: imagePaths
         });
         await newProduct.save();
         res.status(201).send('Product created successfully!');
@@ -109,6 +115,15 @@ exports.deleteProduct = async (req, res) => {
     }
 
     try {
+        const product = await Product.findById(req.params.id);
+        // Delete the product images from the file system
+        for (const imagePath of product.images) {
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error('Error deleting product image:', err);
+                }
+            });
+        }
         await Product.deleteOne( { _id: `${req.params.id}` } );
         res.send('Product deleted successfully');
     } catch (err) {

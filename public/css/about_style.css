@@ -6,11 +6,14 @@ body {
 }
 
 .descriptions {
-    max-width: 1200px;
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+}
+
+.descriptions h1,
+.descriptions p {
+    text-align: center; /* Center the text in h1 and p */
 }
 
 .section {
@@ -21,13 +24,13 @@ body {
     padding: 20px;
     box-sizing: border-box;
     border-radius: 10%;
-    text-align: center;
     display: inline-block;
+    text-align: center; /* Center the text in the sections */
 }
 
-h1 {
+.section#join_us {
+    width: 100%;
     text-align: center;
-    margin-bottom: 20px;
 }
 
 h2 {
@@ -35,7 +38,7 @@ h2 {
 }
 
 p {
-    margin-bottom: 15px;
+    text-align: center; /* Ensure all paragraphs are center-aligned */
 }
 
 .section-content {

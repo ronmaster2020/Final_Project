@@ -5,15 +5,22 @@
 /* 3. products */
 /* 4. slidebar */
 /* 5. navbar */
+/* 6. auth */
+/* 7. form-input */
 
 /*********************/
 /* 1.    global      */
 /*********************/
+::selection {
+    background-color: rgb(0, 72, 255, 0.7);
+    color: white;
+}
 body {
     background-color: white;
-    font-family: Merriweather, serif;
+    font-family: "Raleway", sans-serif;
     margin: 0;
     padding: 0;
+    padding-top: 72px;
     width: 100vw; 
     height: 100vh; 
     overflow: hidden;
@@ -21,18 +28,24 @@ body {
 
 body > .container-fluid, #main-content {
     width: 100%; 
-    margin-top: 56px;
+    max-width: 100vw;
     padding: 0;
-    height: calc(100vh - 56px); /* 56px is the height of the navbar */
+    margin: 0;
+    height: calc(100vh - 72px); /* 56px is the height of the navbar */
     background-color: white; 
     overflow-y: auto; 
     overflow-x: hidden;
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
+    filter: blur(0px);
+    -webkit-filter: blur(0px) brightness(100%);
+    transition: filter 0.3s, -webkit-filter 0.3s;
 }
 
-#main-content {
-    transition: filter 0.5s ease;
+#main-content * {
+    letter-spacing: 2px;
+}
+
+#main-content h1 {
+    letter-spacing: .2rem;
 }
 
 .d-none {
@@ -41,6 +54,14 @@ body > .container-fluid, #main-content {
 
 .text-decoration-underline {
     text-underline-offset: 0.3em;
+}
+
+.material-symbols-sharp {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
 }
 
 /*********************/
@@ -54,6 +75,7 @@ body > .container-fluid, #main-content {
     background-color: lightgray;
     background-size: cover;
     background-position: center;
+    box-shadow: none;
     max-width: 100%;
 }
 .section.banner {
@@ -95,6 +117,7 @@ body > .container-fluid, #main-content {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-radius: 0;
+    transition: 0.3s;
 }
 #allCollection.section .section-text button {
     font-size: 1.5rem;
@@ -244,9 +267,11 @@ hr {
     height: 100%;
     width: 0;
     max-width: 100vw;
-    padding-top: 56px;
+    padding-top: 72px;
     background-color: white;
     color: black;
+    box-shadow: none;
+    border: none;
     overflow-x: hidden;
     z-index: 1;
     transition: 0.5s;
@@ -254,7 +279,7 @@ hr {
 
 .sidebar .closebtn {
     position: absolute;
-    top: 56px;
+    top: 72px;
     right: 10px;
     width: 5rem;
     height: 5rem;
@@ -286,9 +311,11 @@ hr {
     text-decoration: none;
     cursor: pointer;
     border-radius: 50%;
+    transition: 0.3s;
 }
 
-.sidebar .closebtn:hover {
+.sidebar .closebtn:hover,
+.sidebar .brandBtn:hover{
     transform: scale(0.90);
     transition: transform 0.2s ease-in-out;
 }
@@ -298,7 +325,32 @@ hr {
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    font-family: Merriweather, serif;
+}
+
+.sidebar .sidebar-content h2 {
+    font-size: 2rem;
+}
+
+.sidebar .sidebar-content a {
+    color: black;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    text-decoration: none;
+}
+
+.sidebar .sidebar-content .label {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.sidebar .sidebar-content a:hover {
+    color: black;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.sidebar .sidebar-content a:active {
+    text-decoration: underline;
 }
 
 @media (max-width: 500px) {
@@ -311,5 +363,187 @@ hr {
 /* 5.   navbar        */
 /**********************/
 .navbar {
-    font-family: Helvetica, Arial, sans-serif;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    min-height: 72px;
+    background-color: white;
+}
+.navbar-brand {
+    position: absolute; 
+    left: 50%;
+    transition: 0.3s;
+    transform: translateX(-50%);
+}
+.nav-right {
+    padding-right: 1rem;
+    margin-left: auto;
+}
+.navbar .nav-item {
+    margin-left: 12px;
+}
+.navbar .nav-item span {
+    display: inline-block;
+    color: black;
+    font-size: 1rem;
+    font-weight: 600;
+    max-height: 56px;
+    max-width: 100vw;
+    vertical-align: middle;
+}
+
+.navbar .nav-item .material-symbols-sharp {
+    font-size: 2rem;
+} 
+
+@media (max-width: 768px) {
+    #nav-contact, #nav-menu-text {
+        display: none;
+    }
+    .navbar-brand {
+        left: 12px;
+        transform: translateX(0%);
+    }
+}
+
+/**********************/
+/* 6.   auth          */
+/**********************/
+.auth {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    background-color: white;
+}
+.auth form {
+    width: 100%; 
+    max-width: 400px;
+}
+
+.auth form > button {
+    width: 100%;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background-color: rgb(27, 27, 27);
+    color: rgb(232, 232, 232);
+    border: none;
+    border-radius: 0;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0;
+}
+.auth form > button:hover,
+.auth form > button:active {
+    background-color: black;
+    color: white;
+}
+
+.auth .brandBtn {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 0;
+    transition: 0.3s;
+}
+
+.auth .brandBtn:hover, 
+.auth .brandBtn:active{
+    background-color: rgb(231, 231, 231);
+}
+
+.auth .brandBtn img {
+    display: inline-block; 
+    width: 2rem; 
+    height: 2rem; 
+    margin: auto 1rem;
+}
+
+.auth .brandBtn span {
+    display: inline-block; 
+    margin: auto 0;
+}
+
+@media (max-width: 400px) {
+    .auth .brandBtn {
+        padding: 0.5rem 1rem;
+    }
+}
+
+/**********************/
+/* 7.   form-input    */
+/**********************/
+.form-input {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    padding-top: calc(0.7rem + 10px);
+  }
+  
+.form-input input,
+.form-input textarea,
+.form-input select {
+    width: 100%;
+    padding: 1rem;
+    margin: 0;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 0;
+    font-size: 1rem;
+}
+
+.form-input label {
+    position: absolute;
+    top: calc(1.7rem + 10px);
+    left: 1rem;
+    color: #999;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Active/filled state styles */
+.form-input input:not(:placeholder-shown) + label,
+.form-input textarea:not(:placeholder-shown) + label,
+.form-input select:not(:placeholder-shown) + label,
+.form-input input:focus + label,
+.form-input textarea:focus + label,
+.form-input select:focus + label {
+    top: 5px;
+    font-size: 0.7rem;
+    color: #666;
+}
+
+.form-input .material-symbols-sharp {
+    font-size: 2rem;
+}
+.form-input #password {
+    padding-right: 2.5rem;
+}
+.form-input #show-password {
+    position: absolute;
+    top: calc(0.7rem + 15px);
+    right: 0.25rem;
+    height: 3rem;
+    width: 3rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    margin: 0;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: none;
 }

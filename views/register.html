@@ -1,0 +1,104 @@
+<!-- login.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>shop</title>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+    <!-- navbar -->
+    <div id="navbar-placeholder"></div>
+
+    <div id="main-content" class="container-fluid" style="padding-top: 3rem; font-family: 'Ralewa', sans-serif;">
+        <!-- auth page -->
+        <div class="auth px-3 px-md-5">
+            <h1 class="py-3">CREATE YOUR ACCOUNT</h1>
+            <h4 class="mb-5">Have an account? <a href="/login" style="text-decoration: none; text-wrap: nowrap;">Log in now</a></h4>
+            <button class="brandBtn mb-4">
+                <img 
+                    src="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png" 
+                    alt="google">
+                <span>CONTINUE WITH GOOGLE</span>
+            </button>
+            <button class="brandBtn mb-4">
+                <img 
+                    src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-1024.png" 
+                    alt="google">
+                <span>CONTINUE WITH FACEBOOK</span>
+            </button>
+            <button class="brandBtn">
+                <img 
+                    src="https://cdn2.iconfinder.com/data/icons/black-white-social-media/32/online_social_media_apple-1024.png" 
+                    alt="google">
+                <span>CONTINUE WITH APPLE</span>
+            </button>
+            <h5 class="my-4">OR</h5>
+            <h2 class="mb-4">CONTINUE WITH YOUR EMAIL ADDRESS</h2>
+            <form action="/register" method="POST">
+                <div class="error-message"></div>
+
+                <!-- email -->
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="email" id="email" name="email" required>
+                    <label for="email">EMAIL*</label>
+                </div>
+
+                <!-- password -->
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="password" id="password" name="password" required minlength="8">
+                    <label for="password">PASSWORD*</label>
+                    <button id="show-password" type="button" onclick="showPassword()">
+                        <span class="material-symbols-sharp">
+                            visibility
+                        </span>
+                    </button>
+                </div>
+
+                <!-- first name -->
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="text" id="firstName" name="firstName" required>
+                    <label for="firstName">FIRST NAME*</label>
+                </div>
+                
+                <!-- last name -->
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="text" id="lastName" name="lastName" required>
+                    <label for="lastName">LAST NAME*</label>
+                </div>
+                
+                <!-- bio -->
+                <div class="mb-3 form-input">
+                    <textarea placeholder=" " id="bio" name="bio" required></textarea>
+                    <label for="bio">BIO*</label>
+                </div>
+                
+                <!-- address -->
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="text" id="address" name="address" required>
+                    <label for="address">ADDRESS*</label>
+                </div>
+
+                <!-- access -->
+                <div class="mb-3 form-input">
+                    <select aria-placeholder="ACCESS*" id="access" name="access" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                
+                <!-- phone number -->
+                <div class="mb-3 form-input">
+                    <input placeholder=" " type="tel" id="phoneNumber" name="phoneNumber" required>
+                    <label for="phoneNumber">PHONE NUMBER*</label>
+                </div>
+
+                <button type="submit">CREATE MY PROFILE</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
