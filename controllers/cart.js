@@ -103,6 +103,7 @@ exports.deleteCart = async (req, res) => {
 };
 
   
+
 exports.deleteProductFromCart = async (req, res) => {
     // Check if the database is connected
     if (mongoose.connection.readyState !== 1) {
@@ -136,6 +137,7 @@ exports.deleteProductFromCart = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+  
   
 // !!!!!!!!!!! sprint 2 - because we need users first !!!!!
 
