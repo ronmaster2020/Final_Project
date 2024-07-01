@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     background-color: #f8f9fa;
     margin: 0;
     padding: 0;
@@ -17,6 +17,7 @@ body {
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
     color: #343a40;
+    font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .empty-cart-message {
@@ -26,10 +27,11 @@ body {
 }
 
 .continue-shopping-link {
-    font-size: 18px; /* Make the link bigger */
+    font-size: 20px; /* Make the link bigger */
     color: rgb(78, 78, 78);
     padding: 0.75rem 1.5rem; /* Add padding */
     transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+    font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .continue-shopping-link:hover {
@@ -52,6 +54,7 @@ body {
     color: #333;
     font-weight: bold;
     transition: all 0.2s ease-in-out;
+    font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .empty-cart-actions a:hover {
@@ -66,7 +69,8 @@ body {
 .login-title {
     font-size: 1.5rem;
     color: #343a40;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    font-family: 'Roboto', Arial, sans-serif;
 }
 
 .login-link {
@@ -77,6 +81,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     transition: all 0.2s ease-in-out;
+    font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .login-link:hover {

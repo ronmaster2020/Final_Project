@@ -14,7 +14,10 @@
         <!-- CSS -->
         <link rel="stylesheet" href="/css/emptyCart.css">
 
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+
 
     </head>
 
@@ -31,8 +34,15 @@
                 console.log('Is loged-in from server:', cartIdData.isLogedIn);
 
                 const login_container = document.getElementById('login-container');
+                const message = document.getElementById('message');
+                const cart_actions = document.getElementById('cart-actions');
+
                 if(cartIdData.isLogedIn === true) {
                     login_container.style.display = 'none';
+                }
+                else {
+                    message.style.display = 'none';
+                    cart_actions.style.display = 'none';
                 }
             }
         </script>
@@ -45,13 +55,13 @@
         </nav>
 
         <div class="empty-cart-container">
-            <h1 class="empty-cart-title">Your Cart is Empty</h1>
+            <h1 class="empty-cart-title">Your Shopping Bag is Empty</h1>
             
             <div class="empty-cart-message">
                 <p id="message">It looks like you haven't added anything to your cart yet. Start shopping to fill it up!</p>
                 <a href="/" class="continue-shopping-link">Continue Shopping</a>
             </div>
-            <div class="empty-cart-actions">
+            <div class="empty-cart-actions" id="cart-actions">
                 <a href="/">Browse Products</a>
                 <a href="/about">Learn About Us</a>
             </div>

@@ -14,7 +14,9 @@
                 throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
             }
             const cartIdData = await cartIdResponse.json();
-            console.log(cartIdData.isLogedIn);
+
+            console.log('Cart ID from server:', cartIdData.cartId);
+            console.log('Is loged-in from server:', cartIdData.isLogedIn);
         }
     </script>
     <!-- navbar -->
