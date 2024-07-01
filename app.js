@@ -161,6 +161,7 @@ app.get('/cart/all', cartController.getAllCarts);
 
 app.post('/cart/delete', cartController.deleteCart);
 
+app.post('/cart/delproduct', cartController.deleteProductFromCart);
 // catch-all route for any other requests
 app.use('*', (request, response) => {
     response.sendFile(path.join(__dirname, 'views', '404.html'));
