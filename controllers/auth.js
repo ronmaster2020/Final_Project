@@ -2,6 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { ObjectId } = require('mongodb');
 const Cart = require('../models/cart');
+const globalState = require('../globalState'); // Import global state
 
 exports.register = async (req, res) => {
     const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
@@ -41,7 +42,6 @@ exports.register = async (req, res) => {
     }
 };
 
-isLogedIn = false;
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
@@ -60,8 +60,9 @@ exports.login = async (req, res) => {
         }
 
         const cart = await Cart.findById(user.cartId);
-        isLogedIn = true;
-        res.json({ message: 'Login successful!', user, cart, isLogedIn });
+        globalState.cartId = user.cartId; // Set global cartId
+        globalState.isLogedIn = true;
+        res.json({ message: 'Login successful!', user, cart, isLogedIn: globalState.isLogedIn });
     } catch (err) {
         console.error('Error during login:', err);
         res.status(500).json({ error: err.message });

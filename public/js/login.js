@@ -26,9 +26,6 @@ async function handleLogin(event) {
 
         if (data.message === 'Login successful!') {
             alert(data.message + " Your cart Id is " + data.user.cartId);
-            //Setting localStorage items to use them in other scripts
-            localStorage.setItem('cartId', data.user.cartId);
-            localStorage.setItem('isLogedIn', data.isLogedIn);
 
             window.location.href = '/'; // Redirect to the home page after alert
         } else {

@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
+const globalState = require('./globalState'); // Import global state
 const PORT = process.env.PORT || 8080;
 
 // Serve static files from the 'public' directory
@@ -99,6 +100,10 @@ app.get('/viewCart', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'cart.html'));
 });
 
+app.get('/emptyCart', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'emptyCart.html'));
+  });
+
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'register.html'));
 });
@@ -157,6 +162,10 @@ app.post('/cart/add/:productId', cartController.AddToCart);
 app.get('/cart/all', cartController.getAllCarts);
 
 app.post('/cart/delete', cartController.deleteCart);
+
+app.get('/api/cart', (req, res) => {
+    res.json({ cartId: globalState.cartId, isLogedIn: globalState.isLogedIn });
+});
 
 // catch-all route for any other requests
 app.use('*', (request, response) => {

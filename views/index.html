@@ -6,7 +6,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
 </head>
-<body>
+<body onload="CheckLogin()">
+    <script>
+        async function CheckLogin() {
+            const cartIdResponse = await fetch('/api/cart');
+            if (!cartIdResponse.ok) {
+                throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
+            }
+            const cartIdData = await cartIdResponse.json();
+            console.log(cartIdData.isLogedIn);
+        }
+    </script>
     <!-- navbar -->
     <div id="navbar-placeholder"></div>
 

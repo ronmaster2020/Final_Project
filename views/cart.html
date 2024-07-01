@@ -35,7 +35,6 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     const productData = await response.json();
-                    console.log(productData);
                     return productData; // Return the cart data
                 } catch (error) {
                     console.error('Error fetching cart data:', error);
@@ -58,22 +57,31 @@
             }
 
             async function getCartItems() {
-                const cartId = localStorage.getItem('cartId');
-                if (!cartId) {
-                    console.error('No cart ID found. Please log in first.');
-                    return [];
-                }
-                console.log('Cart ID from localStorage:', cartId);
-                
                 try {
+                    // Fetch the cart ID from the server
+                    const cartIdResponse = await fetch('/api/cart');
+                    if (!cartIdResponse.ok) {
+                        throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
+                    }
+                    const cartIdData = await cartIdResponse.json();
+                    const cartId = cartIdData.cartId;
+
+                    if (!cartId) {
+                        console.error('No cart ID found. Please log in first.');
+                        return [];
+                    }
+                    console.log('Cart ID from server:', cartId);
+                    console.log('Is loged-in from server:', cartIdData.isLogedIn);
+
+                    // Fetch the cart items using the cart ID
                     const response = await fetch('/cart/all');
                     if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     const cartData = await response.json();
-                    for(i = 0; i < cartData.length; i++) {
-                        if(cartId === cartData[i]._id) {
-                            console.log(cartData[i]);
+
+                    for (let i = 0; i < cartData.length; i++) {
+                        if (cartId === cartData[i]._id) {
                             return cartData[i].products || [];
                         }
                     }
@@ -82,6 +90,7 @@
                     // Handle errors gracefully (e.g., display an error message)
                 }
             }
+
         
             async function displayCartItems() {
                 const cartItems = await getCartItems();
@@ -104,8 +113,7 @@
                 }
 
                 if (cartItems.length === 0) {
-                    mainContent.style.display = 'none';
-                    cartList.innerHTML = '<div class="empty_bag"><h2>Your shopping bag is empty</h2><a href="/">Continue shopping</a></div>';
+                    window.location.href = '/emptyCart';
                     return;
                 }
                 const cartListContainer = document.createElement('ul'); // Use an unordered list for cart items
