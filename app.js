@@ -179,6 +179,7 @@ app.post('/settings',SettingsController.updateUserSettings);
 
 app.post('/updateUser/:id',SettingsController.updateUser);
 app.get('/username/:id',SettingsController.getUserName);
+app.get('/getAccessLevel/:id', SettingsController.getAccessLevel);
 
 //app.get('/getFirstName/:id', SettingsController.getFirstName);
 
