@@ -180,6 +180,7 @@ app.post('/settings',SettingsController.updateUserSettings);
 app.post('/updateUser/:id',SettingsController.updateUser);
 app.get('/username/:id',SettingsController.getUserName);
 app.get('/getAccessLevel/:id', SettingsController.getAccessLevel);
+app.post('/updateAccessLevel/:id', SettingsController.updateAccessLevel);
 
 //app.get('/getFirstName/:id', SettingsController.getFirstName);
 

@@ -27,10 +27,10 @@ exports.updateUserSettings = async (req, res) => { //this is corrently only the 
 
 exports.updateUser = async (req, res) => {
     const userId = req.params.id; //Get userId from route parameter
-    console.log('Updating user:', userId);
+    
     //Destructure only the fields that may be updated
     const { firstName, lastName, bio, address, phoneNumber, email, password } = req.body;
-    console.log('Uasdfuserfirstname: ',firstName, req.body); 
+    
     try {
         //Find user by ID
         let user = await User.findById(userId);
@@ -119,6 +119,26 @@ exports.getAccessLevel = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
         res.status(200).json({ access: user.access });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+exports.updateAccessLevel = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const { access } = req.body;
+        //ive made this function because i thought i would need it for the 
+        //Admin panel but i dont cuz i dont even make it so ill just leave it here 
+        //find user by id
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        user.access = access;
+        await user.save();
+
+        res.status(200).json({ message: 'Access level updated successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

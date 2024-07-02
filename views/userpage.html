@@ -1,54 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Page</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-        /* Add any custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .profile-header img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .form-control::placeholder {
+            color: #aaa;
+        }
+        .form-group {
+            position: relative;
+        }
+        .form-group input:focus + .form-control-placeholder, .form-group input:not(:placeholder-shown) + .form-control-placeholder {
+            visibility: hidden;
+        }
+        .popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+        .popup.error {
+            background-color: #dc3545;
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>User Settings</h1>
-        <div class="text-center mb-4">
-            <img id="profilePicture" src="https://vectorified.com/images/no-profile-picture-icon-24.jpg" class="rounded-circle" alt="Profile Picture">
+    <div id="navbar-placeholder"></div>
+
+    <div class="container">
+        <div class="profile-header">
+            <img id="profilePicture" src="https://vectorified.com/images/no-profile-picture-icon-24.jpg" alt="Profile Picture">
+            <h2 id="userName"></h2>
         </div>
-        <h2 id="userName"></h2>
         <form id="user-form">
             <div class="form-group">
-                <label for="firstName">First Name</label>
-                <input type="text" class="form-control" id="firstName" name="firstName"  >
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name">
+                <label class="form-control-placeholder" for="firstName">First Name</label>
             </div>
             <div class="form-group">
-                <label for="lastName">Last Name</label>
-                <input type="text" class="form-control" id="lastName" name="lastName"  >
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name">
+                <label class="form-control-placeholder" for="lastName">Last Name</label>
             </div>
             <div class="form-group">
-                <label for="bio">Bio</label>
-                <textarea class="form-control" id="bio" name="bio" rows="3"  ></textarea>
+                <textarea class="form-control" id="bio" name="bio" placeholder="Bio" rows="3"></textarea>
+                <label class="form-control-placeholder" for="bio">Bio</label>
             </div>
             <div class="form-group">
-                <label for="address">Address</label>
-                <input type="text" class="form-control" id="address" name="address"  >
+                <input type="text" class="form-control" id="address" name="address" placeholder="Address">
+                <label class="form-control-placeholder" for="address">Address</label>
             </div>
             <div class="form-group">
-                <label for="phoneNumber">Phone Number</label>
-                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber"  >
+                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Phone Number">
+                <label class="form-control-placeholder" for="phoneNumber">Phone Number</label>
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email"  >
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                <label class="form-control-placeholder" for="email">Email</label>
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
+                <input type="password" class="form-control" id="password" name="password" placeholder="New Password">
+                <label class="form-control-placeholder" for="password">New Password</label>
             </div>
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-block">Update Profile</button>
         </form>
     </div>
 
-    <script src="/js/userPage.js"></script>
+    <div id="popup" class="popup"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/userPage.js"></script>
 </body>
 </html>

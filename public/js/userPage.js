@@ -1,3 +1,24 @@
+
+
+
+function showPopup(message, isError = false) {
+    const popup = $('#popup');
+    popup.text(message);
+    popup.removeClass('error');
+    if (isError) {
+        popup.addClass('error');
+    }
+    popup.fadeIn();
+
+    setTimeout(function() {
+        popup.fadeOut();
+    }, 3000);
+}
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const userId = '667d8e9fb4faf3dfa209d262'; //replace with actual user ID from session or token
@@ -45,6 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const updateResult = await updateResponse.json();
                 if (updateResponse.ok) {
+                    showPopup('Profile updated successfully!');
                     console.log('User updated successfully:', updateResult.message);
                     //Optionally update UI or show a success message
                 } else {
