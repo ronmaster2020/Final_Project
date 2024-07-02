@@ -3,59 +3,46 @@
 <head>
     <title>User Profile</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            margin-top: 30px;
-        }
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .profile-header img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .btn {
-            background-color: #007bff;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .form-control::placeholder {
-            color: #aaa;
-        }
-        .form-group {
-            position: relative;
-        }
-        .form-group input:focus + .form-control-placeholder, .form-group input:not(:placeholder-shown) + .form-control-placeholder {
-            visibility: hidden;
-        }
-        .popup {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #28a745;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            display: none;
-            z-index: 1000;
-        }
-        .popup.error {
-            background-color: #dc3545;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/userPage.css">
+
 </head>
 <body>
     <div id="navbar-placeholder"></div>
-
+   
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <!-- contact -->
+            <li class="nav-item">
+                <a id="nav-contact" class="nav-link" href="javascript:void(0)" onclick="openSidebar('contactSidebar')">
+                    <span class="material-symbols-sharp">perm_phone_msg</span>
+                    <span>Contact Us</span>
+                </a>
+            </li>
+        </ul>
+        <a class="navbar-brand" href="/">Perfume Shop</a>
+        <ul class="navbar-nav nav-right">
+            <!-- shopping cart -->
+            <li class="nav-item">
+                <a id="nav-shopping-bag" class="nav-link" href="/viewCart">
+                    <span class="material-symbols-sharp">shopping_bag</span>
+                </a>
+            </li>
+            <!-- account -->
+            <li class="nav-item">
+                <a id="nav-account" class="nav-link" href="javascript:void(0)" onclick="openSidebar('accountSidebar')">
+                    <span class="material-symbols-sharp">account_circle</span>
+                </a>
+            </li>
+            <!-- menu -->
+            <li class="nav-item">
+                <a id="nav-menu" class="nav-link" href="javascript:void(0)" onclick="openSidebar('menuSidebar')">
+                    <span class="material-symbols-sharp">menu</span>
+                    <span id="nav-menu-text">MENU</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
     <div class="container">
         <div class="profile-header">
             <img id="profilePicture" src="https://vectorified.com/images/no-profile-picture-icon-24.jpg" alt="Profile Picture">

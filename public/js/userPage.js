@@ -16,9 +16,6 @@ function showPopup(message, isError = false) {
 }
 
 
-
-
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const userId = '667d8e9fb4faf3dfa209d262'; //replace with actual user ID from session or token

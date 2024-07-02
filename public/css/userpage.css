@@ -1,0 +1,48 @@
+
+body {
+    font-family: Arial, sans-serif;
+}
+.container {
+    margin-top: 30px;
+}
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.profile-header img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.btn {
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+.btn:hover {
+    background-color: #0056b3;
+}
+.form-control::placeholder {
+    color: #aaa;
+}
+.form-group {
+    position: relative;
+}
+.form-group input:focus + .form-control-placeholder, .form-group input:not(:placeholder-shown) + .form-control-placeholder {
+    visibility: hidden;
+}
+.popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    display: none;
+    z-index: 1000;
+}
+.popup.error {
+    background-color: #dc3545;
+}
