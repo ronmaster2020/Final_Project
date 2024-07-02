@@ -5,7 +5,7 @@ const multer  = require('multer')
 const upload = multer()
 const app = express();
 const PORT = process.env.PORT || 8080;
-
+app.use(express.json());
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/partials', express.static(__dirname + '/views/partials'));
@@ -116,7 +116,9 @@ app.get('/register', (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
-
+app.get('/userpage', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'userpage.html'));
+});
 // Route for user registration
 
 const authController = require('./controllers/auth');
@@ -161,7 +163,39 @@ app.get('/cart/all', cartController.getAllCarts);
 
 app.post('/cart/delete', cartController.deleteCart);
 
+app.post('/cart/delproduct', cartController.deleteProductFromCart);
 // catch-all route for any other requests
+
+//all of th routes f or settingsController
+const  SettingsController  = require('./controllers/SettingsController'); 
+
+
+// new func to replace all this stuff app.get('/getUserDetails/:id', SettingsController.getUserDetails);
+
+app.get('/getUserDetails/:id', SettingsController.getUserDetails);
+
+
+app.post('/settings',SettingsController.updateUserSettings);
+
+app.post('/updateUser/:id',SettingsController.updateUser);
+app.get('/username/:id',SettingsController.getUserName);
+app.get('/getAccessLevel/:id', SettingsController.getAccessLevel);
+app.post('/updateAccessLevel/:id', SettingsController.updateAccessLevel);
+
+//app.get('/getFirstName/:id', SettingsController.getFirstName);
+
+//app.get('/getLastName/:id', SettingsController.getLastName);
+
+//app.get('/getBio/:id', SettingsController.getBio);
+
+//app.get('/getAddress/:id', SettingsController.getAddress);
+
+//app.get('/getPhoneNumber/:id', SettingsController.getPhoneNumber);
+
+//app.get('/getEmail/:id', SettingsController.getEmail);
+
+//app.get('/getPassword/:id', SettingsController.getPassword);
+
 app.use('*', (request, response) => {
     response.sendFile(path.join(__dirname, 'views', '404.html'));
 });
