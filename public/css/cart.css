@@ -1,4 +1,7 @@
-
+body {
+    margin-top: 72px;
+    padding-top: 0px;
+}
 
 .empty_bag {
     text-align: center;
@@ -40,7 +43,6 @@ a:hover { /* Style for hover state (optional) */
     background-position: center; /* Center the image horizontally */
     background-size: cover; /* Resize image to cover the entire element */
     color: #fff; /* White text color (optional) */
-    padding: 1rem 2rem; /* Add some padding (optional) */
     text-align: center; /* Center the text within the element */
     display: flex; /* Make the cart-title a flex container */
     align-items: center; /* Align items vertically in the center */
@@ -116,7 +118,6 @@ a:hover { /* Style for hover state (optional) */
     color: #333; /* Darker text color */
     padding: 10px 15px; /* Add some padding */
     border-bottom: 1px solid #ddd; /* Add a subtle bottom border */
-    margin-bottom: 15px; /* Add some margin below */
     display: flex; /* Make it a flex container for potential icons */
     justify-content: space-between; /* Space content horizontally */
     text-transform: uppercase; /* Make text uppercase */
@@ -130,25 +131,31 @@ a:hover { /* Style for hover state (optional) */
 /* List Params */
 .params {
     font-size: large;
-    display: grid; /* Make it a flex container */
-    grid-template-columns: repeat(4, 1fr);
-    /* justify-content: space-around; /* Distribute items evenly */
+    display: flex; /* Use flexbox for horizontal layout */
     align-items: center; /* Align items vertically in the center */
-    font-family: Arial, sans-serif; /* Base font family */
+    font-family: Arial, sans-serif;
     font-weight: bold; /* Bold font for headings */
     color: #333; /* Darker text color */
     padding: 5px 10px; /* Add some padding */
     border-bottom: 1px solid #ddd; /* Add a bottom border */
     margin-bottom: 10px; /* Add some margin below */
-    text-transform: uppercase;
+    text-transform: uppercase; /* Uppercase text */
 }
-  
+
 .params p {
     margin: 0; /* Remove default margins for better spacing */
-    padding: 0 5px; /* Add some space between elements */
+    padding: 0 15px; /* Add some space between elements */
+    /* No text-align needed as flexbox handles horizontal layout */
+    flex: 1; /* Make all "p" elements grow equally within the row */
     text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
-  
+
+.params .perfume {
+    flex: 0 0 40%; /* Fixed 40% width for the first element */
+}
+
 
 
   
@@ -163,31 +170,50 @@ a:hover { /* Style for hover state (optional) */
     background-color: #f5f5f5; /* Light background color */
 }
   
+/* Individual Cart Item */
 .cart-item {
-    display: grid; /* Make .cart-item a grid container */
-    grid-template-columns: repeat(4, 1fr); /* Define grid columns */
-    /* justify-content: center; */
+    display: flex; /* Use flexbox for horizontal layout */
+    align-items: center; /* Align items vertically in the center */
     border-bottom: 1px solid #ddd; /* Optional: Add a subtle border between items */
     padding: 0.75rem 1rem; /* Adjust padding for better spacing within the item */
-    background-color:   #e0e0e0; /* White background for each item */
-    /* background-color: #b3dffe; /* White background for each item */
+    background-color: #e5e5e5; /* Background color for each item */
     transition: all 0.2s ease-in-out; /* Add a smooth transition effect on hover */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
-    border-right: 1px solid #ddd; /* Add a right border for spacing */
     border-radius: 5px;
     margin-bottom: 1px;
-    align-items: center;
 }
+
+/* Cart Item Parameters */
+.cart-item div {
+    flex: 1; /* Make all div elements grow equally within the row */
+    padding: 0 5px; /* Add some space between elements */
+    text-align: center; /* Center text */
+    color: #333; /* Darker text color */
+    font-weight: bold; /* Bold font for headings (optional) */
+    text-transform: uppercase; /* Uppercase text (optional) */
+}
+
+/* Hover Effect for Cart Item */
+.cart-item:hover {
+    background-color: #d6e1f8; /* Change background color slightly on hover */
+    cursor: pointer; /* Indicate hover interaction with a pointer cursor */
+}
+
+
+/* Add pseudo-element for image space */
+.cart-item::before {
+    content: ""; /* Empty content to avoid extra text */
+    display: inline-block;
+    width: 20%; /* Adjust width for desired image size */
+    height: 50px; /* Adjust height for desired image size */
+    margin-right: 10px; /* Add space between "image" and next element */
+}
+
 
 .cart-item span { /* Target all span elements within .cart-item */
     flex: 1; /* Allow each span to grow and fill available space horizontally */
     text-align: center; /* Align text within each span to the left */
     /* Optional: Adjust other styling for individual spans (e.g., font-size) */
-}
-  
-.cart-item:hover {
-    background-color: #d6e1f8; /* Change background color slightly on hover */
-    cursor: pointer; /* Indicate hover interaction with a pointer cursor */
 }
   
 .cart-item img {
@@ -213,10 +239,11 @@ a:hover { /* Style for hover state (optional) */
 }
 
 .quantity-button {
+    width: 20%;
     /* Styles for the quantity button */
     padding: 5px 10px;
     border: 1px solid #ccc;
-    border-radius: 4px; /* Add rounded corners */
+    border-radius: 8px; /* Add rounded corners */
     font-size: 16px; /* Adjust font size */
     cursor: pointer; /* Indicate interactivity on hover */
     background-color: #f5f5f5; /* Light background color */
@@ -250,7 +277,8 @@ a:hover { /* Style for hover state (optional) */
 .footer-right {
     text-align: right; /* Align elements within the right section to the right */
     margin-left: 350px;
-    margin-right: 110px;
+    align-items: end;
+    margin-right: 7%;
 }
   
 .footer-right h3 {

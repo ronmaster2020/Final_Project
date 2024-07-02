@@ -42,6 +42,20 @@
                 }
             }
 
+            async function getProductNames() {
+                const products = await getProducts();
+                const cartItems = await getCartItems();
+                names = [];
+                cartItems.forEach(item => {
+                    for(i = 0; i < products.length; i++) {
+                        if(item.productId === products[i]._id) {
+                            names.push(products[i].name);
+                        }
+                    }
+                });
+                return names;
+            }
+
             async function getPrices() {
                 const products = await getProducts();
                 const cartItems = await getCartItems();
@@ -70,8 +84,8 @@
                         console.error('No cart ID found. Please log in first.');
                         return [];
                     }
-                    console.log('Cart ID from server:', cartId);
-                    console.log('Is loged-in from server:', cartIdData.isLogedIn);
+                    //console.log('Cart ID from server:', cartId);
+                    //console.log('Is loged-in from server:', cartIdData.isLogedIn);
 
                     // Fetch the cart items using the cart ID
                     const response = await fetch('/cart/all');
@@ -94,8 +108,11 @@
         
             async function displayCartItems() {
                 const cartItems = await getCartItems();
+                const products = await getProducts();
                 const num_of_cart_products = cartItems.length;
                 const prices = await getPrices();
+                const productNames = await getProductNames();
+                console.log(productNames);
                 console.log(prices);
                 console.log(cartItems);
 
@@ -119,7 +136,7 @@
                 const cartListContainer = document.createElement('ul'); // Use an unordered list for cart items
                 cartListContainer.classList.add('cart-list'); // Apply the cart-list class
 
-                prices_index = 0;
+                product_index = 0;
                 cartItems.forEach(item => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('cart-item', 'row'); // Apply cart-item and row classes
@@ -137,10 +154,10 @@
                     //detailsContainer.classList.add('col-md-9');
 
                     const qty_change = false;
-                    const productIdSpan = document.createElement('span');
-                    productIdSpan.classList.add('product-id');
-                    productIdSpan.textContent = `${item.productId}  `;
-                    listItem.appendChild(productIdSpan);
+                    const productNameSpan = document.createElement('span');
+                    productNameSpan.classList.add('product-id');
+                    productNameSpan.textContent = productNames[product_index];
+                    listItem.appendChild(productNameSpan);
 
                     const quantityButton = document.createElement('button');
                     quantityButton.classList.add('quantity-button');
@@ -148,26 +165,33 @@
 
                     // Option 1: Add click event listener for manual quantity change
                     quantityButton.addEventListener('click', () => {
-                    // Handle quantity update logic here (e.g., prompt, increment/decrement)
-                    const newQuantity = prompt("Enter new quantity(10 max):"); // Prompt for new quantity
-                    if (newQuantity && !isNaN(newQuantity) && newQuantity <= 10) { // Validate numeric input
-                        quantityButton.textContent = newQuantity; // Update button text with new quantity
-                        item.quantity = newQuantity;
-                        console.log(item.quantity);
-                        const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
-                        totalSpan.textContent = "$" + new_total;
-                        getTotal();
-                        // Update your cart data with the new quantity (implementation depends on your setup)
-                    } else {
-                        alert("We are not able to provide you with that many parfumes. You can order 10 max each one.");
-                    }
+                        // Handle quantity update logic here (e.g., prompt, increment/decrement)
+                        const newQuantity = prompt("Enter new quantity:"); // Prompt for new quantity
+                        if (newQuantity && !isNaN(newQuantity)) { // Validate numeric input
+                            for(let i = 0; i < products.length; i++) {
+                                if(item.productId === products[i]._id) {
+                                    if(newQuantity > products[i].stock) {
+                                        alert("We are not able to provide you with that amount of parfumes. There are only " + 
+                                        + products[i].stock + " left.");
+                                    }
+                                    else {
+                                        quantityButton.textContent = newQuantity; // Update button text with new quantity
+                                        item.quantity = newQuantity;
+                                        console.log("Changed Qty - " + item.quantity);
+                                        const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
+                                        totalSpan.textContent = "$" + new_total;
+                                        getTotal();
+                                    }
+                                }
+                            }
+                            // Update your cart data with the new quantity (implementation depends on your setup)
+                        } 
                     });
                     listItem.appendChild(quantityButton);
 
                     const priceSpan = document.createElement('span');
                     priceSpan.classList.add('price');
-                    priceSpan.textContent = "$" + parseFloat(prices[prices_index]);
-                    prices_index++;
+                    priceSpan.textContent = "$" + parseFloat(prices[product_index]);
                     listItem.appendChild(priceSpan);
 
                     const totalSpan = document.createElement('span');
@@ -180,6 +204,8 @@
 
                     //listItem.appendChild(imageContainer);
                     //listItem.appendChild(detailsContainer);
+
+                    product_index++;
 
                     cartListContainer.appendChild(listItem);
                 });
@@ -209,7 +235,7 @@
                 const estTotal = document.getElementById('est-total');
                 estTotal.textContent = "Estimated total $" + final_price;
 
-                console.log(final_price); // Logs the text content of each item
+                console.log("Total amount - " + final_price); // Logs the text content of each item
             }
             
 
@@ -249,7 +275,7 @@
             <div class="list-title" id="list-title"></div>
             
             <div class="params">
-                <p>Product ID</p>
+                <p class="perfume">Perfume</p>
                 <p>Quantity</p>
                 <p>Price</p>
                 <p>Total</p>

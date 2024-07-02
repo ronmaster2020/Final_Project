@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const multer  = require('multer')
+const multer  = require('multer');
 const upload = multer()
 const app = express();
 const globalState = require('./globalState'); // Import global state
