@@ -1,0 +1,68 @@
+/* table of contents */
+/* 1. global         */
+/* 2. navbar         */
+
+
+/*********************/
+/* 1.    global      */
+/*********************/
+body {
+    padding: 0;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+    margin: 0;
+    width: 5rem;
+    height: 100vh;
+    background-color: rgb(42, 42, 42);
+    color: lightgray;
+}
+
+/*********************/
+/* 2.    navbar      */
+/*********************/
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+nav ul li {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 0;
+    border-top: grey solid 1px;
+    border-bottom: grey solid 1px;
+}
+
+nav ul li a {
+    align-items: center;
+    text-decoration: none;
+    color: lightgray;
+    padding: 1rem;
+    width: 5rem;
+    height: 5rem;
+}
+
+nav .material-symbols-sharp {
+    display: inline-block;
+    font-size: 3rem;
+    color: lightgray;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a:hover {
+    background-color: gray;
+}
+nav ul li a:hover > .material-symbols-sharp{
+    color: rgb(39, 39, 39);
+}

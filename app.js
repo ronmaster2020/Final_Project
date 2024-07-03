@@ -119,6 +119,10 @@ app.get('/login', (req, res) => {
 app.get('/userpage', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'userpage.html'));
 });
+
+app.get('/admin'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin.html'));
+});
 // Route for user registration
 
 const authController = require('./controllers/auth');
@@ -204,3 +208,11 @@ app.use('*', (request, response) => {
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
+
+function validateAdmin(req, res, next) {
+    if (req.user && req.user.isAdmin) {
+        next();
+    } else {
+        res.status(403).send('Access denied');
+    }
+}
