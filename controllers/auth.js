@@ -11,6 +11,8 @@ exports.register = async (req, res) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
         const newCartId = new ObjectId();
+
+        const orders = [];
         
         // Create a new user instance with hashed password
         const user = new User({ 
@@ -23,6 +25,7 @@ exports.register = async (req, res) => {
             email, 
             password: hashedPassword, // Store hashed password
             cartId: newCartId,
+            orders: orders,
         });
 
         
@@ -35,6 +38,9 @@ exports.register = async (req, res) => {
         newCart._id = newCartId;
         console.log(newCart._id);
         await newCart.save();
+
+        globalState.cartId = newCartId; // Set global cartId
+        globalState.isLogedIn = true;
         
         res.status(201).json({ message: 'User registered successfully' });
     } catch (err) {
