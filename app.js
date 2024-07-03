@@ -183,10 +183,6 @@ app.get('/api/cart', (req, res) => {
     res.json({ cartId: globalState.cartId, isLogedIn: globalState.isLogedIn });
 });
 
-app.get('/api/cart', (req, res) => {
-    res.json({ cartId: globalState.cartId, isLogedIn: globalState.isLogedIn });
-});
-
 app.post('/cart/delproduct', cartController.deleteProductFromCart);
 // catch-all route for any other requests
 
