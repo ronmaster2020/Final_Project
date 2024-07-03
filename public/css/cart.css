@@ -3,27 +3,6 @@ body {
     padding-top: 0px;
 }
 
-.empty_bag {
-    text-align: center;
-    margin: 0 auto;  /* Center horizontally */
-    position: absolute;
-    top: calc(30vh);  /* 30% viewport height from the top */
-    left: 50%;
-    transform: translateX(-50%);  /* Center horizontally */
-    font-size: 20px;
-    font-weight: bold;
-}
-
-
-a {
-    color: rgb(47, 52, 54); /* Change the color to red */
-}
-  
-a:hover { /* Style for hover state (optional) */
-    color: rgb(86, 86, 93);
-    text-decoration: underline;
-}
-
 /* Cart title */
 .cart-title {
     height: 250px;
@@ -88,6 +67,11 @@ a:hover { /* Style for hover state (optional) */
     color: inherit; /* Inherit text color from parent */
     /* text-decoration: none; /* Remove underline from link */
 }
+
+.left-part a:hover {
+    color: #374086;
+    cursor: pointer;
+}
   
 .right-part {
     text-align: right; /* Right-align text in right part */
@@ -101,7 +85,14 @@ a:hover { /* Style for hover state (optional) */
 .right-part p {
     margin-bottom: 0rem;
 }
-  
+
+.right-part a {
+    color: #666; /* Lighter text color */
+}
+
+.right-part a:hover {
+    color: #374086;
+}
   
 .right-part p:first-child { /* Style the first paragraph in right part */
     font-style: italic; /* Italicize "NEED ASSISTANCE?" */
