@@ -79,7 +79,7 @@ body > .container-fluid, #main-content {
     max-width: 100%;
 }
 .section.banner {
-    height: calc(90vh - 56px);
+    height: calc(90vh - 72px);
 }
 #summerCollection.section {
     background-image: url("https://images.pexels.com/photos/8760675/pexels-photo-8760675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
@@ -153,107 +153,6 @@ body > .container-fluid, #main-content {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-}
-
-body {
-    background-color: #24262b;
-    padding-top: 50px;
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.5;
-}
-
-.container {
-    max-width: 1400px;
-    margin: auto;
-    display: flex;
-    justify-content: center;
-}
-
-.footer-col {
-    width: 22%;
-    padding: 0 10px;
-}
-
-.footer-col:first-child {
-    margin-left: 50px; /* Adjust this if needed */
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-col h4 {
-    font-size: 18px;
-    color: #ffffff;
-    text-transform: capitalize;
-    margin-bottom: 35px;
-    font-weight: 500;
-    position: relative;
-}
-
-.footer-col h4::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    background-color: #e91e63;
-    height: 2px;
-    box-sizing: border-box;
-    width: 50px;
-}
-
-.footer-col ul li:not(:last-child) {
-    margin-bottom: 10px;
-}
-
-.footer-col ul li a {
-    font-size: 16px;
-    text-transform: capitalize;
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: 300;
-    color: #bbbbbb;
-    display: block;
-    transition: all 0.3s ease;
-}
-
-.footer-col ul li a:hover {
-    color: #ffffff;
-    padding-left: 10px;
-}
-
-hr {
-    width: 50%;
-    margin: 0 auto;
-    border: 1px solid #ffffff;
-}
-
-.bottun-bar {
-    text-align: center;
-    color: #ffffff;
-    margin-top: 20px;
-}
-
-.socials {
-    text-align: center;
-    margin-top: 5px;
-}
-
-.socials a {
-    color: #ffffff;
-    font-size: 24px;
-    margin: 0 10px;
-    transition: color 0.3s ease;
-}
-
-.socials a:hover {
-    color: #e91e63;
-}
-
-.map {
-    padding-right: 200px;
 }
 
 /**********************/

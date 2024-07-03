@@ -104,6 +104,41 @@ exports.deleteCart = async (req, res) => {
 };
 
   
+
+exports.deleteProductFromCart = async (req, res) => {
+    // Check if the database is connected
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
+    try {
+        const cartId = req.body.cartId;
+        const productId = req.body.productId;
+
+        // Check if cartId and productId are provided
+        if (!cartId || !productId) {
+            return res.status(400).send('Missing cartId or productId');
+        }
+
+        // Use $pull operator to remove product from cart.products
+        const cart = await Cart.findOneAndUpdate(
+            { _id: cartId },
+            { $pull: { products: { productId } } },
+            { new: true } // To return the updated cart
+        );
+
+        // Check if cart is found and product exists
+        if (!cart) {
+            return res.status(404).send('Cart or product not found');
+        }
+
+        res.status(200).send('Product deleted from cart successfully!');
+    } catch (err) {
+        console.error('Error deleting product from cart:', err);
+        res.status(500).send('Server error');
+    }
+};
+  
   
 // !!!!!!!!!!! sprint 2 - because we need users first !!!!!
 
