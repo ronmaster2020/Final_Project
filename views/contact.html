@@ -1,12 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>shop</title>
-    <!-- JQuery -->
+    <title>Contact Form</title>
+    <!-- Include necessary scripts and stylesheets -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/common.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="/public/js/email.js"></script> <!-- Your email.js file -->
+    <link rel="stylesheet" href="/public/css/contact_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap">
 </head>
 <body>
+    <!-- navbar -->
     <div id="navbar-placeholder"></div>
+
+    <div class="contact-container">
+        <div class="form-wrapper">
+            <form id="contact-form" action="" class="contact-left">
+                <div class="contact-left-title">
+                    <h2>Get in touch</h2>
+                    <p>a problem? a question? Want to say a good word? Write to us and we will reply as soon as possible
+                        For problem solving without waiting we invite you to visit our <a href="http://127.0.0.1:3000/views/support_center.html">support center</a></p>
+                    <hr>
+                </div>
+                <div class="input-container">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="name" placeholder="Your Name" class="contact-inputs" required>
+                </div>
+                <div class="input-container">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Your Email" class="contact-inputs" required>
+                </div>
+                <div class="input-container">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" class="contact-inputs" required>
+                </div>
+                <div class="input-container">
+                    <i class="fas fa-comment"></i>
+                    <textarea name="message" placeholder="Your Message" class="contact-inputs" required></textarea>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
