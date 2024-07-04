@@ -1,6 +1,3 @@
-
-
-
 function showPopup(message, isError = false) {
     const popup = $('#popup');
     popup.text(message);
@@ -15,16 +12,14 @@ function showPopup(message, isError = false) {
     }, 3000);
 }
 
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const userId = '667d8e9fb4faf3dfa209d262'; //replace with actual user ID from session or token
-       
+        const userId = '667d8e9fb4faf3dfa209d262'; // replace with actual user ID from session or token
         
-        //Fetch and populate form with user details
-       
-        const userDetailsResponse = await fetch(`/getUserDetails/${userId}`)
+        // Fetch and populate form with user details
+        const userDetailsResponse = await fetch(`/getUserDetails/${userId}`);
         const userDetails = await userDetailsResponse.json();
+        
         if (userDetails) {
             document.getElementById('firstName').value = userDetails.firstName || '';
             document.getElementById('lastName').value = userDetails.lastName || '';
@@ -34,13 +29,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('email').value = userDetails.email || '';
             document.getElementById('profilePicture').src = userDetails.profilePicture || 'https://vectorified.com/images/no-profile-picture-icon-24.jpg';
         }
+        
         document.getElementById('userName').innerText = `Welcome back ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}!`;
-        // event listener for form submission
+        
+        // Event listener for form submission
         const userForm = document.getElementById('user-form');
         userForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); //prevent form submission
+            event.preventDefault(); // prevent form submission
 
-            //Collect updated data from form
+            // Collect updated data from form
             const updatedUserData = {
                 firstName: document.getElementById('firstName').value,
                 lastName: document.getElementById('lastName').value,
@@ -65,18 +62,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (updateResponse.ok) {
                     showPopup('Profile updated successfully!');
                     console.log('User updated successfully:', updateResult.message);
-                    //Optionally update UI or show a success message
                 } else {
+                    showPopup('Failed to update profile.', true);
                     console.error('Failed to update user:', updateResult.error);
-                    //Handle error or show error message
                 }
             } catch (error) {
+                showPopup('Error updating profile.', true);
                 console.error('Error updating user:', error.message);
-                //Handle fetch or server error
             }
         });
-
     } catch (error) {
+        showPopup('Error loading user data.', true);
         console.error('Error loading user data:', error);
     }
 });

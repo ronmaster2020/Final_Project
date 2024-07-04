@@ -2,88 +2,61 @@
 <html lang="en">
 <head>
     <title>User Profile</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/userPage.css">
-
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <script type="text/javascript" src="/js/userPage.js"></script>
+    <link rel="stylesheet" href="/css/userpage.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    
 </head>
 <body>
+    <!-- navbar -->
     <div id="navbar-placeholder"></div>
-   
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <!-- contact -->
-            <li class="nav-item">
-                <a id="nav-contact" class="nav-link" href="javascript:void(0)" onclick="openSidebar('contactSidebar')">
-                    <span class="material-symbols-sharp">perm_phone_msg</span>
-                    <span>Contact Us</span>
-                </a>
-            </li>
-        </ul>
-        <a class="navbar-brand" href="/">Perfume Shop</a>
-        <ul class="navbar-nav nav-right">
-            <!-- shopping cart -->
-            <li class="nav-item">
-                <a id="nav-shopping-bag" class="nav-link" href="/viewCart">
-                    <span class="material-symbols-sharp">shopping_bag</span>
-                </a>
-            </li>
-            <!-- account -->
-            <li class="nav-item">
-                <a id="nav-account" class="nav-link" href="javascript:void(0)" onclick="openSidebar('accountSidebar')">
-                    <span class="material-symbols-sharp">account_circle</span>
-                </a>
-            </li>
-            <!-- menu -->
-            <li class="nav-item">
-                <a id="nav-menu" class="nav-link" href="javascript:void(0)" onclick="openSidebar('menuSidebar')">
-                    <span class="material-symbols-sharp">menu</span>
-                    <span id="nav-menu-text">MENU</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
     <div class="container">
-        <div class="profile-header">
-            <img id="profilePicture" src="https://vectorified.com/images/no-profile-picture-icon-24.jpg" alt="Profile Picture">
-            <h2 id="userName"></h2>
+        <div id="main-content" class="container-fluid" style="padding-top: 0.5rem; font-family: 'Ralewa', sans-serif;">
+            <div class="auth px-3 px-md-5">
+                <h2 class="mb-4">Update Profile Settings</h2>
+                <div class="auth px-3 px-md-5">
+                    <div class="profile-header">
+                        <img id="profilePicture" src="https://vectorified.com/images/no-profile-picture-icon-24.jpg" alt="Profile Picture">
+                        <h2 id="userName"></h2>
+                    </div>
+                    <form id="user-form">
+                        <div class="mb-3 form-input">
+                            <input type="text" id="firstName" name="firstName" placeholder=" ">
+                            <label for="firstName">First Name</label>
+                        </div>
+                        <div class="mb-3 form-input">
+                            <input type="text" id="lastName" name="lastName" placeholder=" ">
+                            <label for="lastName">Last Name</label>
+                        </div>
+                        <div class="mb-3 form-input">
+                            <textarea id="bio" name="bio" placeholder=" " rows="3"></textarea>
+                            <label for="bio">Bio</label>
+                        </div>
+                        <div class="mb-3 form-input">
+                            <input type="text" id="address" name="address" placeholder=" ">
+                            <label for="address">Address</label>
+                        </div>
+                        <div class="mb-3 form-input">
+                            <input type="number" id="phoneNumber" name="phoneNumber" placeholder=" ">
+                            <label for="phoneNumber">Phone Number</label>
+                        </div>
+                        <div class="mb-3 form-input">
+                            <input type="email" id="email" name="email" placeholder=" ">
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="mb-3 form-input">
+                            <input type="password" id="password" name="password" placeholder=" ">
+                            <label for="password">New Password</label>
+                        </div>
+                        <button type="submit" class="btn btn-block">Update Profile</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <form id="user-form">
-            <div class="form-group">
-                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name">
-                <label class="form-control-placeholder" for="firstName">First Name</label>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name">
-                <label class="form-control-placeholder" for="lastName">Last Name</label>
-            </div>
-            <div class="form-group">
-                <textarea class="form-control" id="bio" name="bio" placeholder="Bio" rows="3"></textarea>
-                <label class="form-control-placeholder" for="bio">Bio</label>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" id="address" name="address" placeholder="Address">
-                <label class="form-control-placeholder" for="address">Address</label>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Phone Number">
-                <label class="form-control-placeholder" for="phoneNumber">Phone Number</label>
-            </div>
-            <div class="form-group">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
-                <label class="form-control-placeholder" for="email">Email</label>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" id="password" name="password" placeholder="New Password">
-                <label class="form-control-placeholder" for="password">New Password</label>
-            </div>
-            <button type="submit" class="btn btn-block">Update Profile</button>
-        </form>
+        <div id="popup" class="popup"></div>
     </div>
-
-    <div id="popup" class="popup"></div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/userPage.js"></script>
 </body>
 </html>
