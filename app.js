@@ -101,6 +101,34 @@ app.get('/contact', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'contact.html'));
 });
 
+app.get('/admin'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin.html'));
+});
+
+app.get('/admin/dashboard'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_dashboard.html'));
+});
+
+app.get('/admin/products'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_products.html'));
+});
+
+app.get('/admin/orders'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_orders.html'));
+});
+
+app.get('/admin/customers'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_customers.html'));
+});
+
+app.get('/admin/settings'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_settings.html'));
+});
+
+app.get('/orderhistory', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
+});
+
 // Route for the create product page
 app.get('/product/new-form', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
@@ -120,13 +148,6 @@ app.get('/userpage', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'userpage.html'));
 });
 
-app.get('/admin'/*, validateAdmin()*/, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'admin.html'));
-});
-
-app.get('/orderhistory', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
-});
 // Route for user registration
 
 const authController = require('./controllers/auth');

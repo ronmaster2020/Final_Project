@@ -56,18 +56,6 @@ nav {
     transition: transform 0.3s ease-in-out;
 }
 
-#navbar-placeholder button {
-    align-items: center;
-    text-decoration: none;
-    background-color: rgb(42, 42, 42);
-    border: none;
-    color: lightgray;
-    padding: 1rem;
-    width: 100%;
-    height: 5rem;
-    transform: translateX(0%);
-}
-
 nav ul {
     list-style-type: none;
     padding: 0;
@@ -85,7 +73,9 @@ nav ul li {
     border-bottom: grey solid 1px;
 }
 
-nav button, #menu-toggle {
+nav button, 
+nav a, 
+#menu-toggle {
     align-items: center;
     text-decoration: none;
     background-color: rgb(42, 42, 42);
@@ -95,6 +85,7 @@ nav button, #menu-toggle {
     width: 100%;
     height: 5rem;
     cursor: pointer;
+    transform: translateX(0%);
 }
 
 #navbar-placeholder .material-symbols-sharp {
@@ -105,25 +96,38 @@ nav button, #menu-toggle {
     padding: 0;
 }
 
-#navbar-placeholder button:hover {
+#navbar-placeholder button:hover,
+#navbar-placeholder a:hover{
     background-color: gray;
 }
-#navbar-placeholder button:hover > .material-symbols-sharp{
+#navbar-placeholder button:hover > .material-symbols-sharp,
+#navbar-placeholder a:hover > .material-symbols-sharp {
     color: rgb(39, 39, 39);
 }
 
-#navbar-placeholder button.active {
+#navbar-placeholder button.active,
+#navbar-placeholder a.active {
     background-color: rgb(39, 39, 39);
 }
 
-#navbar-placeholder button.active > .material-symbols-sharp {
+#navbar-placeholder button.active > .material-symbols-sharp,
+#navbar-placeholder a.active > .material-symbols-sharp {
     color: rgb(39, 39, 39);
+}
+
+.nav-active-link {
+    background-color: black;
+    color: white;
+}
+
+.nav-active-link > .material-symbols-sharp {
+    color: white !important;
 }
 
 @media (max-width: 768px) {
     #main-content {
         margin-left: 0;
-        margin-top: 4.5rem;
+        margin-top: 3.5rem;
     }
     #menu-toggle {
         display: block;
@@ -134,7 +138,8 @@ nav button, #menu-toggle {
     nav {
         height: calc(100vh - 3.5rem);
     }
-    #navbar-placeholder button {
+    #navbar-placeholder button,
+    #navbar-placeholder a {
         /* padding 1rem + 1rem + icon 2.5rem */
         height: 4.5rem; 
         padding: 1rem 0.5rem;
