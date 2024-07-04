@@ -141,5 +141,3 @@ exports.deleteProductFromCart = async (req, res) => {
   
 // !!!!!!!!!!! sprint 2 - because we need users first !!!!!
 
-// exports.getCartById = async(req, res) => {
-// };

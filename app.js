@@ -119,6 +119,10 @@ app.get('/login', (req, res) => {
 app.get('/userpage', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'userpage.html'));
 });
+
+app.get('/orderhistory', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
+});
 // Route for user registration
 
 const authController = require('./controllers/auth');
@@ -162,6 +166,7 @@ app.post('/cart/add/:productId', cartController.AddToCart);
 app.get('/cart/all', cartController.getAllCarts);
 
 app.post('/cart/delete', cartController.deleteCart);
+
 
 app.post('/cart/delproduct', cartController.deleteProductFromCart);
 // catch-all route for any other requests
