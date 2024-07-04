@@ -141,5 +141,23 @@ exports.deleteProductFromCart = async (req, res) => {
   
 // !!!!!!!!!!! sprint 2 - because we need users first !!!!!
 
-// exports.getCartById = async(req, res) => {
-// };
+exports.getCartById = async (req, res) => {
+    try {
+        const cartId = globalState.cartId;
+
+        if (!cartId) {
+            return res.status(404).send('Cart not found');
+        }
+
+        const cart = await Cart.findById(cartId);
+
+        if (!cart) {
+            return res.status(404).send('Cart not found');
+        }
+
+        res.status(200).json(cart);
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        res.status(500).send('Server error');
+    }
+};
