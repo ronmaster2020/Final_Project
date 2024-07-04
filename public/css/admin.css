@@ -37,6 +37,9 @@ body {
 
 #menu-toggle {
     display: none;
+    border-bottom-right-radius: 20px;
+    padding: 0.5rem !important;
+    height: 3.5rem !important;
 }
 
 nav {
@@ -129,7 +132,7 @@ nav button, #menu-toggle {
         width: 4rem;
     }
     nav {
-        height: calc(100vh - 4.5rem);
+        height: calc(100vh - 3.5rem);
     }
     #navbar-placeholder button {
         /* padding 1rem + 1rem + icon 2.5rem */
