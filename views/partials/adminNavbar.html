@@ -1,34 +1,45 @@
+<button id="menu-toggle" onclick="openSideNavbar()">
+    <span class="material-symbols-sharp">
+        menu
+    </span>
+</button>
 <nav>
     <ul>
-        <li style="border-top: 0;"><a href="#"><span class="material-symbols-sharp">
+        <!-- home -->
+        <li style="border-top: 0;"><button href="#"><span class="material-symbols-sharp">
                 home
-                </span></a></li>
+                </span></button></li>
         <!-- dashboard -->
-        <li><a href="#"><span class="material-symbols-sharp">
+        <li><button href="#"><span class="material-symbols-sharp">
             bar_chart_4_bars
-            </span></a>
+            </span></button>
             </li>
         <!-- orders -->
-        <li><a href="#"><span class="material-symbols-sharp">
+        <li><button href="#"><span class="material-symbols-sharp">
             deployed_code
-            </span></a></li>
+            </span></button></li>
         <!-- products -->
-        <li><a href="#"><span class="material-symbols-sharp">
+        <li><button href="#"><span class="material-symbols-sharp">
             conveyor_belt
-            </span></a></li>
+            </span></button></li>
         <!-- customers -->
-        <li><a href="#"><span class="material-symbols-sharp">
+        <li><button href="#"><span class="material-symbols-sharp">
             user_attributes
-            </span></a></li>
+            </span></button></li>
     </ul>
     <ul>
         <!-- settings -->
-        <li><a href="#"><span class="material-symbols-sharp">
+        <li><button href="#"><span class="material-symbols-sharp">
             manage_accounts
-            </span></a></li>
+            </span></button></li>
         <!-- logout -->
-        <li><a href="#"><span class="material-symbols-sharp">
+        <li style="border-bottom: 0;"><button href="#"><span class="material-symbols-sharp">
             logout
-            </span></a></li>
+            </span></button></li>
     </ul>
 </nav>
+<script>
+    if (window.innerWidth < 768) {
+        $('nav').addClass('translateX-100');
+    }
+</script>
