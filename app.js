@@ -120,6 +120,10 @@ app.get('/userpage', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'userpage.html'));
 });
 
+app.get('/admin'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin.html'));
+});
+
 app.get('/orderhistory', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
 });
@@ -209,3 +213,11 @@ app.use('*', (request, response) => {
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
+
+function validateAdmin(req, res, next) {
+    if (req.user && req.user.isAdmin) {
+        next();
+    } else {
+        res.status(403).send('Access denied');
+    }
+}

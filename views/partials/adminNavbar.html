@@ -1,0 +1,45 @@
+<button id="menu-toggle" onclick="openSideNavbar()">
+    <span class="material-symbols-sharp">
+        menu
+    </span>
+</button>
+<nav>
+    <ul>
+        <!-- home -->
+        <li style="border-top: 0;"><button href="#"><span class="material-symbols-sharp">
+                home
+                </span></button></li>
+        <!-- dashboard -->
+        <li><button href="#"><span class="material-symbols-sharp">
+            bar_chart_4_bars
+            </span></button>
+            </li>
+        <!-- orders -->
+        <li><button href="#"><span class="material-symbols-sharp">
+            deployed_code
+            </span></button></li>
+        <!-- products -->
+        <li><button href="#"><span class="material-symbols-sharp">
+            conveyor_belt
+            </span></button></li>
+        <!-- customers -->
+        <li><button href="#"><span class="material-symbols-sharp">
+            user_attributes
+            </span></button></li>
+    </ul>
+    <ul>
+        <!-- settings -->
+        <li><button href="#"><span class="material-symbols-sharp">
+            manage_accounts
+            </span></button></li>
+        <!-- logout -->
+        <li style="border-bottom: 0;"><button href="#"><span class="material-symbols-sharp">
+            logout
+            </span></button></li>
+    </ul>
+</nav>
+<script>
+    if (window.innerWidth < 768) {
+        $('nav').addClass('translateX-100');
+    }
+</script>
