@@ -14,8 +14,8 @@ app.use(express.urlencoded({ extended: true })); // Middleware to parse form dat
 // MongoDB connection
 mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
  , {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    
+    
 })
 .then(() => {
     console.log('MongoDB connected');
