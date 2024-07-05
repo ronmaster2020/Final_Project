@@ -194,6 +194,9 @@ app.post('/cart/delete', cartController.deleteCart);
 
 
 app.post('/cart/delproduct', cartController.deleteProductFromCart);
+
+app.post('/cart/deleteAllProducts', cartController.deleteAllProductsFromCart);
+
 // catch-all route for any other requests
 
 //all of th routes f or settingsController
