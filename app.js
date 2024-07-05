@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/products_files', express.static(__dirname + '/file_uploads/products_files'));
+app.use('/products_files', express.static(path.join(__dirname, 'file_uploads', 'products_files')));
 app.use('/partials', express.static(__dirname + '/views/partials'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 
