@@ -1,6 +1,7 @@
 body {
     margin-top: 72px;
     padding-top: 0px;
+    height: 100%;
 }
 
 /* Cart title */
@@ -246,9 +247,9 @@ body {
 .cart-footer {
     margin-top: 20px; 
     display: flex; /* Use flexbox for layout */
-    justify-content: space-between; /* Distribute content horizontally */
+    justify-content: space-around; /* Distribute content horizontally */
     align-items: center; /* Align content vertically */
-    padding: 10px 20px; /* Add some padding */
+    padding: 10px 50px; /* Add some padding */
     background-color: #f5f5f5; /* Light gray background */
     border-radius: 5px; /* Rounded corners */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
@@ -266,10 +267,9 @@ body {
 }
   
 .footer-right {
-    text-align: right; /* Align elements within the right section to the right */
-    margin-left: 350px;
+    text-align: center; /* Align elements within the right section to the right */
+    margin-left: 300px;
     align-items: end;
-    margin-right: 7%;
 }
   
 .footer-right h3 {
@@ -303,7 +303,7 @@ form {
   
 button[type="submit"] {
     /* Base styles for the button */
-    margin-top: 25px;
+    width: 300px;
     padding: 0.75rem 1.5rem;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -313,6 +313,8 @@ button[type="submit"] {
     transition: all 0.2s ease-in-out; /* Smooth hover transition */
     font-family: 'Montserrat', sans-serif; /* Cool font */
     text-transform: uppercase; /* Make all text uppercase */
+    margin-top: 20px;
+    margin-left: 0px;
     /* font-weight: bold; /* Optional: Add boldness for emphasis */
 }
 
@@ -321,4 +323,62 @@ button[type="submit"]:hover {
     /* Hover styles for the button */
     background-color: rgb(30, 30, 100); /* Slightly darker blue on hover */
 }
-  
+
+
+/* Order pop-up */
+.toast-container {
+    position: fixed; /* Ensures toast stays visible on scroll */
+    top: 50%; /* Move the container to the vertical center */
+    left: 50%; /* Move the container to the horizontal center */
+    transform: translate(-50%, -50%); /* Center the container within viewport */
+    width: 80%; /* Allow toasts to adapt to content width */
+    z-index: 1060; /* Ensure toast appears above most content */
+    display: flex; /* Allow stacking toasts vertically */
+    flex-direction: column; /* Stack toasts from top to bottom */
+    min-width: 250px; /* Set minimum toast width */
+    padding: 15px; /* Add some padding for better spacing */
+}
+
+/* Toast Styles */
+.toast {
+    flex: 0 0 auto; /* Allow toasts to shrink to content */
+    width: 100%; /* Match container width */
+    margin-bottom: 10px; /* Add some spacing between toasts */
+    padding: 1rem; /* Add padding for content */
+    background-color: #fff; /* White background for main toast content */
+    border-radius: 10px; /* Adjust corner radius for a softer look */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Toast Body Styles */
+.toast-body {
+    display: flex; /* Allow horizontal layout for content and buttons */
+    align-items: center; /* Vertically center content */
+    font-size: 0.9rem; /* Slightly larger font size */
+    color: #212529; /* Darker text color for better contrast */
+}
+
+/* Toast Header Styles */
+.toast-header {
+    display: flex; /* Allow horizontal layout for header content (if used) */
+    align-items: center; /* Vertically center header content */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional: Add a subtle border below the header */
+    padding-bottom: 0.75rem; /* Add some spacing below the header */
+}
+
+.toast-header img {
+    width: 25px; /* Adjust image size slightly larger */
+    height: 25px; /* Adjust image size slightly larger */
+    margin-right: 10px; /* Add spacing between image and text */
+}
+
+.toast-header strong {
+    font-size: 16px; /* Larger title text size */
+    font-family: 'Roboto', sans-serif; /* Use a modern font for the title */
+    margin-right: auto; /* Push title to the left */
+}
+
+.toast-header small {
+    color: #868e96; /* Lighter text color for subtitle */
+    font-size: 0.8rem; /* Slightly smaller font size for subtitle */
+}

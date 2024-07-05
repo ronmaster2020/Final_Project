@@ -10,6 +10,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script type="text/javascript" src="/js/common.js"></script>
         <script type="text/javascript" src="/js/login.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" href="/css/cart.css">
@@ -155,7 +158,7 @@
 
                     const qty_change = false;
                     const productNameSpan = document.createElement('span');
-                    productNameSpan.classList.add('product-id');
+                    productNameSpan.classList.add('product-name');
                     productNameSpan.textContent = productNames[product_index];
                     listItem.appendChild(productNameSpan);
 
@@ -221,6 +224,7 @@
 
             function getTotal() {
                 const cartList = document.getElementById('cart-list');
+
                 final_price = 0;
                 const listItems = cartList.querySelectorAll('li');
                 listItems.forEach(listItem => {
@@ -238,6 +242,52 @@
                 console.log("Total amount - " + final_price); // Logs the text content of each item
             }
             
+
+            $(document).ready(function() {
+                $('#checkoutForm').submit(function(event) {
+                    event.preventDefault(); // Prevent form from submitting normally
+                    
+                    // Show the toast
+                    $('#checkoutToast').toast('show');
+                    
+                });
+            }); 
+
+
+            function buildToast() {
+                const toastBody = document.getElementById('toast-body');
+
+                const total = document.querySelector('#est-total');
+                const overall = document.getElementById('overall-payment');
+                const textContent = total.textContent;
+                const dollarIndex = textContent.indexOf('$');
+                const slicedText = textContent.slice(dollarIndex); // Slice from dollar sign index
+                overall.textContent = "Overall payment is " + slicedText; // Set the toast body text
+
+
+                const itemList = document.getElementById('item-list');
+                const cartList = document.getElementById('cart-list');
+                const listItems = cartList.querySelectorAll('li');
+                
+                // Collect product names and quantities efficiently
+                const items = [...cartList.querySelectorAll('.product-name, .quantity-button')] // Combine selectors
+                .reduce((acc, item) => {
+                    const name = item.classList.contains('product-name') ? item.textContent.trim() : '';
+                    const qty = item.classList.contains('quantity-button') ? item.textContent.trim() : '';
+                    if (name) {
+                    acc.push({ name, qty }); // Create object with product and quantity
+                    }
+                    return acc;
+                }, []);
+
+                // Create and add list items with formatted content
+                items.forEach(item => {
+                const newItem = document.createElement('li');
+                newItem.textContent = `${item.name} (Qty: ${item.qty})`; // Combine name and qty with formatting
+                itemList.appendChild(newItem);
+                });
+
+            }
 
         </script>
 
@@ -293,20 +343,30 @@
                 <!-- <button type="submit" onclick="getTotal()">Get total</button> -->
                 <h3 id="subtotal"></h3>
                 <h3 id="est-total"></h3>
+
+                <form id="checkoutForm">
+                    <button type="submit" class="btn btn-primary" onclick="buildToast()">Proceed to checkout</button>
+                </form>
                 </div>
             </div>
 
-            <form action="/order/create" method="post">
-                <button type="submit">Proceed to checkout</button>
-            </form>
-
-
-
-            <!--<div class="empty_bag">
-                <h2>Your shopping bag is empty</h2>
-                <a href="/">Continue shopping</a>
-            </div>-->
             
+
+            <div class="toast-container">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="checkoutToast">
+                    <div class="toast-header">
+                      <img src="https://i.pinimg.com/564x/4b/67/b2/4b67b221dad53e271950e25cc92736e0.jpg" class="rounded me-2" alt="...">
+                      <strong class="me-auto" style="font-weight: bold;">Your order</strong>
+                      <small class="text-body-secondary">Seamless Checkout, Speedy Delivery!</small>
+                      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div id="toast-body" class="toast-body">
+                        <div id="overall-payment"></div>
+                        <div id="item-list"></div>
+                    </div>
+                  </div>
+            </div>
+
 
             <br>
         </div>
