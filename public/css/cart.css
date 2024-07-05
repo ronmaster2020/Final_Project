@@ -199,11 +199,13 @@ body {
 }
   
 .cart-item .image {
-    width: 100px; /* Adjust width as needed for your image size */
-    height: 100px; /* Maintain aspect ratio */
+    width: 10%; /* Adjust width as needed for your image size */
+    height: 10%; /* Maintain aspect ratio */
     object-fit: cover; /* Crop image to fit container */
-    /*margin-right: 1rem;*/
-    border-radius: 5px; /* Add a slight rounded corner for the image */
+    margin-right: 8%;
+    margin-left: 2%;
+    border-radius: 10px; /* Add a slight rounded corner for the image */
+    padding: 0px;
 }
   
 .cart-item details {
@@ -380,8 +382,4 @@ button[type="submit"]:hover {
     margin-bottom: 10px;
     font-weight: bold;
     font-size: large;
-}
-
-.pop-up-items {
-
 }

@@ -144,22 +144,19 @@
                     const listItem = document.createElement('li');
                     listItem.classList.add('cart-item', 'row'); // Apply cart-item and row classes
 
+
                     let product;
                     for(let i = 0; i < products.length; i++) {
                         if(item.productId === products[i]._id) {
                             product = products[i];
                         }
                     }
-                    console.log(product.images.length);
 
-                    //const imageContainer = document.createElement('div');
-                    //imageContainer.classList.add('col-md-3'); 
 
                     // Assuming you have a product image URL property in item:
                     const image = document.createElement('img');
-                    image.classList.add('image');
                     image.src = '/' + product.images[0];
-                    image.alt = 'ppp';
+                    image.classList.add('image'); // Responsive image
                     listItem.appendChild(image);
 
                     //const detailsContainer = document.createElement('div');
@@ -210,7 +207,6 @@
 
                     // Add more details as needed (e.g., product name, price)
 
-                    //listItem.appendChild(imageContainer);
                     //listItem.appendChild(detailsContainer);
 
                     product_index++;
@@ -333,7 +329,6 @@
                 <p>Total</p>
             </div>
 
-            <img src="products_files/1720188071144.perfume_0.png">
 
             <div id="cart-list"></div>
             
