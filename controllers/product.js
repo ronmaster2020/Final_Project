@@ -11,8 +11,7 @@ exports.createProduct = async (req, res) => {
 
     try {
         // Extract file paths from the uploaded files
-        const imagePaths = req.files.map(file => file.path);
-        // Extract the product data from the request body
+        const imagePaths = req.files.map(file => file.path.replace(/\\/g, '/').replace('file_uploads/', ''));        // Extract the product data from the request body
         const { name, DESC, price, gender, size, stock } = req.body;
         const newProduct = new Product({
             name,

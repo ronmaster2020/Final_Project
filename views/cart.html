@@ -144,12 +144,19 @@
                     const listItem = document.createElement('li');
                     listItem.classList.add('cart-item', 'row'); // Apply cart-item and row classes
 
-                    //const imageContainer = document.createElement('div');
-                    //imageContainer.classList.add('col-md-3'); // Use Bootstrap grid for layout
+                    let product;
+                    for(let i = 0; i < products.length; i++) {
+                        if(item.productId === products[i]._id) {
+                            product = products[i];
+                        }
+                    }
+
+                    const imageContainer = document.createElement('div');
+                    imageContainer.classList.add('col-md-3'); 
 
                     // Assuming you have a product image URL property in item:
                     //const image = document.createElement('img');
-                    //image.src = item.imageUrl;
+                    //image.src = product.images[0];
                     //image.classList.add('img-fluid'); // Responsive image
                     //imageContainer.appendChild(image);
 
@@ -171,21 +178,17 @@
                         // Handle quantity update logic here (e.g., prompt, increment/decrement)
                         const newQuantity = prompt("Enter new quantity:"); // Prompt for new quantity
                         if (newQuantity && !isNaN(newQuantity)) { // Validate numeric input
-                            for(let i = 0; i < products.length; i++) {
-                                if(item.productId === products[i]._id) {
-                                    if(newQuantity > products[i].stock) {
-                                        alert("We are not able to provide you with that amount of parfumes. There are only " + 
-                                        + products[i].stock + " left.");
-                                    }
-                                    else {
-                                        quantityButton.textContent = newQuantity; // Update button text with new quantity
-                                        item.quantity = newQuantity;
-                                        console.log("Changed Qty - " + item.quantity);
-                                        const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
-                                        totalSpan.textContent = "$" + new_total;
-                                        getTotal();
-                                    }
-                                }
+                            if(newQuantity > product.stock) {
+                                alert("We are not able to provide you with that amount of parfumes. There are only " + 
+                                + product.stock + " left.");
+                            }
+                            else {
+                                quantityButton.textContent = newQuantity; // Update button text with new quantity
+                                item.quantity = newQuantity;
+                                console.log("Changed Qty - " + item.quantity);
+                                const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
+                                totalSpan.textContent = "$" + new_total;
+                                getTotal();
                             }
                             // Update your cart data with the new quantity (implementation depends on your setup)
                         } 
@@ -268,25 +271,22 @@
                 const itemList = document.getElementById('item-list');
                 const cartList = document.getElementById('cart-list');
                 const listItems = cartList.querySelectorAll('li');
-                
-                // Collect product names and quantities efficiently
-                const items = [...cartList.querySelectorAll('.product-name, .quantity-button')] // Combine selectors
-                .reduce((acc, item) => {
-                    const name = item.classList.contains('product-name') ? item.textContent.trim() : '';
-                    const qty = item.classList.contains('quantity-button') ? item.textContent.trim() : '';
-                    if (name) {
-                    acc.push({ name, qty }); // Create object with product and quantity
+    
+                // Clear the previous list items
+                itemList.innerHTML = '';
+
+                // Iterate through list items to collect product names and quantities
+                listItems.forEach(item => {
+                    const productName = item.querySelector('.product-name').textContent.trim();
+                    const quantity = item.querySelector('.quantity-button').textContent.trim();
+                    
+                    if (productName && quantity) {
+                        const newItem = document.createElement('li');
+                        newItem.textContent = `${productName} (Qty: ${quantity})`; // Combine name and qty with formatting
+                        itemList.appendChild(newItem);
                     }
-                    return acc;
-                }, []);
 
-                // Create and add list items with formatted content
-                items.forEach(item => {
-                const newItem = document.createElement('li');
-                newItem.textContent = `${item.name} (Qty: ${item.qty})`; // Combine name and qty with formatting
-                itemList.appendChild(newItem);
-                });
-
+                })
             }
 
         </script>
@@ -330,6 +330,7 @@
                 <p>Price</p>
                 <p>Total</p>
             </div>
+            <img src="products_files/1720188071144.perfume_0.png" alt="p">
 
             <div id="cart-list"></div>
             
@@ -361,9 +362,12 @@
                       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div id="toast-body" class="toast-body">
-                        <div id="overall-payment"></div>
-                        <div id="item-list"></div>
+                        <div id="overall-payment" class="overall"></div>
+                        <div id="item-list" class="pop-up-items"></div>
                     </div>
+                    <form action="order/create" method="post">
+                        <button type="submit">Make an order</button>
+                    </form>
                   </div>
             </div>
 
