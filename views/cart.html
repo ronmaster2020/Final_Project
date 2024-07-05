@@ -150,15 +150,17 @@
                             product = products[i];
                         }
                     }
+                    console.log(product.images.length);
 
-                    const imageContainer = document.createElement('div');
-                    imageContainer.classList.add('col-md-3'); 
+                    //const imageContainer = document.createElement('div');
+                    //imageContainer.classList.add('col-md-3'); 
 
                     // Assuming you have a product image URL property in item:
-                    //const image = document.createElement('img');
-                    //image.src = product.images[0];
-                    //image.classList.add('img-fluid'); // Responsive image
-                    //imageContainer.appendChild(image);
+                    const image = document.createElement('img');
+                    image.classList.add('image');
+                    image.src = '/' + product.images[0];
+                    image.alt = 'ppp';
+                    listItem.appendChild(image);
 
                     //const detailsContainer = document.createElement('div');
                     //detailsContainer.classList.add('col-md-9');
@@ -330,7 +332,8 @@
                 <p>Price</p>
                 <p>Total</p>
             </div>
-            <img src="products_files/1720188071144.perfume_0.png" alt="p">
+
+            <img src="products_files/1720188071144.perfume_0.png">
 
             <div id="cart-list"></div>
             

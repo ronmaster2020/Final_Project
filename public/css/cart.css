@@ -192,25 +192,15 @@ body {
 }
 
 
-/* Add pseudo-element for image space */
-.cart-item::before {
-    content: ""; /* Empty content to avoid extra text */
-    display: inline-block;
-    width: 20%; /* Adjust width for desired image size */
-    height: 50px; /* Adjust height for desired image size */
-    margin-right: 10px; /* Add space between "image" and next element */
-}
-
-
 .cart-item span { /* Target all span elements within .cart-item */
     flex: 1; /* Allow each span to grow and fill available space horizontally */
     text-align: center; /* Align text within each span to the left */
     /* Optional: Adjust other styling for individual spans (e.g., font-size) */
 }
   
-.cart-item img {
-    width: 80px; /* Adjust width as needed for your image size */
-    height: auto; /* Maintain aspect ratio */
+.cart-item .image {
+    width: 100px; /* Adjust width as needed for your image size */
+    height: 100px; /* Maintain aspect ratio */
     object-fit: cover; /* Crop image to fit container */
     /*margin-right: 1rem;*/
     border-radius: 5px; /* Add a slight rounded corner for the image */
