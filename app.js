@@ -18,8 +18,8 @@ app.use(express.json());
 // MongoDB connection
 mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
  , {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    
+    
 })
 .then(() => {
     console.log('MongoDB connected');
@@ -105,6 +105,34 @@ app.get('/contact', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'contact.html'));
 });
 
+app.get('/admin'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin.html'));
+});
+
+app.get('/admin/dashboard'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_dashboard.html'));
+});
+
+app.get('/admin/products'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_products.html'));
+});
+
+app.get('/admin/orders'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_orders.html'));
+});
+
+app.get('/admin/customers'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_customers.html'));
+});
+
+app.get('/admin/settings'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_settings.html'));
+});
+
+app.get('/orderhistory', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
+});
+
 // Route for the create product page
 app.get('/product/new-form', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
@@ -127,6 +155,7 @@ app.get('/login', (req, res) => {
 app.get('/userpage', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'userpage.html'));
 });
+
 // Route for user registration
 
 const authController = require('./controllers/auth');
@@ -184,6 +213,9 @@ app.get('/api/cart', (req, res) => {
 });
 
 app.post('/cart/delproduct', cartController.deleteProductFromCart);
+
+app.post('/cart/deleteAllProducts', cartController.deleteAllProductsFromCart);
+
 // catch-all route for any other requests
 
 //all of th routes f or settingsController
@@ -224,3 +256,11 @@ app.use('*', (request, response) => {
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
+
+function validateAdmin(req, res, next) {
+    if (req.user && req.user.isAdmin) {
+        next();
+    } else {
+        res.status(403).send('Access denied');
+    }
+}

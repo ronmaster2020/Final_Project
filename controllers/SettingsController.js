@@ -17,7 +17,7 @@ exports.updateUserSettings = async (req, res) => { //this is corrently only the 
         user.firstName = firstName || user.firstName;
         user.lastName = lastName || user.lastName;
         user.password = password || user.password;
-
+       // user.profilePicture = user.profilePicture;
         await user.save();
         res.status(200).send('User updated successfully');
     } catch (error) {

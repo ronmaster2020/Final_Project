@@ -1,0 +1,63 @@
+<button id="menu-toggle" onclick="openSideNavbar()">
+    <span class="material-symbols-sharp">
+        menu
+    </span>
+</button>
+<nav>
+    <ul>
+        <!-- home -->
+        <li><a href="/admin"><span class="material-symbols-sharp">
+                home
+                </span></a></li>
+        <!-- dashboard -->
+        <li><a href="/admin/dashboard"><span class="material-symbols-sharp">
+            bar_chart_4_bars
+            </span></a>
+            </li>
+        <!-- products -->
+        <li><a href="/admin/products"><span class="material-symbols-sharp">
+            deployed_code
+            </span></a></li>
+        <!-- orders -->
+        <li><a href="/admin/orders"><span class="material-symbols-sharp">
+            conveyor_belt
+            </span></a></li>
+        <!-- customers -->
+        <li><a href="/admin/customers"><span class="material-symbols-sharp">
+            user_attributes
+            </span></a></li>
+    </ul>
+    <ul>
+        <!-- settings -->
+        <li><a href="/admin/settings"><span class="material-symbols-sharp">
+            manage_accounts
+            </span></a></li>
+        <!-- logout -->
+        <li style="border-bottom: 0;"><button href="#"><span class="material-symbols-sharp">
+            logout
+            </span></button></li>
+    </ul>
+</nav>
+<script>
+$(document).ready(function() {
+    // Get current page URL path
+    var path = window.location.pathname;
+    console.log(path);
+
+    // Iterate over each link in the nav
+    $('nav a').each(function() {
+        var href = $(this).attr('href');
+        console.log(href);
+
+        // Check if the href matches the current path
+        if (path === href) {
+            // Add 'active-link' class to the parent li or the a tag itself
+            $(this).addClass('nav-active-link');
+        }
+    });
+
+    if (window.innerWidth < 768) {
+        $('nav').addClass('translateX-100');
+    }
+});
+</script>
