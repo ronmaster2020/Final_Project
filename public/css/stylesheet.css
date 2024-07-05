@@ -140,25 +140,7 @@ body > .container-fluid, #main-content {
 }
 
 /**********************/
-/* 3.   products      */
-/**********************/
-
-#loadingIndicator {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(235, 235, 235); 
-    height: 100%;
-}
-
-#productsTable {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-}
-
-/**********************/
-/* 4.   slidebar      */
+/* 3.   slidebar      */
 /**********************/
 
 .sidebar {
@@ -261,7 +243,7 @@ body > .container-fluid, #main-content {
 }
 
 /**********************/
-/* 5.   navbar        */
+/* 4.   navbar        */
 /**********************/
 .navbar {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
@@ -306,7 +288,7 @@ body > .container-fluid, #main-content {
 }
 
 /**********************/
-/* 6.   auth          */
+/* 5.   auth          */
 /**********************/
 .auth {
     display: flex;
@@ -384,7 +366,7 @@ body > .container-fluid, #main-content {
 }
 
 /**********************/
-/* 7.   form-input    */
+/* 6.   form-input    */
 /**********************/
 .form-input {
     position: relative;

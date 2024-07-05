@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/products_files', express.static(path.join(__dirname, 'file_uploads', 'products_files')));
 app.use('/partials', express.static(__dirname + '/views/partials'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 
@@ -27,10 +28,10 @@ mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.n
 // Configure storage options
 const product_file_storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, path.join(__dirname, 'file_uploads', 'products_files'));
+        cb(null, './file_uploads/products_files');
     },
     filename: function(req, file, cb) {
-        cb(null, `${file.originalname}.${Date.now()}`); // Set the file name
+        cb(null, `${Date.now()}.${file.originalname}`); // Set the file name
     }
 });
 
@@ -39,36 +40,36 @@ const product_file_upload = multer({ storage: product_file_storage, limits: { fi
 // load the Product model //
 const Product = require('./models/product');
 const products = [
-    {"name": "Ocean Breeze", "price": 35, "gender": 3, "size": 20, "DESC": "Unisex perfume with a fresh ocean scent.", "stock": 500},
-    {"name": "Mountain Dew", "price": 40, "gender": 1, "size": 25, "DESC": "Male perfume inspired by the mountains.", "stock": 750},
-    {"name": "Floral Whisper", "price": 45, "gender": 2, "size": 30, "DESC": "Female perfume with a soft floral scent.", "stock": 250},
-    {"name": "Citrus Spark", "price": 50, "gender": 3, "size": 35, "DESC": "Unisex perfume with a vibrant citrus aroma.", "stock": 1000},
-    {"name": "Woodland", "price": 55, "gender": 1, "size": 40, "DESC": "Male perfume with a deep, woody scent.", "stock": 800},
-    {"name": "Vanilla Dream", "price": 60, "gender": 2, "size": 45, "DESC": "Female perfume with a sweet vanilla essence.", "stock": 600},
-    {"name": "Mystic Night", "price": 65, "gender": 3, "size": 50, "DESC": "Unisex perfume for evening wear.", "stock": 400},
-    {"name": "Arctic Fresh", "price": 70, "gender": 1, "size": 55, "DESC": "Male perfume with a cool, refreshing scent.", "stock": 900},
-    {"name": "Rose Petals", "price": 75, "gender": 2, "size": 60, "DESC": "Female perfume with a pure rose fragrance.", "stock": 300},
-    {"name": "Sunset Glow", "price": 80, "gender": 3, "size": 65, "DESC": "Unisex perfume with a warm, inviting aroma.", "stock": 700},
-    {"name": "Spice Route", "price": 85, "gender": 1, "size": 70, "DESC": "Male perfume with exotic spices.", "stock": 100},
-    {"name": "Lavender Fields", "price": 90, "gender": 2, "size": 75, "DESC": "Female perfume with a calming lavender scent.", "stock": 950},
-    {"name": "Tropical Escape", "price": 95, "gender": 3, "size": 80, "DESC": "Unisex summer perfume.", "stock": 550},
-    {"name": "Urban Edge", "price": 100, "gender": 1, "size": 85, "DESC": "Male perfume with a modern, bold scent.", "stock": 350},
-    {"name": "Peony Bloom", "price": 105, "gender": 2, "size": 90, "DESC": "Female perfume with a fresh peony fragrance.", "stock": 150},
-    {"name": "Desert Mirage", "price": 110, "gender": 3, "size": 95, "DESC": "Unisex perfume with a mysterious allure.", "stock": 450},
-    {"name": "Oceanic", "price": 115, "gender": 1, "size": 100, "DESC": "Male perfume with deep sea notes.", "stock": 850},
-    {"name": "Gardenia Grace", "price": 120, "gender": 2, "size": 105, "DESC": "Female perfume with a rich gardenia scent.", "stock": 650},
-    {"name": "Zen Retreat", "price": 125, "gender": 3, "size": 110, "DESC": "Unisex perfume inspired by tranquility.", "stock": 950},
-    {"name": "Bold Leather", "price": 130, "gender": 1, "size": 115, "DESC": "Male perfume with a strong leather note.", "stock": 250},
-    {"name": "Jasmine Night", "price": 135, "gender": 2, "size": 120, "DESC": "Female perfume with an intoxicating jasmine scent.", "stock": 750},
-    {"name": "Crystal Clear", "price": 140, "gender": 3, "size": 125, "DESC": "Unisex perfume with a clear, crisp scent.", "stock": 550},
-    {"name": "Amber Woods", "price": 145, "gender": 1, "size": 130, "DESC": "Male perfume with warm amber and wood.", "stock": 850},
-    {"name": "Orchid Oasis", "price": 150, "gender": 2, "size": 135, "DESC": "Female perfume with an exotic orchid scent.", "stock": 650},
-    {"name": "Silver Mist", "price": 155, "gender": 3, "size": 140, "DESC": "Unisex perfume with a fresh, clean aroma.", "stock": 450},
-    {"name": "Rustic Pine", "price": 160, "gender": 1, "size": 145, "DESC": "Male perfume with a pine forest scent.", "stock": 750},
-    {"name": "Cherry Blossom", "price": 165, "gender": 2, "size": 150, "DESC": "Female perfume with a delicate cherry blossom fragrance.", "stock": 550},
-    {"name": "Midnight Velvet", "price": 170, "gender": 3, "size": 155, "DESC": "Unisex perfume for a sophisticated evening.", "stock": 350},
-    {"name": "Saffron Zest", "price": 175, "gender": 1, "size": 160, "DESC": "Male perfume with a unique saffron note.", "stock": 950},
-    {"name": "Magnolia Dew", "price": 180, "gender": 2, "size": 165, "DESC": "Female perfume with a soft magnolia essence.", "stock": 650}
+    {"name": "Ocean Breeze", "price": 35, "gender": 3, "size": 20, "DESC": "Unisex perfume with a fresh ocean scent.", "stock": 500, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Mountain Dew", "price": 40, "gender": 1, "size": 25, "DESC": "Male perfume inspired by the mountains.", "stock": 750, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Floral Whisper", "price": 45, "gender": 2, "size": 30, "DESC": "Female perfume with a soft floral scent.", "stock": 250, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Citrus Spark", "price": 50, "gender": 3, "size": 35, "DESC": "Unisex perfume with a vibrant citrus aroma.", "stock": 1000, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Woodland", "price": 55, "gender": 1, "size": 40, "DESC": "Male perfume with a deep, woody scent.", "stock": 800, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Vanilla Dream", "price": 60, "gender": 2, "size": 45, "DESC": "Female perfume with a sweet vanilla essence.", "stock": 600, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Mystic Night", "price": 65, "gender": 3, "size": 50, "DESC": "Unisex perfume for evening wear.", "stock": 400, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Arctic Fresh", "price": 70, "gender": 1, "size": 55, "DESC": "Male perfume with a cool, refreshing scent.", "stock": 900, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Rose Petals", "price": 75, "gender": 2, "size": 60, "DESC": "Female perfume with a pure rose fragrance.", "stock": 300, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Sunset Glow", "price": 80, "gender": 3, "size": 65, "DESC": "Unisex perfume with a warm, inviting aroma.", "stock": 700, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Spice Route", "price": 85, "gender": 1, "size": 70, "DESC": "Male perfume with exotic spices.", "stock": 100, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Lavender Fields", "price": 90, "gender": 2, "size": 75, "DESC": "Female perfume with a calming lavender scent.", "stock": 950, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Tropical Escape", "price": 95, "gender": 3, "size": 80, "DESC": "Unisex summer perfume.", "stock": 550, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Urban Edge", "price": 100, "gender": 1, "size": 85, "DESC": "Male perfume with a modern, bold scent.", "stock": 350, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Peony Bloom", "price": 105, "gender": 2, "size": 90, "DESC": "Female perfume with a fresh peony fragrance.", "stock": 150, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Desert Mirage", "price": 110, "gender": 3, "size": 95, "DESC": "Unisex perfume with a mysterious allure.", "stock": 450, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Oceanic", "price": 115, "gender": 1, "size": 100, "DESC": "Male perfume with deep sea notes.", "stock": 850, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Gardenia Grace", "price": 120, "gender": 2, "size": 105, "DESC": "Female perfume with a rich gardenia scent.", "stock": 650, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Zen Retreat", "price": 125, "gender": 3, "size": 110, "DESC": "Unisex perfume inspired by tranquility.", "stock": 950, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Bold Leather", "price": 130, "gender": 1, "size": 115, "DESC": "Male perfume with a strong leather note.", "stock": 250, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Jasmine Night", "price": 135, "gender": 2, "size": 120, "DESC": "Female perfume with an intoxicating jasmine scent.", "stock": 750, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Crystal Clear", "price": 140, "gender": 3, "size": 125, "DESC": "Unisex perfume with a clear, crisp scent.", "stock": 550, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Amber Woods", "price": 145, "gender": 1, "size": 130, "DESC": "Male perfume with warm amber and wood.", "stock": 850, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Orchid Oasis", "price": 150, "gender": 2, "size": 135, "DESC": "Female perfume with an exotic orchid scent.", "stock": 650, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Silver Mist", "price": 155, "gender": 3, "size": 140, "DESC": "Unisex perfume with a fresh, clean aroma.", "stock": 450, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Rustic Pine", "price": 160, "gender": 1, "size": 145, "DESC": "Male perfume with a pine forest scent.", "stock": 750, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Cherry Blossom", "price": 165, "gender": 2, "size": 150, "DESC": "Female perfume with a delicate cherry blossom fragrance.", "stock": 550, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Midnight Velvet", "price": 170, "gender": 3, "size": 155, "DESC": "Unisex perfume for a sophisticated evening.", "stock": 350, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Saffron Zest", "price": 175, "gender": 1, "size": 160, "DESC": "Male perfume with a unique saffron note.", "stock": 950, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Magnolia Dew", "price": 180, "gender": 2, "size": 165, "DESC": "Female perfume with a soft magnolia essence.", "stock": 650, "images": ["products_files/1720188071144.perfume_0.png"]}
 ];
   
   async function initializeData() {
@@ -87,10 +88,6 @@ const products = [
 // Route for the sending pages
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
-
-app.get('/products', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'products.html'));
 });
 
 app.get('/about', (req, res) => {
@@ -194,6 +191,9 @@ app.post('/cart/delete', cartController.deleteCart);
 
 
 app.post('/cart/delproduct', cartController.deleteProductFromCart);
+
+app.post('/cart/deleteAllProducts', cartController.deleteAllProductsFromCart);
+
 // catch-all route for any other requests
 
 //all of th routes f or settingsController
