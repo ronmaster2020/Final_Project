@@ -36,26 +36,17 @@ async function loadProducts(query = {}) {
     $('#productsTable h2').text(products.length + ' items')
     for (let i = 0; i < products.length; i++) {
         let product = products[i];
-        let gender = parseInt(product.gender, 10);
-        switch (gender) {
-            case 1:
-                gender = 'male';
-                break;
-            case 2:
-                gender = 'female';
-                break;
-            case 3:
-                gender = 'unisex';
-                break;
-            default:
-                break;
+        
+        let outOfStock = "";
+        if (product.stock === 0) {
+            outOfStock = "outOfStock";
         }
         $('#productsTable table tbody').append(`
-            <tr id="row-${product._id}">
+            <tr id="row-${product._id}" class="${outOfStock}">
                 <td>${product._id}</td>
                 <td>${product.name}</td>
                 <td>${product.price}<span style="color: rgb(63, 115, 63)">$</span></td>
-                <td>${gender}</td>
+                <td>${product.stock}</td>
                 <td>${product.size}<span style="color: rgb(0, 51, 153)">ml</span></td>
                 <td>
                     <div class="d-flex align-items-center" style="height: 30px; max-width: 150px;">

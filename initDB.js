@@ -26,7 +26,7 @@ connect();
 const products = [
     {"name": "Ocean Breeze", "price": 5, "gender": 3, "size": 15, "DESC": "Unisex perfume with a fresh ocean scent.", "stock": 500, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Mountain Dew", "price": 10, "gender": 1, "size": 15, "DESC": "Male perfume inspired by the mountains.", "stock": 750, "images": ["products_files/1720188071144.perfume_0.png"]},
-    {"name": "Floral Whisper", "price": 10, "gender": 2, "size": 15, "DESC": "Female perfume with a soft floral scent.", "stock": 250, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Floral Whisper", "price": 10, "gender": 2, "size": 15, "DESC": "Female perfume with a soft floral scent.", "stock": 0, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Citrus Spark", "price": 15, "gender": 3, "size": 30, "DESC": "Unisex perfume with a vibrant citrus aroma.", "stock": 1000, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Woodland", "price": 15, "gender": 1, "size": 30, "DESC": "Male perfume with a deep, woody scent.", "stock": 800, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Vanilla Dream", "price": 20, "gender": 2, "size": 30, "DESC": "Female perfume with a sweet vanilla essence.", "stock": 600, "images": ["products_files/1720188071144.perfume_0.png"]},
@@ -42,7 +42,7 @@ const products = [
     {"name": "Desert Mirage", "price": 55, "gender": 3, "size": 75, "DESC": "Unisex perfume with a mysterious allure.", "stock": 450, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Oceanic", "price": 55, "gender": 1, "size": 75, "DESC": "Male perfume with deep sea notes.", "stock": 850, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Gardenia Grace", "price": 70, "gender": 2, "size": 75, "DESC": "Female perfume with a rich gardenia scent.", "stock": 650, "images": ["products_files/1720188071144.perfume_0.png"]},
-    {"name": "Zen Retreat", "price": 70, "gender": 3, "size": 75, "DESC": "Unisex perfume inspired by tranquility.", "stock": 950, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Zen Retreat", "price": 70, "gender": 3, "size": 75, "DESC": "Unisex perfume inspired by tranquility.", "stock": 0, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Bold Leather", "price": 70, "gender": 1, "size": 75, "DESC": "Male perfume with a strong leather note.", "stock": 250, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Jasmine Night", "price": 70, "gender": 2, "size": 75, "DESC": "Female perfume with an intoxicating jasmine scent.", "stock": 750, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Crystal Clear", "price": 70, "gender": 3, "size": 75, "DESC": "Unisex perfume with a clear, crisp scent.", "stock": 550, "images": ["products_files/1720188071144.perfume_0.png"]},
@@ -59,11 +59,11 @@ const products = [
     {"name": "Frosty Mint", "price": 100, "gender": 1, "size": 200, "DESC": "Male perfume with a cool, frosty mint scent.", "stock": 700, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Blossom Breeze", "price": 110, "gender": 2, "size": 200, "DESC": "Female perfume with a light, blossom-filled breeze.", "stock": 800, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Moonlight Shadow", "price": 140, "gender": 3, "size": 250, "DESC": "Unisex perfume with a mysterious moonlight shadow scent.", "stock": 900, "images": ["products_files/1720188071144.perfume_0.png"]},
-    {"name": "Spiced Bergamot", "price": 160, "gender": 1, "size": 250, "DESC": "Male perfume with a spicy bergamot twist.", "stock": 1000, "images": ["products_files/1720188071144.perfume_0.png"]},
+    {"name": "Spiced Bergamot", "price": 160, "gender": 1, "size": 250, "DESC": "Male perfume with a spicy bergamot twist.", "stock": 0, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Whispering Willow", "price": 190, "gender": 2, "size": 250, "DESC": "Female perfume with a gentle whispering willow note.", "stock": 1100, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Crimson Night", "price": 220, "gender": 3, "size": 350, "DESC": "Unisex perfume with a deep, crimson night aroma.", "stock": 1200, "images": ["products_files/1720188071144.perfume_0.png"]},
     {"name": "Azure Dream", "price": 220, "gender": 1, "size": 350, "DESC": "Male perfume with an inspiring azure dream scent.", "stock": 1300, "images": ["products_files/1720188071144.perfume_0.png"]},
-    {"name": "Velvet Rose", "price": 230, "gender": 2, "size": 350, "DESC": "Female perfume with a luxurious velvet rose fragrance.", "stock": 1400, "images": ["products_files/1720188071144.perfume_0.png"]}
+    {"name": "Velvet Rose", "price": 230, "gender": 2, "size": 350, "DESC": "Female perfume with a luxurious velvet rose fragrance.", "stock": 150, "images": ["products_files/1720188071144.perfume_0.png"]}
 ];
 
 async function initializeProductsData() {

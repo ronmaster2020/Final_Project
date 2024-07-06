@@ -8,6 +8,7 @@
 /* 6. auth */
 /* 7. form-input */
 /* 8. footer */
+/* 9. table */
 
 /*********************/
 /* 1.    global      */
@@ -534,4 +535,12 @@ body > .container-fluid, #main-content {
 
 #footer .map {
     padding-right: 200px;
+}
+
+/**********************/
+/* 9.   table         */
+/**********************/
+
+table .outOfStock {
+    background-color: rgb(255, 204, 204);
 }
