@@ -33,7 +33,12 @@ const orderSchema = new Schema({
   order_items: {
     type: [String],
     required: [true, 'Order items are required']
-  }//,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: [true, 'UserId is required'],
+    ref: 'User',
+  }
   // status: {
   //   type: String,
   //   enum: ['active', 'canceled', 'returned', 'completed'],

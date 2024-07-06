@@ -15,20 +15,18 @@ exports.createOrder = async (req, res) => {
         const cartId = globalState.cartId;
         const cart = await Cart.findById(cartId);
 
-        // Save the order
-        const order = new Order({
-            order_items: cart.products,
-        });
-        await order.save();
-
         // Push the new order id to user's array 
         const currentUser = await User.findOne({ cartId: cartId });
         if (!currentUser) {
             return res.status(404).send('User not found');
         }
 
-        currentUser.orders.push(order._id);
-        await currentUser.save();
+        // Save the order
+        const order = new Order({
+            order_items: cart.products,
+            userId: currentUser._id,
+        });
+        await order.save();
 
         res.redirect('/viewCart');
     } catch (err) {

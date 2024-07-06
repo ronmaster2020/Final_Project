@@ -55,10 +55,6 @@ const userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'cart',
-    },
-    orders: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Order',
     }
 });
 
