@@ -36,7 +36,7 @@ async function loadProducts(query = {}) {
     $('#productsTable h2').text(products.length + ' items')
     for (let i = 0; i < products.length; i++) {
         let product = products[i];
-        
+
         let outOfStock = "";
         if (product.stock === 0) {
             outOfStock = "outOfStock";
@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteBtns = document.querySelectorAll('.action-btn.delete');
 
     $("#resetBtn").click(function() {
+        $("#name").val('');
         $("#priceRange").val('');
         $("#genderCategory").val('');
         $("#sizeRange").val('');
@@ -79,13 +80,20 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault(); // Prevent the form from submitting traditionally
 
         // Construct the query from form inputs
-        const fLetter = document.querySelector('input[name="fLetter"]').value;
-        const price = $("#priceRange").val();
+        const name = $('input[name="name"]').val();
         const gender = $("#genderCategory").val();
-        const size = $("#sizeRange").val();
+
+        const selectedPriceOption = $("#priceRange option:selected");
+        const priceMin = selectedPriceOption.attr('data-min') || null;
+        const priceMax = selectedPriceOption.attr('data-max') || null;
+
+        const selectedSizeOption = $("#sizeRange option:selected");
+        const sizeMin = selectedSizeOption.attr('data-min') || null;
+        const sizeMax = selectedSizeOption.attr('data-max') || null;
+
 
         // Assuming you want to construct a query string
-        const query = `fLetter=${fLetter}&price=${price}&gender=${gender}&size=${size}`;
+        const query = `name=${name}&priceMin=${priceMin}&priceMax=${priceMax}&gender=${gender}&sizeMin=${sizeMin}&sizeMax=${sizeMax}`;
 
         // Call your loadProducts function with the query
         loadProducts(query);

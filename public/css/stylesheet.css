@@ -543,3 +543,10 @@ body > .container-fluid, #main-content {
 table .outOfStock {
     background-color: rgb(255, 204, 204);
 }
+
+table img {
+    width: 100px;
+    height: 100px;
+    padding: 0;
+    margin: 0;
+}
