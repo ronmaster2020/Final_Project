@@ -175,6 +175,18 @@ exports.searchProducts = async (req, res) => {
         query.size = { $lte: maxSize };
     }
 
+    if (req.query.stockMin && req.query.stockMax && !isNaN(req.query.stockMin) && !isNaN(req.query.stockMax)){
+        const minStock = parseInt(req.query.stockMin, 10);
+        const maxStock = parseInt(req.query.stockMax, 10);
+        query.stock = { $gte: minStock, $lte: maxStock };
+    } else if (req.query.stockMin && !isNaN(req.query.stockMin)) {
+        const minStock = parseInt(req.query.stockMin, 10);
+        query.stock = { $gte: minStock };
+    } else if (req.query.stockMax && !isNaN(req.query.stockMax)) {
+        const maxStock = parseInt(req.query.stockMax, 10);
+        query.stock = { $lte: maxStock };
+    }
+
     try {
         const products = await Product.find(query);
         res.json(products);

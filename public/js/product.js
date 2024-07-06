@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $("#priceRange").val('');
         $("#genderCategory").val('');
         $("#sizeRange").val('');
+        $("#stockRange").val('');
         loadProducts();
     });
 
@@ -96,9 +97,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const sizeMin = selectedSizeOption.attr('data-min') || null;
         const sizeMax = selectedSizeOption.attr('data-max') || null;
 
+        const selectedStockOption = $("#stockRange option:selected");
+        const stockMin = selectedStockOption.attr('data-min') || null;
+        const stockMax = selectedStockOption.attr('data-max') || null;
+
 
         // Assuming you want to construct a query string
-        const query = `name=${name}&priceMin=${priceMin}&priceMax=${priceMax}&gender=${gender}&sizeMin=${sizeMin}&sizeMax=${sizeMax}`;
+        const query = `name=${name}&priceMin=${priceMin}&priceMax=${priceMax}&gender=${gender}&sizeMin=${sizeMin}&sizeMax=${sizeMax}&stockMin=${stockMin}&stockMax=${stockMax}`;
 
         // Call your loadProducts function with the query
         loadProducts(query);
