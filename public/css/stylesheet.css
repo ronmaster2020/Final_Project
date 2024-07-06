@@ -435,36 +435,36 @@ body > .container-fluid, #main-content {
 /* 8.    footer      */
 /*********************/
 
-body {
+#footer body {
     background-color: #24262b;
     padding-top: 50px;
     font-family: 'Poppins', sans-serif;
     line-height: 1.5;
 }
 
-.container {
+#footer .container {
     max-width: 1400px;
     margin: auto;
     display: flex;
     justify-content: center;
 }
 
-.footer-col {
+#footer .footer-col {
     width: 22%;
     padding: 0 10px;
 }
 
-.footer-col:first-child {
+#footer .footer-col:first-child {
     margin-left: 50px; /* Adjust this if needed */
 }
 
-ul {
+#footer ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.footer-col h4 {
+#footer .footer-col h4 {
     font-size: 18px;
     color: #ffffff;
     text-transform: capitalize;
@@ -473,7 +473,7 @@ ul {
     position: relative;
 }
 
-.footer-col h4::before {
+#footer .footer-col h4::before {
     content: '';
     position: absolute;
     left: 0;
@@ -484,11 +484,11 @@ ul {
     width: 50px;
 }
 
-.footer-col ul li:not(:last-child) {
+#footer .footer-col ul li:not(:last-child) {
     margin-bottom: 10px;
 }
 
-.footer-col ul li a {
+#footer .footer-col ul li a {
     font-size: 16px;
     text-transform: capitalize;
     color: #ffffff;
@@ -499,39 +499,39 @@ ul {
     transition: all 0.3s ease;
 }
 
-.footer-col ul li a:hover {
+#footer .footer-col ul li a:hover {
     color: #ffffff;
     padding-left: 10px;
 }
 
-hr {
+#footer hr {
     width: 50%;
     margin: 0 auto;
     border: 1px solid #ffffff;
 }
 
-.bottun-bar {
+#footer .bottun-bar {
     text-align: center;
     color: #ffffff;
     margin-top: 20px;
 }
 
-.socials {
+#footer .socials {
     text-align: center;
     margin-top: 5px;
 }
 
-.socials a {
+#footer .socials a {
     color: #ffffff;
     font-size: 24px;
     margin: 0 10px;
     transition: color 0.3s ease;
 }
 
-.socials a:hover {
+#footer .socials a:hover {
     color: #e91e63;
 }
 
-.map {
+#footer .map {
     padding-right: 200px;
 }
