@@ -189,12 +189,12 @@ nav a,
     border: none;
     cursor: pointer;
     background-color: transparent;
-    border-radius: 50%;
+    border-radius: 40%;
     color: black;
 }
 
 .action-btn:hover {
-    background-color: lightgray;
+    background-color: rgb(241, 241, 241);
 }
 
 .action-btn > .material-symbols-sharp {
