@@ -115,6 +115,9 @@ exports.deleteProduct = async (req, res) => {
 
     try {
         const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
         // Delete the product images from the file system
         for (const imagePath of product.images) {
             fs.unlink(imagePath, (err) => {
@@ -124,7 +127,10 @@ exports.deleteProduct = async (req, res) => {
             });
         }
         await Product.deleteOne( { _id: `${req.params.id}` } );
-        res.send('Product deleted successfully');
+        res.json({
+            message: 'Product deleted successfully',
+            product: product
+        });
     } catch (err) {
         console.error('Error deleting product:', err);
         res.status(500).send('Server error');
