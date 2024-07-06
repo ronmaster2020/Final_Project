@@ -33,9 +33,6 @@ const product_file_storage = multer.diskStorage({
 
 const product_file_upload = multer({ storage: product_file_storage, limits: { fileSize: 10 * 1024 * 1024 } }); // 10 MB file size limit
 
-initializeData();
-// complete load product model //
-
 // Route for the sending pages
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));

@@ -77,8 +77,22 @@ async function initializeProductsData() {
     }
 }
 
-async function initializeCartsData(carts) {
+async function initializeCartsData() {
     try {
+        const products = await Product.find({});
+
+        const carts = Array.from({ length: 10 }, () => {
+            // Shuffle products array
+            const shuffledProducts = products.sort(() => 0.5 - Math.random());
+            // Get a random number of products between 1 and 6
+            const selectedProducts = shuffledProducts.slice(0, Math.floor(Math.random() * 6) + 1);
+            return {
+                products: selectedProducts.map((product) => ({
+                    productId: product._id,
+                    quantity: Math.floor(Math.random() * 10) + 1,
+                })),
+            };
+        });
         await Cart.deleteMany({});
         await Cart.insertMany(carts);
         console.log('Cart data initialized.');
@@ -88,22 +102,64 @@ async function initializeCartsData(carts) {
     }
 }
 
-initializeProductsData()
-.then(async (products) => {
-    const carts = Array.from({ length: 10 }, () => {
-        // Shuffle products array
-        const shuffledProducts = products.sort(() => 0.5 - Math.random());
-        // Get a random number of products between 1 and 6
-        const selectedProducts = shuffledProducts.slice(0, Math.floor(Math.random() * 6) + 1);
-        return {
-            products: selectedProducts.map((product) => ({
-                productId: product._id,
-                quantity: Math.floor(Math.random() * 10) + 1,
-            })),
-        };
-    });
-    await initializeCartsData(carts);
-})
+async function initializeUsersData() {
+    try {
+        const users = await User.find({});
+        let carts = await Cart.find({});
+
+        // Assign a random cartId to each user
+        users.forEach(async (user) => {
+            const randomIndex = Math.floor(Math.random() * carts.length);
+            user.cartId = carts[randomIndex]._id;
+            // remove the added cart from carts (locally) to prevent duplicate cartId
+            carts = carts.filter((cart) => cart._id !== user.cartId);
+            await user.save();
+        });
+        console.log('User data initialized.');
+        return User.find({});
+    } catch (error) {
+        console.error('Error initializing user data:', error);
+    }
+}
+
+async function initializeOrdersData() {
+    try {
+        const users = await User.find({});
+        const products = await Product.find({});
+
+        const orders = Array.from({ length: 10 }, () => {
+            // Shuffle users array
+            const shuffledUsers = users.sort(() => 0.5 - Math.random());
+            // Get a random user
+            const user = shuffledUsers[0];
+            // Get a random number of products between 1 and 6
+            const selectedProducts = products.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 6) + 1);
+            return {
+                userId: user._id,
+                products: selectedProducts.map((product) => ({
+                    productId: product._id,
+                    quantity: Math.floor(Math.random() * 10) + 1,
+                })),
+                totalPrice: selectedProducts.reduce((total, product) => total + product.price, 0),
+            };
+        });
+        await Order.deleteMany({});
+        await Order.insertMany(orders);
+        console.log('Order data initialized.');
+        return Order.find({});
+    } catch (error) {
+        console.error('Error initializing order data:', error);
+    }
+}
+
+async function initializeData() {
+    await initializeProductsData();
+    await initializeCartsData();
+    await initializeUsersData();
+    // await initializeOrdersData();
+}
+
+initializeData()
 .finally (() => {
     mongoose.connection.close();
 });
