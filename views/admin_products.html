@@ -32,12 +32,12 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="priceRange" name="priceRange">
                         <option value="" selected>all</option>
-                        <option value="1">0-19 ml</option>
-                        <option value="2">20-49 ml</option>
-                        <option value="3">50-99 ml</option>
-                        <option value="4">100-149 ml</option>
-                        <option value="5">150-199 ml</option>
-                        <option value="6">200+ ml</option>
+                        <option value="1">0-19 $</option>
+                        <option value="2">20-49 $</option>
+                        <option value="3">50-99 $</option>
+                        <option value="4">100-149 $</option>
+                        <option value="5">150-199 $</option>
+                        <option value="6">200+ $</option>
                     </select>
                 </div>
                 <label class="form-label" for="genderCategory">Gender category</label>
@@ -91,5 +91,11 @@
             </div>
         </div>
     </div>
+    <style>
+        .toast {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+    <div class="toast-container" style="position: fixed; bottom: 20px; right: 20px;"></div>
 </body>
 </html>

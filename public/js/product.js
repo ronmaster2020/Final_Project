@@ -62,7 +62,7 @@ async function loadProducts(query = {}) {
                         <button class="action-btn" onclick="editProduct('${product._id}')">
                             <span class="material-symbols-sharp">edit</span>     
                         </button>
-                        <button style="color: rgb(169, 0, 0);" class="action-btn delete" onclick="deleteProduct('${product._id}').then(response => {console.log('Product deleted successfully', response);}).catch(error => {console.error('Deletion failed', error);});">
+                        <button style="color: rgb(169, 0, 0);" class="action-btn delete" onclick="deleteProduct('${product._id}')">
                             <span class="material-symbols-sharp">delete</span>
                         </button>
                     </div>
@@ -76,6 +76,13 @@ document.addEventListener('DOMContentLoaded', function() {
     loadProducts(); // Load all products when the page loads
     const form = document.querySelector('form'); // Assuming there's only one form on the page
     const deleteBtns = document.querySelectorAll('.action-btn.delete');
+
+    $("#resetBtn").click(function() {
+        $("#priceRange").val('');
+        $("#genderCategory").val('');
+        $("#sizeRange").val('');
+        loadProducts();
+    });
 
     form.addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the form from submitting traditionally
@@ -101,12 +108,55 @@ function deleteProduct(productId) {
             url: `/product/delete/${productId}`,
             method: 'POST',
             success: function(response) {
-                console.log('Product deleted', response);
+                const product = response.product;
+                console.log('Product deleted', product);
                 $(`#row-${productId}`).remove();
+                const productCount = $('#productsTable table tbody tr').length;
+                $('#productsTable h2').text(productCount + ' items');
+                const toast = $(`
+                    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header" style="background-color: rgb(230, 255, 230)">
+                            <strong class="me-auto">Product deleted successfully</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            <div>ID: ${product._id}</div>
+                            <div>Name: ${product.name}</div>
+                        </div>
+                    </div>`);
+                $('.toast-container').append(toast)
+                toast.toast('show');
+                setTimeout(() => {
+                    toast.toast('hide');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, 3000);
+
                 resolve(response);
             },
             error: function(xhr, status, error) {
                 console.error('Error deleting a product', error);
+                // error deleting toast
+                const toast = $(`
+                    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header" style="background-color: rgb(255, 230, 230)">
+                            <strong class="me-auto">Error deleting product</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            <div>ID: ${productId}</div>
+                            <div>Error: ${error}</div>
+                        </div>
+                    </div>`);
+                $('.toast-container').append(toast)
+                toast.toast('show');
+                setTimeout(() => {
+                    toast.toast('hide');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, 3000);
                 reject(error);
             }
         });
