@@ -21,11 +21,29 @@ exports.createOrder = async (req, res) => {
             return res.status(404).send('User not found');
         }
 
+        // Fetch product details for each product in the cart
+        const orderItems = await Promise.all(cart.products.map(async (cartItem) => {
+            const product = await Product.findById(cartItem.productId);
+            if (!product) {
+                throw new Error(`Product with id ${cartItem.productId} not found`);
+            }
+
+            return {
+                productId: product._id,
+                quantity: cartItem.quantity,
+                price: product.price // Assuming product has a price field
+            };
+        }));
+
         // Save the order
         const order = new Order({
-            order_items: cart.products,
+            order_items: orderItems,
             userId: currentUser._id,
+            status: 2,
         });
+
+        console.log(order);
+
         await order.save();
 
         res.redirect('/viewCart');
