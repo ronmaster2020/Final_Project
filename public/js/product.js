@@ -36,29 +36,25 @@ async function loadProducts(query = {}) {
     $('#productsTable h2').text(products.length + ' items')
     for (let i = 0; i < products.length; i++) {
         let product = products[i];
-        let gender = parseInt(product.gender, 10);
-        switch (gender) {
-            case 1:
-                gender = 'male';
-                break;
-            case 2:
-                gender = 'female';
-                break;
-            case 3:
-                gender = 'unisex';
-                break;
-            default:
-                break;
+
+        let outOfStock = "";
+        if (product.stock === 0) {
+            outOfStock = "outOfStock";
         }
         $('#productsTable table tbody').append(`
-            <tr id="row-${product._id}">
+            <tr id="row-${product._id}" class="${outOfStock}">
                 <td>${product._id}</td>
-                <td>${product.name}</td>
+                <td>
+                    <div class="d-flex flex-row flex-nowrap align-items-center justify-content-start">
+                        <img src="/${product.images[0]}" alt="${product.name}" style="margin-right: 1rem">
+                        ${product.name}
+                    </div>
+                </td>
                 <td>${product.price}<span style="color: rgb(63, 115, 63)">$</span></td>
-                <td>${gender}</td>
+                <td>${product.stock}</td>
                 <td>${product.size}<span style="color: rgb(0, 51, 153)">ml</span></td>
                 <td>
-                    <div class="d-flex align-items-center" style="height: 30px; max-width: 150px;">
+                    <div class="d-flex align-items-center justify-content-center" style="max-width: 150px;">
                         <button class="action-btn" onclick="editProduct('${product._id}')">
                             <span class="material-symbols-sharp">edit</span>     
                         </button>
@@ -78,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteBtns = document.querySelectorAll('.action-btn.delete');
 
     $("#resetBtn").click(function() {
+        $("#name").val('');
         $("#priceRange").val('');
         $("#genderCategory").val('');
         $("#sizeRange").val('');
@@ -88,13 +85,20 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault(); // Prevent the form from submitting traditionally
 
         // Construct the query from form inputs
-        const fLetter = document.querySelector('input[name="fLetter"]').value;
-        const price = $("#priceRange").val();
+        const name = $('input[name="name"]').val();
         const gender = $("#genderCategory").val();
-        const size = $("#sizeRange").val();
+
+        const selectedPriceOption = $("#priceRange option:selected");
+        const priceMin = selectedPriceOption.attr('data-min') || null;
+        const priceMax = selectedPriceOption.attr('data-max') || null;
+
+        const selectedSizeOption = $("#sizeRange option:selected");
+        const sizeMin = selectedSizeOption.attr('data-min') || null;
+        const sizeMax = selectedSizeOption.attr('data-max') || null;
+
 
         // Assuming you want to construct a query string
-        const query = `fLetter=${fLetter}&price=${price}&gender=${gender}&size=${size}`;
+        const query = `name=${name}&priceMin=${priceMin}&priceMax=${priceMax}&gender=${gender}&sizeMin=${sizeMin}&sizeMax=${sizeMax}`;
 
         // Call your loadProducts function with the query
         loadProducts(query);

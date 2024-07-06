@@ -141,76 +141,40 @@ exports.deleteProduct = async (req, res) => {
 exports.searchProducts = async (req, res) => {
     const query = {};
 
-    if (req.query.fLetter && req.query.fLetter.length === 1) {
-        query.name = { $regex: new RegExp(`^${req.query.fLetter}`), $options: 'i' }; // Ensure it starts with the specified letter, case-insensitive
+    if (req.query.name) {
+        const name = req.query.name.substring(0, 100); // Limit to 100 characters
+        query.name = { $regex: new RegExp(`^${name}`), $options: 'i' }; // Case-insensitive
     }
-    if (req.query.price) {
-        const priceCategory = parseInt(req.query.price, 10); // Convert to number
-        switch (priceCategory) {
-            case 1:
-                query.price = { $gte: 0, $lte: 19 };
-                break;
-            case 2:
-                query.price = { $gte: 20, $lte: 49 };
-                break;
-            case 3:
-                query.price = { $gte: 50, $lte: 99 };
-                break;
-            case 4:
-                query.price = { $gte: 100, $lte: 149 };
-                break;
-            case 5:
-                query.price = { $gte: 150, $lte: 199 };
-                break;
-            case 6:
-                query.price = { $gte: 200 };
-                break;
-            default:
-                break;
-        }
+    
+    if (req.query.priceMin && req.query.priceMax && !isNaN(req.query.priceMax) && !isNaN(req.query.priceMin)){
+        const minPrice = parseInt(req.query.priceMin, 10);
+        const maxPrice = parseInt(req.query.priceMax, 10);
+        query.price = { $gte: minPrice, $lte: maxPrice };
+    } else if (req.query.priceMin && !isNaN(req.query.priceMin)) {
+        const minPrice = parseInt(req.query.priceMin, 10);
+        query.price = { $gte: minPrice };
+    } else if (req.query.priceMax && !isNaN(req.query.priceMax)) {
+        const maxPrice = parseInt(req.query.priceMax, 10);
+        query.price = { $lte: maxPrice };
     }
-    if (req.query.gender) {
+
+    if (req.query.gender && !isNaN(req.query.gender)) {
         const genderCategory = parseInt(req.query.gender, 10); // Convert to number
-        switch (genderCategory) {
-            case 1:
-                query.gender = genderCategory;
-                break;
-            case 2:
-                query.gender = genderCategory;                
-                break;
-            case 3:
-                query.gender = genderCategory;
-                break;
-            default:
-                break;
-        }
-            
+        query.gender = genderCategory;
     }
-    if (req.query.size) {
-        const sizeCategory = parseInt(req.query.size, 10); // Convert to number
-        switch (sizeCategory) {
-            case 1:
-                query.size = { $gte: 0, $lte: 19 };
-                break;
-            case 2:
-                query.size = { $gte: 20, $lte: 49 };
-                break;
-            case 3:
-                query.size = { $gte: 50, $lte: 99 };
-                break;
-            case 4:
-                query.size = { $gte: 100, $lte: 149 };
-                break;
-            case 5:
-                query.size = { $gte: 150, $lte: 199 };
-                break;
-            case 6:
-                query.size = { $gte: 200 };
-                break;
-            default:
-                break;
-        }
+    
+    if (req.query.sizeMin && req.query.sizeMax && !isNaN(req.query.sizeMin) && !isNaN(req.query.sizeMax)){
+        const minSize = parseInt(req.query.sizeMin, 10);
+        const maxSize = parseInt(req.query.sizeMax, 10);
+        query.size = { $gte: minSize, $lte: maxSize };
+    } else if (req.query.sizeMin && !isNaN(req.query.sizeMin)) {
+        const minSize = parseInt(req.query.sizeMin, 10);
+        query.size = { $gte: minSize };
+    } else if (req.query.sizeMax && !isNaN(req.query.sizeMax)) {
+        const maxSize = parseInt(req.query.sizeMax, 10);
+        query.size = { $lte: maxSize };
     }
+
     try {
         const products = await Product.find(query);
         res.json(products);
