@@ -114,8 +114,8 @@ app.get('/admin/orders'/*, validateAdmin()*/, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin_orders.html'));
 });
 
-app.get('/admin/customers'/*, validateAdmin()*/, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'admin_customers.html'));
+app.get('/admin/staff'/*, validateAdmin()*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin_staff.html'));
 });
 
 app.get('/admin/settings'/*, validateAdmin()*/, (req, res) => {
