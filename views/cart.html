@@ -175,7 +175,7 @@
                     // Option 1: Add click event listener for manual quantity change
                     quantityButton.addEventListener('click', () => {
                         // Handle quantity update logic here (e.g., prompt, increment/decrement)
-                        const newQuantity = prompt("Enter new quantity:"); // Prompt for new quantity
+                        const newQuantity = prompt("How many do you want to order?"); // Prompt for new quantity
                         if (newQuantity && !isNaN(newQuantity)) { // Validate numeric input
                             if(newQuantity > product.stock) {
                                 alert("We are not able to provide you with that amount of parfumes. There are only " + 
