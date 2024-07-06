@@ -2,13 +2,12 @@
 /* table of contents */
 /* 1. global styles */
 /* 2. sections */
-/* 3. products */
-/* 4. slidebar */
-/* 5. navbar */
-/* 6. auth */
-/* 7. form-input */
-/* 8. footer */
-/* 9. table */
+/* 3. slidebar */
+/* 4. navbar */
+/* 5. auth */
+/* 6. form-input */
+/* 7. footer */
+/* 8. table */
 
 /*********************/
 /* 1.    global      */
@@ -433,7 +432,7 @@ body > .container-fluid, #main-content {
 }
 
 /*********************/
-/* 8.    footer      */
+/* 7.    footer      */
 /*********************/
 
 #footer body {
@@ -538,7 +537,7 @@ body > .container-fluid, #main-content {
 }
 
 /**********************/
-/* 9.   table         */
+/* 8.   table         */
 /**********************/
 
 table .outOfStock {
