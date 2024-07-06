@@ -44,12 +44,17 @@ async function loadProducts(query = {}) {
         $('#productsTable table tbody').append(`
             <tr id="row-${product._id}" class="${outOfStock}">
                 <td>${product._id}</td>
-                <td>${product.name}</td>
+                <td>
+                    <div class="d-flex flex-row flex-nowrap align-items-center justify-content-start">
+                        <img src="/${product.images[0]}" alt="${product.name}" style="margin-right: 1rem">
+                        ${product.name}
+                    </div>
+                </td>
                 <td>${product.price}<span style="color: rgb(63, 115, 63)">$</span></td>
                 <td>${product.stock}</td>
                 <td>${product.size}<span style="color: rgb(0, 51, 153)">ml</span></td>
                 <td>
-                    <div class="d-flex align-items-center" style="height: 30px; max-width: 150px;">
+                    <div class="d-flex align-items-center justify-content-center" style="max-width: 150px;">
                         <button class="action-btn" onclick="editProduct('${product._id}')">
                             <span class="material-symbols-sharp">edit</span>     
                         </button>
