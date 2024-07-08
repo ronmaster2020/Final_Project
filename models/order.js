@@ -61,9 +61,6 @@ const orderSchema = new Schema({
     enum: [1, 2, 3], // 1: pending, 2: processed, 3: delivered (example statuses)
     default: 1, // default status
   },
-}, 
-{ 
-  timestamps: { createdAt: true, updatedAt: false } // Corrected placement of timestamps option
 });
 
 
