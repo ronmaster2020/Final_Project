@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
     <link rel="stylesheet" href="/css/auth.css">
+    <script type="text/javascript" src="/js/login.js"></script>
 </head>
 <body>
     <!-- navbar -->
@@ -42,7 +43,7 @@
             <h5 class="my-4">OR</h5>
             <h2 class="mb-4">CONTINUE WITH YOUR EMAIL ADDRESS</h2>
 
-            <form action="/login" method="post">
+            <form onsubmit="handleLogin(event)">
                 <div class="error-message"></div>
 
                 <!-- email -->

@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Order = require('../models/order');
 const Product = require('../models/product');
+const globalState = require('../globalState'); // Import global state
+const Cart = require('../models/cart');
+const User = require('../models/user');
 
 exports.createOrder = async (req, res) => {
     if (mongoose.connection.readyState !== 1) {
@@ -8,16 +11,42 @@ exports.createOrder = async (req, res) => {
     }
 
     try {
-        // Access the order_items value (assuming only one product)
-        const selectedProductIds = req.body.order_items; 
-        console.log(selectedProductIds);
+        //Find the right cart to get the products from 
+        const cartId = globalState.cartId;
+        const cart = await Cart.findById(cartId);
+
+        // Push the new order id to user's array 
+        const currentUser = await User.findOne({ cartId: cartId });
+        if (!currentUser) {
+            return res.status(404).send('User not found');
+        }
+
+        // Fetch product details for each product in the cart
+        const orderItems = await Promise.all(cart.products.map(async (cartItem) => {
+            const product = await Product.findById(cartItem.productId);
+            if (!product) {
+                throw new Error(`Product with id ${cartItem.productId} not found`);
+            }
+
+            return {
+                productId: product._id,
+                quantity: cartItem.quantity,
+                price: product.price // Assuming product has a price field
+            };
+        }));
 
         // Save the order
         const order = new Order({
-            order_items: selectedProductIds,
+            order_items: orderItems,
+            userId: currentUser._id,
+            status: 2,
         });
+
+        console.log(order);
+
         await order.save();
-        res.json(order);
+
+        res.redirect('/viewCart');
     } catch (err) {
         console.error('Error creating order:', err);
 

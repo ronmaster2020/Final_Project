@@ -9,6 +9,10 @@
         <!-- JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script type="text/javascript" src="/js/common.js"></script>
+        <script type="text/javascript" src="/js/login.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" href="/css/cart.css">
@@ -34,12 +38,25 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     const productData = await response.json();
-                    console.log(productData);
                     return productData; // Return the cart data
                 } catch (error) {
                     console.error('Error fetching cart data:', error);
                     // Handle errors gracefully (e.g., display an error message)
                 }
+            }
+
+            async function getProductNames() {
+                const products = await getProducts();
+                const cartItems = await getCartItems();
+                names = [];
+                cartItems.forEach(item => {
+                    for(i = 0; i < products.length; i++) {
+                        if(item.productId === products[i]._id) {
+                            names.push(products[i].name);
+                        }
+                    }
+                });
+                return names;
             }
 
             async function getPrices() {
@@ -57,33 +74,57 @@
             }
 
             async function getCartItems() {
-                
                 try {
+                    // Fetch the cart ID from the server
+                    const cartIdResponse = await fetch('/api/cart');
+                    if (!cartIdResponse.ok) {
+                        throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
+                    }
+                    const cartIdData = await cartIdResponse.json();
+                    const cartId = cartIdData.cartId;
+
+                    if (!cartId) {
+                        console.error('No cart ID found. Please log in first.');
+                        return [];
+                    }
+                    //console.log('Cart ID from server:', cartId);
+                    //console.log('Is loged-in from server:', cartIdData.isLogedIn);
+
+                    // Fetch the cart items using the cart ID
                     const response = await fetch('/cart/all');
                     if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     const cartData = await response.json();
-                    return cartData[0].products; // Return the cart data
+
+                    for (let i = 0; i < cartData.length; i++) {
+                        if (cartId === cartData[i]._id) {
+                            return cartData[i].products || [];
+                        }
+                    }
                 } catch (error) {
                     console.error('Error fetching cart data:', error);
                     // Handle errors gracefully (e.g., display an error message)
                 }
             }
+
         
             async function displayCartItems() {
                 const cartItems = await getCartItems();
+                const products = await getProducts();
                 const num_of_cart_products = cartItems.length;
                 const prices = await getPrices();
+                const productNames = await getProductNames();
+                console.log(productNames);
                 console.log(prices);
                 console.log(cartItems);
-                console.log(num_of_cart_products);
 
                 const listTitle = document.getElementById('list-title');
                 listTitle.innerHTML = '';
                 listTitle.textContent = "Shopping bag  (" + num_of_cart_products + ")";
 
                 const cartList = document.getElementById('cart-list');
+                const mainContent = document.getElementById('main-content');
 
                 if (!cartItems) {
                     // Handle case where cartItems or cartItems.products is missing or empty
@@ -92,34 +133,40 @@
                 }
 
                 if (cartItems.length === 0) {
-                    cartList.innerHTML = '<div class="empty_bag"><h2>Your shopping bag is empty</h2><a href="/">Continue shopping</a></div>';
+                    window.location.href = '/emptyCart';
                     return;
                 }
                 const cartListContainer = document.createElement('ul'); // Use an unordered list for cart items
                 cartListContainer.classList.add('cart-list'); // Apply the cart-list class
 
-                prices_index = 0;
+                product_index = 0;
                 cartItems.forEach(item => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('cart-item', 'row'); // Apply cart-item and row classes
 
-                    //const imageContainer = document.createElement('div');
-                    //imageContainer.classList.add('col-md-3'); // Use Bootstrap grid for layout
+
+                    let product;
+                    for(let i = 0; i < products.length; i++) {
+                        if(item.productId === products[i]._id) {
+                            product = products[i];
+                        }
+                    }
+
 
                     // Assuming you have a product image URL property in item:
-                    //const image = document.createElement('img');
-                    //image.src = item.imageUrl;
-                    //image.classList.add('img-fluid'); // Responsive image
-                    //imageContainer.appendChild(image);
+                    const image = document.createElement('img');
+                    image.src = '/' + product.images[0];
+                    image.classList.add('image'); // Responsive image
+                    listItem.appendChild(image);
 
                     //const detailsContainer = document.createElement('div');
                     //detailsContainer.classList.add('col-md-9');
 
                     const qty_change = false;
-                    const productIdSpan = document.createElement('span');
-                    productIdSpan.classList.add('product-id');
-                    productIdSpan.textContent = `${item.productId}  `;
-                    listItem.appendChild(productIdSpan);
+                    const productNameSpan = document.createElement('span');
+                    productNameSpan.classList.add('product-name');
+                    productNameSpan.textContent = productNames[product_index];
+                    listItem.appendChild(productNameSpan);
 
                     const quantityButton = document.createElement('button');
                     quantityButton.classList.add('quantity-button');
@@ -127,26 +174,29 @@
 
                     // Option 1: Add click event listener for manual quantity change
                     quantityButton.addEventListener('click', () => {
-                    // Handle quantity update logic here (e.g., prompt, increment/decrement)
-                    const newQuantity = prompt("Enter new quantity(10 max):"); // Prompt for new quantity
-                    if (newQuantity && !isNaN(newQuantity) && newQuantity <= 10) { // Validate numeric input
-                        quantityButton.textContent = newQuantity; // Update button text with new quantity
-                        item.quantity = newQuantity;
-                        console.log(item.quantity);
-                        const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
-                        totalSpan.textContent = "$" + new_total;
-                        getTotal();
-                        // Update your cart data with the new quantity (implementation depends on your setup)
-                    } else {
-                        alert("We are not able to provide you with that many parfumes. You can order 10 max each one.");
-                    }
+                        // Handle quantity update logic here (e.g., prompt, increment/decrement)
+                        const newQuantity = prompt("How many do you want to order?"); // Prompt for new quantity
+                        if (newQuantity && !isNaN(newQuantity)) { // Validate numeric input
+                            if(newQuantity > product.stock) {
+                                alert("We are not able to provide you with that amount of parfumes. There are only " + 
+                                + product.stock + " left.");
+                            }
+                            else {
+                                quantityButton.textContent = newQuantity; // Update button text with new quantity
+                                item.quantity = newQuantity;
+                                console.log("Changed Qty - " + item.quantity);
+                                const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
+                                totalSpan.textContent = "$" + new_total;
+                                getTotal();
+                            }
+                            // Update your cart data with the new quantity (implementation depends on your setup)
+                        } 
                     });
                     listItem.appendChild(quantityButton);
 
                     const priceSpan = document.createElement('span');
                     priceSpan.classList.add('price');
-                    priceSpan.textContent = "$" + parseFloat(prices[prices_index]);
-                    prices_index++;
+                    priceSpan.textContent = "$" + parseFloat(prices[product_index]);
                     listItem.appendChild(priceSpan);
 
                     const totalSpan = document.createElement('span');
@@ -157,8 +207,9 @@
 
                     // Add more details as needed (e.g., product name, price)
 
-                    //listItem.appendChild(imageContainer);
                     //listItem.appendChild(detailsContainer);
+
+                    product_index++;
 
                     cartListContainer.appendChild(listItem);
                 });
@@ -174,6 +225,7 @@
 
             function getTotal() {
                 const cartList = document.getElementById('cart-list');
+
                 final_price = 0;
                 const listItems = cartList.querySelectorAll('li');
                 listItems.forEach(listItem => {
@@ -188,23 +240,62 @@
                 const estTotal = document.getElementById('est-total');
                 estTotal.textContent = "Estimated total $" + final_price;
 
-                console.log(final_price); // Logs the text content of each item
+                console.log("Total amount - " + final_price); // Logs the text content of each item
             }
             
+
+            $(document).ready(function() {
+                $('#checkoutForm').submit(function(event) {
+                    event.preventDefault(); // Prevent form from submitting normally
+                    
+                    // Show the toast
+                    $('#checkoutToast').toast('show');
+                    
+                });
+            }); 
+
+
+            function buildToast() {
+                const toastBody = document.getElementById('toast-body');
+
+                const total = document.querySelector('#est-total');
+                const overall = document.getElementById('overall-payment');
+                const textContent = total.textContent;
+                const dollarIndex = textContent.indexOf('$');
+                const slicedText = textContent.slice(dollarIndex); // Slice from dollar sign index
+                overall.textContent = "Overall payment is " + slicedText; // Set the toast body text
+
+
+                const itemList = document.getElementById('item-list');
+                const cartList = document.getElementById('cart-list');
+                const listItems = cartList.querySelectorAll('li');
+    
+                // Clear the previous list items
+                itemList.innerHTML = '';
+
+                // Iterate through list items to collect product names and quantities
+                listItems.forEach(item => {
+                    const productName = item.querySelector('.product-name').textContent.trim();
+                    const quantity = item.querySelector('.quantity-button').textContent.trim();
+                    
+                    if (productName && quantity) {
+                        const newItem = document.createElement('li');
+                        newItem.textContent = `${productName} (Qty: ${quantity})`; // Combine name and qty with formatting
+                        itemList.appendChild(newItem);
+                    }
+
+                })
+            }
 
         </script>
 
 
         <!-- navbar -->
         <nav id="navbar-placeholder">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                </ul>
+            <ul class="navbar-nav"></ul>
         </nav>
         
-        <div class="container-fluid" id="main-content" style="margin-top:56px">
+        <div class="container-fluid" id="main-content">
             <!-- <button onclick="displayCartItems()">Get items</button> -->
         
             <!-- <form action="/cart/create" method="post">
@@ -214,6 +305,7 @@
 
 
             <h2 class="cart-title">Your Shopping Cart</h2>
+
             
             <div class="cart-info">
                 <div class="left-part">
@@ -231,11 +323,12 @@
             <div class="list-title" id="list-title"></div>
             
             <div class="params">
-                <p>Product ID</p>
+                <p class="perfume">Perfume</p>
                 <p>Quantity</p>
                 <p>Price</p>
                 <p>Total</p>
             </div>
+
 
             <div id="cart-list"></div>
             
@@ -249,22 +342,33 @@
                 <!-- <button type="submit" onclick="getTotal()">Get total</button> -->
                 <h3 id="subtotal"></h3>
                 <h3 id="est-total"></h3>
+
+                <form id="checkoutForm">
+                    <button type="submit" class="btn btn-primary" onclick="buildToast()">Proceed to checkout</button>
+                </form>
                 </div>
             </div>
 
-            <form action="/order/create" method="post">
-                <input type="hidden" name="order_items[]" value="66754afa008577e463e3062b">
-                <input type="hidden" name="order_items[]" value="667567b72642681c6b5397ac">
-                <button type="submit">Proceed to checkout</button>
-            </form>
-
-
-
-            <!--<div class="empty_bag">
-                <h2>Your shopping bag is empty</h2>
-                <a href="/">Continue shopping</a>
-            </div>-->
             
+
+            <div class="toast-container">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="checkoutToast">
+                    <div class="toast-header">
+                      <img src="https://i.pinimg.com/564x/4b/67/b2/4b67b221dad53e271950e25cc92736e0.jpg" class="rounded me-2" alt="...">
+                      <strong class="me-auto" style="font-weight: bold;">Your order</strong>
+                      <small class="text-body-secondary">Seamless Checkout, Speedy Delivery!</small>
+                      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div id="toast-body" class="toast-body">
+                        <div id="overall-payment" class="overall"></div>
+                        <div id="item-list" class="pop-up-items"></div>
+                    </div>
+                    <form action="order/create" method="post">
+                        <button type="submit">Make an order</button>
+                    </form>
+                  </div>
+            </div>
+
 
             <br>
         </div>

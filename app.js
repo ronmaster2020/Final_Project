@@ -1,9 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const multer  = require('multer')
+const multer  = require('multer');
 const upload = multer()
 const app = express();
+const globalState = require('./globalState'); // Import global state
 const PORT = process.env.PORT || 8080;
 app.use(express.json());
 // Serve static files from the 'public' directory
@@ -11,6 +12,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/products_files', express.static(path.join(__dirname, 'file_uploads', 'products_files')));
 app.use('/partials', express.static(__dirname + '/views/partials'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
+
+// Middleware to parse JSON bodies
+app.use(express.json());
 
 // MongoDB connection
 mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
@@ -83,6 +87,10 @@ app.get('/viewCart', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'cart.html'));
 });
 
+app.get('/emptyCart', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'emptyCart.html'));
+  });
+
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'register.html'));
 });
@@ -101,6 +109,10 @@ app.post('/register', authController.register);
 
 app.post('/login', authController.login);
 
+app.get('/user/all', authController.getUsers);
+
+
+
 // all routes for products (CRUD)
 
 const productController = require('./controllers/product');
@@ -117,7 +129,10 @@ app.post('/product/delete/:id'/*, validateAdmin()*/, productController.deletePro
 
 app.get('/product/:id', productController.getProductById);
 
+
+
 // all routes for orders (CRUD)
+
 const orderController = require('./controllers/order');
 
 app.post('/order/create', orderController.createOrder);
@@ -126,7 +141,10 @@ app.get('/order/all'/*, validateAdmin()*/, orderController.getOrders);
 
 app.get('/order/:id', orderController.getOrderById);
 
+
+
 // all routes for cart (CRUD)
+
 const cartController = require('./controllers/cart');
 
 app.post('/cart/create', cartController.createCart);
@@ -137,6 +155,9 @@ app.get('/cart/all'/*, validateAdmin()*/, cartController.getAllCarts);
 
 app.post('/cart/delete', cartController.deleteCart);
 
+app.get('/api/cart', (req, res) => {
+    res.json({ cartId: globalState.cartId, isLogedIn: globalState.isLogedIn });
+});
 
 app.post('/cart/delproduct', cartController.deleteProductFromCart);
 

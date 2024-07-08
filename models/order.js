@@ -31,23 +31,39 @@ const orderItemSchema = new Schema({
 
 const orderSchema = new Schema({
   order_items: {
-    type: [String],
-    required: [true, 'Order items are required']
-  }//,
-  // status: {
-  //   type: String,
-  //   enum: ['active', 'canceled', 'returned', 'completed'],
-  //   default: 'active'
-  // },
-  // total: {
-  //   type: Number,
-  //   required: [true, 'Total is required'],
-  //   min: [0.01, 'Total must be at least 0.01'],
-  //   max: [10000, 'Total must be less than 10000']
-  // }
-}, { 
-    timestamps: { createdAt: true, updatedAt: false }
+    type: [{
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Product',
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        min: 1,
+      },
+      price: {
+        type: Number,
+        required: true, 
+        min: [0.01, 'Price must be at least 0.01'],
+        max: [1000, 'Price must be below 1000']
+      }
+    }],
+    required: [true, 'Order items are required'],
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: [true, 'UserId is required'],
+    ref: 'User',
+  },
+  status: {
+    type: Number,
+    enum: [1, 2, 3], // 1: pending, 2: processed, 3: delivered (example statuses)
+    default: 1, // default status
+  },
 });
+
+
 
 // function calculateTotal(orderItems) {
 //   return orderItems.reduce((acc, item) => {
