@@ -17,23 +17,6 @@
     <div id="main-content">
         <h1>Products</h1>
         <div class="my-4">
-            <style>
-                form {
-                    width: 100%;
-                    display: flex;
-                    flex-direction: row;
-                    flex-wrap: wrap;
-                }
-                .input-group {
-                    max-width: 15rem;
-                }
-                .input-group label {
-                    display: block;
-                    width: 100%;
-                    font-size: 0.8rem;
-                    margin-bottom: 0.2rem;
-                }
-            </style>
             <form method="GET" class="border-bottom pb-2 mb-3">
                 <div class="input-group m-3">
                     <label class="form-label" for="name">Search by first letters</label>
@@ -42,13 +25,13 @@
                 <div class="input-group m-3">
                     <label class="form-label" for="priceRange">Price Range</label>
                     <select class="form-select" id="priceRange" name="priceRange">
-                        <option value="" selected>all</option>
-                        <option value="1" data-min="0" data-max="19">0-19 $</option>
-                        <option value="2" data-min="20" data-max="49">20-49 $</option>
-                        <option value="3" data-min="50" data-max="99">50-99 $</option>
-                        <option value="4" data-min="100" data-max="149">100-149 $</option>
-                        <option value="5" data-min="150" data-max="199">150-199 $</option>
-                        <option value="6" data-min="200">200+ $</option>
+                        <option selected>all</option>
+                        <option data-min="0" data-max="19">0-19 $</option>
+                        <option data-min="20" data-max="49">20-49 $</option>
+                        <option data-min="50" data-max="99">50-99 $</option>
+                        <option data-min="100" data-max="149">100-149 $</option>
+                        <option data-min="150" data-max="199">150-199 $</option>
+                        <option data-min="200">200+ $</option>
                     </select>
                 </div>
                 <div class="input-group m-3">
@@ -63,25 +46,25 @@
                 <div class="input-group m-3">
                     <label class="form-label" for="sizeRange">Size Range</label>
                     <select class="form-select" id="sizeRange" name="sizeRange">
-                        <option value="" selected>all</option>
-                        <option value="1" data-min="0" data-max="19">0-19 ml</option>
-                        <option value="2" data-min="20" data-max="49">20-49 ml</option>
-                        <option value="3" data-min="50" data-max="99">50-99 ml</option>
-                        <option value="4" data-min="100" data-max="149">100-149 ml</option>
-                        <option value="5" data-min="150" data-max="199">150-199 ml</option>
-                        <option value="6" data-min="200">200+ ml</option>
+                        <option selected>all</option>
+                        <option data-min="0" data-max="19">0-19 ml</option>
+                        <option data-min="20" data-max="49">20-49 ml</option>
+                        <option data-min="50" data-max="99">50-99 ml</option>
+                        <option data-min="100" data-max="149">100-149 ml</option>
+                        <option data-min="150" data-max="199">150-199 ml</option>
+                        <option data-min="200">200+ ml</option>
                     </select>
                 </div>
                 <div class="input-group m-3">
                     <label class="form-label" for="stockRange">Stock Range</label>
                     <select class="form-select" id="stockRange" name="stockRange">
-                        <option value="" selected>all</option>
-                        <option value="1" data-max="0" class="outOfStock">out of stock</option>
-                        <option value="2" data-min="1" data-max="99">1-99 units</option>
-                        <option value="3" data-min="100" data-max="299">100-299 units</option>
-                        <option value="4" data-min="300" data-max="599">300-599 units</option>
-                        <option value="5" data-min="600" data-max="999">600-999 units</option>
-                        <option value="6" data-min="1000">1000+ units</option>
+                        <option selected>all</option>
+                        <option data-max="0" class="outOfStock">out of stock</option>
+                        <option data-min="1" data-max="99">1-99 units</option>
+                        <option data-min="100" data-max="299">100-299 units</option>
+                        <option data-min="300" data-max="599">300-599 units</option>
+                        <option data-min="600" data-max="999">600-999 units</option>
+                        <option data-min="1000">1000+ units</option>
                     </select>
                 </div>
                 <div class="p-2 w-100">

@@ -178,3 +178,22 @@ nav a,
     overflow-x: auto;
     box-sizing: border-box;
 }
+
+/*********************/
+/* 4.  form          */
+/*********************/
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.input-group {
+    max-width: 15rem;
+}
+.input-group label {
+    display: block;
+    width: 100%;
+    font-size: 0.8rem;
+    margin-bottom: 0.2rem;
+}
