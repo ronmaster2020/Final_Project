@@ -80,8 +80,9 @@ async function initializeProductsData() {
 async function initializeCartsData() {
     try {
         const products = await Product.find({});
+        const numOfUsers = await User.countDocuments();
 
-        const carts = Array.from({ length: 10 }, () => {
+        const carts = Array.from({ length: numOfUsers }, () => {
             // Shuffle products array
             const shuffledProducts = products.sort(() => 0.5 - Math.random());
             // Get a random number of products between 1 and 6
@@ -157,6 +158,7 @@ async function initializeOrdersData() {
                         };
                     }),
                     status: getRandomStatus(), // Assign a random status
+                    order_date: new Date(Date.now() - Math.floor(Math.random() * 2 * 365 * 24 * 60 * 60 * 1000)), // Maximum 2 years ago
                 };
             });
         });
@@ -173,8 +175,8 @@ async function initializeOrdersData() {
 
 async function initializeData() {
     await initializeProductsData();
-    await initializeCartsData();
     await initializeUsersData();
+    await initializeCartsData();
     await initializeOrdersData();
 }
 
