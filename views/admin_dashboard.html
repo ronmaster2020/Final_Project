@@ -14,6 +14,26 @@
     <div id="navbar-placeholder"></div>
     <div id="main-content">
         <h1>Dashboard</h1>
+        <div class="my-4">
+            <form class="border-bottom pb-2 mb-3">
+                <div class="input-group m-3">
+                    <label class="form-label" for="stockRange">Date Range</label>
+                    <select class="form-select" id="stockRange" name="stockRange">
+                        <option value="2" selected>last 30 days</option>
+                        <option value="1">last week</option>
+                        <option value="3">last 180 days</option>
+                        <option value="4">last year</option>
+                        <option value="5">last 2 years</option>
+                        <option value="6">all</option>
+                    </select>
+                </div>
+                <div class="p-2 w-100">
+                    <button class="btn btn-outline-secondary" type="submit">Filter</button>
+                    <button class="btn btn-outline-secondary mx-3" id="resetBtn">Reset</button>
+                </div>
+            </form>
+            <div id="graph-sales"></div>
+        </div>
     </div>
 </body>
 </html>
