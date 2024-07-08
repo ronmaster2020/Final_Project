@@ -141,7 +141,7 @@ app.get('/order/all'/*, validateAdmin()*/, orderController.getOrders);
 
 app.get('/order/:id', orderController.getOrderById);
 
-
+app.post('/order/delete/:id', orderController.deleteOrder);
 
 // all routes for cart (CRUD)
 

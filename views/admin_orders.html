@@ -1,19 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>shop</title>
-    <!-- JQuery -->
+    <title>Shop Orders</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
-    <!-- admin page css -->
     <link rel="stylesheet" href="/css/admin.css">
-    <!-- admin page js -->
     <script type="text/javascript" src="/js/admin.js"></script>
+    <script type="text/javascript" src="/js/order.js"></script> <!-- Order page specific JavaScript -->
+
+    <style>
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .toast.show {
+        opacity: 1;
+    }
+
+    .toast.success {
+        background-color: #5cb85c;
+    }
+
+    .toast.error {
+        background-color: #d9534f;
+    }
+
+    .delete-btn {
+        
+        color: white;
+        background-color: #d9534f;
+    }
+    #statusFilter {
+        width: 400px;
+    }
+    </style>
 </head>
+
 <body>
     <div id="navbar-placeholder"></div>
     <div id="main-content">
         <h1>Orders</h1>
+        <div class="my-4">
+            <!-- Form for filtering orders -->
+            <form method="GET" class="border-bottom pb-2 mb-3" id="filterForm">
+                <div class="p-2 w-100">
+                    <label for="statusFilter">Filter by Status:</label>
+                    <select class="form-select" id="statusFilter" name="status">
+                        <option value="">All</option>
+                        <option value="processed">Processed</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                    <button class="btn btn-outline-secondary" type="submit">Filter</button>
+                    <button class="btn btn-outline-secondary mx-3" id="resetBtn">Reset</button>
+                </div>
+            </form>
+            <div id="ordersTable">
+                <h2 class="mb-3">All Orders</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Total Items</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersBody">
+                        <!-- Orders will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+    
+    <div class="toast-container" style="position: fixed; bottom: 20px; right: 20px;"></div>
+
 </body>
 </html>
