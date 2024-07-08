@@ -109,6 +109,8 @@ app.post('/register', authController.register);
 
 app.post('/login', authController.login);
 
+app.get('/user/all', authController.getUsers);
+
 
 
 // all routes for products (CRUD)

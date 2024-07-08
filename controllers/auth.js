@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { ObjectId } = require('mongodb');
@@ -72,3 +73,19 @@ exports.login = async (req, res) => {
     }
 };
 
+exports.getUsers = async(req, res) => {
+    // Check if the database is connected
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
+    try {
+        const users = await User.find();
+        res.json(users);
+        //console.log(carts);
+        //return carts;
+    } catch (err) {
+        console.error('Error getting carts:', err);
+        res.status(500).send('Server error');
+    }
+};
