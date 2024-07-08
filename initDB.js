@@ -109,6 +109,9 @@ async function initializeUsersData() {
 
         // Assign a random cartId to each user
         users.forEach(async (user) => {
+            if (!user.password) {
+                user.password = 'defaultPassword'; // Assign a default password if missing
+            }
             const randomIndex = Math.floor(Math.random() * carts.length);
             user.cartId = carts[randomIndex]._id;
             // remove the added cart from carts (locally) to prevent duplicate cartId
@@ -127,22 +130,37 @@ async function initializeOrdersData() {
         const users = await User.find({});
         const products = await Product.find({});
 
-        const orders = Array.from({ length: 10 }, () => {
-            // Shuffle users array
-            const shuffledUsers = users.sort(() => 0.5 - Math.random());
-            // Get a random user
-            const user = shuffledUsers[0];
-            // Get a random number of products between 1 and 6
-            const selectedProducts = products.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 6) + 1);
-            return {
-                userId: user._id,
-                products: selectedProducts.map((product) => ({
-                    productId: product._id,
-                    quantity: Math.floor(Math.random() * 10) + 1,
-                })),
-                totalPrice: selectedProducts.reduce((total, product) => total + product.price, 0),
-            };
+        // Function to get a weighted random status
+        function getRandomStatus() {
+            const random = Math.random();
+            if (random < 0.1) return 1; // 10% chance
+            if (random < 0.3) return 2; // 20% chance
+            return 3; // 70% chance
+        }
+
+        const orders = users.flatMap(user => {
+            // Create a random number of orders for each user (between 0 and 3)
+            const numberOfOrders = Math.floor(Math.random() * 4);
+            return Array.from({ length: numberOfOrders }, () => {
+                // Get a random number of products between 1 and 5
+                const selectedProducts = products.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 5) + 1);
+                return {
+                    userId: user._id,
+                    order_items: selectedProducts.map((product) => {
+                        const maxBudget = 500;
+                        const maxQuantity = Math.floor(maxBudget / product.price);
+                        const quantity = Math.floor(Math.random() * maxQuantity) + 1;
+                        return {
+                            productId: product._id,
+                            quantity: quantity,
+                            price: product.price,
+                        };
+                    }),
+                    status: getRandomStatus(), // Assign a random status
+                };
+            });
         });
+
         await Order.deleteMany({});
         await Order.insertMany(orders);
         console.log('Order data initialized.');
@@ -152,11 +170,12 @@ async function initializeOrdersData() {
     }
 }
 
+
 async function initializeData() {
     await initializeProductsData();
     await initializeCartsData();
     await initializeUsersData();
-    // await initializeOrdersData();
+    await initializeOrdersData();
 }
 
 initializeData()
