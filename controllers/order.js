@@ -27,7 +27,7 @@ exports.createOrder = async (req, res) => {
             if (!product) {
                 throw new Error(`Product with id ${cartItem.productId} not found`);
             }
-
+            
             return {
                 productId: product._id,
                 quantity: cartItem.quantity,
