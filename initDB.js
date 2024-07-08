@@ -175,8 +175,8 @@ async function initializeOrdersData() {
 
 async function initializeData() {
     await initializeProductsData();
-    await initializeUsersData();
     await initializeCartsData();
+    await initializeUsersData();
     await initializeOrdersData();
 }
 
