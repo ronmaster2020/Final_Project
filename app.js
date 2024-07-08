@@ -1,19 +1,22 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const multer  = require('multer');
-const upload = multer()
-const app = express();
-const globalState = require('./globalState'); // Import global state
+const multer = require('multer');
+const session = require('express-session');
+const MongoStore = require('connect-mongo'); 
+const passport = require('passport');
+const authRoutes = require('./controllers/auth');
 const PORT = process.env.PORT || 8080;
+const app = express();
+
 app.use(express.json());
-// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/partials', express.static(__dirname + '/views/partials'));
-app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
+app.use(express.urlencoded({ extended: true }));
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+
+
+
 
 // MongoDB connection
 mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
@@ -27,6 +30,23 @@ mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.n
 .catch(err => {
     console.error('MongoDB connection error:', err);
 });
+
+// Passport login and regsiter initialization
+
+
+app.use(session({
+    secret: '0802',
+    resave: false,
+    saveUninitialized: true,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }) // Adjust as per your MongoDB connection setup
+}));
+
+  
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
+  app.use('/auth', authRoutes);
+  
 
 // Configure storage options
 const product_file_storage = multer.diskStorage({
@@ -118,22 +138,17 @@ app.get('/emptyCart', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'emptyCart.html'));
   });
 
+
+app.get('/userpage', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'userpage.html'));
+});
+// Route for user registration
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'register.html'));
 });
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
-app.get('/userpage', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'userpage.html'));
-});
-// Route for user registration
-
-const authController = require('./controllers/auth');
-
-app.post('/register', authController.register);
-
-app.post('/login', authController.login);
 
 
 
@@ -180,8 +195,9 @@ app.get('/cart/all', cartController.getAllCarts);
 app.post('/cart/delete', cartController.deleteCart);
 
 app.get('/api/cart', (req, res) => {
-    res.json({ cartId: globalState.cartId, isLogedIn: globalState.isLogedIn });
+    res.json({ cartId: req.session.cartId, isLoggedIn: req.session.isLoggedIn });
 });
+
 
 app.post('/cart/delproduct', cartController.deleteProductFromCart);
 // catch-all route for any other requests

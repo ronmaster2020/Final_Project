@@ -1,77 +1,107 @@
+const express = require('express');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const bcrypt = require('bcryptjs');
-const { ObjectId } = require('mongodb');
 const Cart = require('../models/cart');
-const globalState = require('../globalState'); // Import global state
+const { ObjectId } = require('mongodb');
+const router = express.Router();
 
-exports.register = async (req, res) => {
-    const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
-    
+// Passport Local Strategy
+passport.use(new LocalStrategy(
+  { usernameField: 'email' }, // Specify that the username field is 'email'
+  async function(username, password, done) {
     try {
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
-        const newCartId = new ObjectId();
-
-        const orders = [];
-        
-        // Create a new user instance with hashed password
-        const user = new User({ 
-            firstName, 
-            lastName, 
-            bio, 
-            address, 
-            access, 
-            phoneNumber, 
-            email, 
-            password: hashedPassword, // Store hashed password
-            cartId: newCartId,
-            orders: orders,
-        });
-
-        
-        
-        // Save the user to the database
-        await user.save();
-
-        // New empty cart
-        const newCart = new Cart();
-        newCart._id = newCartId;
-        console.log(newCart._id);
-        await newCart.save();
-
-        globalState.cartId = newCartId; // Set global cartId
-        globalState.isLogedIn = true;
-        
-        res.status(201).json({ message: 'User registered successfully' });
+      const user = await User.findOne({ email: username });
+      if (!user) {
+        return done(null, false, { message: 'Incorrect email.' });
+      }
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+      return done(err);
     }
-};
+  }
+));
 
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
 
-exports.login = async (req, res) => {
-    const { email, password } = req.body;
-    console.log('Received login request for email:', email); // Add logging
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            console.error('User not found:', email);
-            return res.status(404).json({ message: 'User not found' });
-        }
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
+});
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            console.error('Invalid credentials for user:', email);
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
+// Registration Route
+router.post('/register', async (req, res) => {
+  const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
 
-        const cart = await Cart.findById(user.cartId);
-        globalState.cartId = user.cartId; // Set global cartId
-        globalState.isLogedIn = true;
-        res.json({ message: 'Login successful!', user, cart, isLogedIn: globalState.isLogedIn });
-    } catch (err) {
-        console.error('Error during login:', err);
-        res.status(500).json({ error: err.message });
+  console.log('Registration request received:', req.body);
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.log('Email already registered:', email);
+      return res.status(400).json({ message: 'Email already registered.' });
     }
-};
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newCartId = new ObjectId();
+
+    const user = new User({
+      firstName,
+      lastName,
+      bio,
+      address,
+      access,
+      phoneNumber,
+      email,
+      password: hashedPassword,
+      cartId: newCartId,
+      orders: [],
+    });
+
+    const savedUser = await user.save();
+    console.log('User saved:', savedUser);
+
+    const newCart = new Cart({
+      _id: newCartId,
+      products: [],
+    });
+
+    const savedCart = await newCart.save();
+    console.log('Cart saved:', savedCart);
+
+    req.session.cartId = newCartId;
+    req.session.isLogedIn = true;
+
+    res.status(201).json({ message: 'User registered successfully', user: savedUser, cart: savedCart });
+  } catch (err) {
+    console.error('Error in registration:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+// Login Route using Passport.js
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+      if (err) return next(err);
+      if (!user) return res.status(400).send('Invalid email or password');
+      req.logIn(user, (err) => {
+        if (err) return next(err);
+        req.session.userId = user._id;
+        res.status(200).send('Login successful!');
+      });
+    })(req, res, next);
+  });
+  
+  module.exports = router;

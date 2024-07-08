@@ -23,27 +23,39 @@
 
     <body onload="CheckLogin()">
         <script>
-            async function CheckLogin() {
-                const cartIdResponse = await fetch('/api/cart');
-                if (!cartIdResponse.ok) {
-                    throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
-                }
-                const cartIdData = await cartIdResponse.json();
-                
-                console.log('Cart ID from server:', cartIdData.cartId);
-                console.log('Is loged-in from server:', cartIdData.isLogedIn);
+          async function CheckLogin() {
+    try {
+        const cartIdResponse = await fetch('/api/cart');
+        if (!cartIdResponse.ok) {
+            throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
+        }
+        const cartIdData = await cartIdResponse.json();
 
-                const login_container = document.getElementById('login-container');
-                const message = document.getElementById('message');
-                const cart_actions = document.getElementById('cart-actions');
+        console.log('Cart ID from server:', cartIdData.cartId);
+        console.log('Is logged in from server:', cartIdData.isLoggedIn);
 
-                if(cartIdData.isLogedIn === true) {
-                    login_container.style.display = 'none';
-                }
-                else {
-                    message.style.display = 'none';
-                    cart_actions.style.display = 'none';
-                }
+        // Adjust UI based on login status
+        const loginContainer = document.getElementById('login-container');
+        const message = document.getElementById('message');
+        const cartActions = document.getElementById('cart-actions');
+
+        if (cartIdData.isLoggedIn === true) {
+            loginContainer.style.display = 'none'; // Hide login UI
+            message.style.display = 'block'; // Show message or cart UI
+            cartActions.style.display = 'block'; // Show cart actions
+        } else {
+            loginContainer.style.display = 'block'; // Show login UI
+            message.style.display = 'none'; // Hide message or cart UI
+            cartActions.style.display = 'none'; // Hide cart actions
+        }
+    } catch (error) {
+        console.error('Error checking login status:', error);
+    }
+}
+
+    
+            function redirectToLogin() {
+                window.location.href = '/login'; // Redirect to login page
             }
         </script>
 
