@@ -58,11 +58,12 @@
                 
                 <div class="list-title" id="list-title"></div>
 
+                <!--
                 <form action="/cart/item/update" method="post">
                     <input type="hidden" name="productId" value="668c095007d18a6c9e4a7cbe">
                     <input type="hidden" name="quantity" value="15">
                     <button type="submit">Cart update</button>
-                </form>
+                </form>-->
                 
                 <div class="params">
                     <p class="perfume">Perfume</p>
@@ -351,7 +352,7 @@
                     const new_qty = listItem.querySelector('.quantity-button').textContent;
                     qty_array.push(new_qty);
                 })
-                
+
                 const response = await fetch('/cart/update', {
                     method: 'POST',
                     headers: {
