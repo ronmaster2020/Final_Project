@@ -13,6 +13,9 @@
 
 </head>
 <style>
+    #leadpage {
+        color: rgb(85, 85, 85);
+    }
     html, body {
         overflow: auto; /* Ensure overflow is not hidden */
     }
@@ -24,6 +27,7 @@
         font-size: 16px;
        
     }
+   
 </style>
 <body>
 
@@ -34,10 +38,10 @@
         <div class="row">
             <div class="col-12 text-center">
                 <h1>About COLstore</h1>
-                <p class="lead">Your destination for the finest perfumes</p>
+                <p id = "leadpage" class="lead">Your destination for the finest perfumes</p>
             </div>
         </div>
-        <div class="row mt-4">
+        <div class="row mt-4 ">
             <div class="col-md-6">
                 <img src="https://i.ibb.co/2FBscQh/download-1.jpg" class="img-fluid" alt="Company Image">
             </div>
@@ -53,7 +57,7 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-md-6">
+            <div class="col-md-6 appendlabel1">
                 <h2>Our Vision</h2>
                 <p>At COLstore, we envision a world where everyone can experience the luxury of fine fragrances. We strive to make our perfumes accessible and enjoyable for all.</p>
                 <button id="readMoreBtn2" class="brandBtn">Read More</button>
@@ -62,12 +66,12 @@
                     <p>We are dedicated to reducing our environmental footprint by using eco-friendly packaging and sustainable sourcing practices. Our vision is to create a beautiful and sustainable future for the perfume industry.</p>
                 </div>
             </div>
-            <div class="col-md-6">
-                <img src="https://i.ibb.co/MhvS528/image.png" class="img-fluid" alt="Vision Image">
+            <div id = "workvision" class="col-md-6 ">
+                <img id = "appendlabel2" src="https://i.ibb.co/MhvS528/image.png" class="img-fluid" alt="Vision Image">
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-md-6">
+            <div id = "teamSection" class="col-md-6">
                 <img src="https://www.albawaba.com/sites/default/files/im/Business/Job_Market_Success/teamwork-hands-shutterstock_288464495.jpg" class="img-fluid" alt="Team Image">
             </div>
             <div class="col-md-6">
@@ -83,7 +87,7 @@
     </div>
     
     <script>
-        $(document).ready(function(){
+       $(document).ready(function(){
             $('#readMoreBtn1').click(function(){
                 $('#moreContent1').toggle('slow');
             });
@@ -92,6 +96,22 @@
             });
             $('#readMoreBtn3').click(function(){
                 $('#moreContent3').toggle('slow');
+            });
+
+            // JavaScript to reorder Meet Our Team section on smaller screens
+            function reorderMeetOurTeam() {
+                var screenWidth = $(window).width();
+                if (screenWidth <= 767.98) { // Small devices (phones)
+                    $('#appendlabel2').prependTo('.appendlabel1'); 
+                } else {
+                    $('#appendlabel2').appendTo('#workvision'); 
+                }
+            }
+
+            reorderMeetOurTeam();
+
+            $(window).resize(function() {
+                reorderMeetOurTeam();
             });
         });
     </script>
