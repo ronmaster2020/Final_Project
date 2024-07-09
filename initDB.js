@@ -126,9 +126,12 @@ async function initializeUsersData() {
     }
 }
 
-async function initializeOrdersData() {
+async function initializeOrdersData(users, numOfOrdersRange = { min: 0, max: 3}) {
     try {
-        const users = await User.find({});
+        if (!users) {
+            users = await User.find({});
+        }
+
         const products = await Product.find({});
 
         // Function to get a weighted random status
@@ -139,9 +142,9 @@ async function initializeOrdersData() {
             return 3; // 70% chance
         }
 
-        const orders = users.flatMap(user => {
+        const orders = users.map(user => {
             // Create a random number of orders for each user (between 0 and 3)
-            const numberOfOrders = Math.floor(Math.random() * 4);
+            const numberOfOrders = Math.floor(Math.random() * (numOfOrdersRange.max - numOfOrdersRange.min + 1)) + numOfOrdersRange.min;
             return Array.from({ length: numberOfOrders }, () => {
                 // Get a random number of products between 1 and 5
                 const selectedProducts = products.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 5) + 1);
@@ -161,7 +164,7 @@ async function initializeOrdersData() {
                     order_date: new Date(Date.now() - Math.floor(Math.random() * 2 * 365 * 24 * 60 * 60 * 1000)), // Maximum 2 years ago
                 };
             });
-        });
+        }).reduce((acc, val) => acc.concat(val), []);
 
         await Order.deleteMany({});
         await Order.insertMany(orders);
@@ -178,6 +181,8 @@ async function initializeData() {
     await initializeCartsData();
     await initializeUsersData();
     await initializeOrdersData();
+    const bots = await User.find({ email: { $regex: /@example.com$/ }});
+    await initializeOrdersData(bots, { min: 30, max: 100 });
 }
 
 initializeData()
