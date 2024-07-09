@@ -143,6 +143,8 @@ app.get('/order/:id', orderController.getOrderById);
 
 app.post('/order/delete/:id', orderController.deleteOrder);
 
+app.get('/orders/byid/:userId', orderController.getOrdersByUserId);
+
 // all routes for cart (CRUD)
 
 const cartController = require('./controllers/cart');
