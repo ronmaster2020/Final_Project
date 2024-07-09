@@ -1,11 +1,11 @@
 $(document).ready(function() {
     let orders = [];
-    const userId = "668bfa4ea02553a02291e0b4"; // Replace with actual user ID or fetch dynamically
+    const userId = "668bca9d80348374d847150d"; 
 
-    // Function to fetch orders from the server
+   
     function fetchOrders() {
         $.ajax({
-            url: '/orders/byid/' + userId, // URL of your server endpoint to fetch all orders
+            url: '/orders/byid/' + userId, 
             method: 'GET',
             success: function(data) {
                 orders = data;
@@ -17,10 +17,10 @@ $(document).ready(function() {
         });
     }
 
-    // Function to populate orders in the HTML
+    
     function populateOrders(orders) {
         const orderHistoryContainer = $('#order-history');
-        orderHistoryContainer.empty(); // Clear any existing content
+        orderHistoryContainer.empty(); 
 
         if (orders.length === 0) {
             orderHistoryContainer.append('<p>No orders found.</p>');
@@ -28,7 +28,7 @@ $(document).ready(function() {
         }
 
         orders.forEach(order => {
-            // Calculate total order price
+            
             let totalPrice = order.order_items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
 
             const orderElement = `
