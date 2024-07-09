@@ -4,13 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order History</title>
-    <!-- Include necessary CSS files -->
     <link rel="stylesheet" href="/css/userpage.css">
     <link rel="stylesheet" href="/css/auth.css">
-    <!-- Include Bootstrap CSS if needed -->
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
     <style>
-        
+        .order-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .order-history {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .order-filters {
+        display: flex; /* Make it a flex container */
+        justify-content: space-between; /* Distribute items horizontally */
+        align-items: center; /* Center items vertically */
+        width: 100%; /* Ensure it takes full width */
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px; /* Add some bottom margin */
+    }
         .order {
             margin-bottom: 20px;
             padding: 10px;
@@ -30,24 +44,84 @@
         }
         .order-details {
             font-size: 16px;
+            display: none; /* Initially hide order details */
+        }
+        .order-details.visible {
+            display: block; /* Show order details on click */
+        }
+        .order-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+        .order-item img {
+            width: 100px; /* Adjust image size as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 10px;
+        }
+        .buy-again-btn {
+            background-color: rgb(27, 27, 27);
+            color: rgb(232, 232, 232);
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            margin-top: 10px; /* Adjust spacing from above element */
+        }
+        .buy-again-btn:hover {
+            background-color: black;
+        }
+        .filter-btn {
+            width: 100%;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+            background-color: #f0f0f0; /* Adjust background color */
+            margin-bottom: 10px; /* Add spacing between buttons */
+            transition: background-color 0.3s;
+        }
+        .filter-btn.active {
+            background-color: black;
+            color: white;
+        }
+        .filter-btn:hover {
+            background-color: black;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <div id="navbar-placeholder"></div>
 
     <div class="container">
+        
         <div id="main-content" class="container-fluid" style="padding-top: 0.5rem; font-family: 'Ralewa', sans-serif;">
-            <div class="auth px-3 px-md-5">
-                <h2 class="mb-4">Order History</h2>
-                <!-- Orders will be dynamically populated here -->
-                <div id="order-history"></div>
+            <div class="order-container">
+               
+                <div class="order-history">
+                    <h2 class="mb-4">Order History</h2>
+                    <div class="order-filters">
+                    
+                        <button class="filter-btn active" data-status="all">All Orders</button>
+                        <button class="filter-btn" data-status="1">Pending</button>
+                        <button class="filter-btn" data-status="2">Processed</button>
+                        <button class="filter-btn" data-status="3">Delivered</button>
+                    </div>
+                    <div id="order-history"></div>
+                    
+                </div>
+               
             </div>
         </div>
     </div>
 
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
     <script type="text/javascript" src="/js/orderhistory.js"></script>
