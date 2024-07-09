@@ -181,7 +181,7 @@ async function initializeData() {
     await initializeCartsData();
     await initializeUsersData();
     const notBotUsers = await User.find({ email: { $not: /@example.com$/ }});
-    await initializeOrdersData(notBotUsers, { min: 1, max: 3 });
+    await initializeOrdersData(notBotUsers, { min: 0, max: 3 });
     const bots = await User.find({ email: { $regex: /@example.com$/ }});
     await initializeOrdersData(bots, { min: 30, max: 100 });
 }
