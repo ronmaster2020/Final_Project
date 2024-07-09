@@ -106,7 +106,8 @@
                         <div id="overall-payment" class="overall"></div>
                         <div id="item-list" class="pop-up-items"></div>
                     </div>
-                    <form action="order/create" method="post">
+                    <div id="messageContainer" style="margin-top: 5px;"></div>
+                    <form action="order/create" method="post" id="createOrder">
                         <button type="submit">Make an order</button>
                     </form>
                 </div>
@@ -343,7 +344,6 @@
 
             const cartList = document.getElementById('cart-list');
             const listItems = cartList.querySelectorAll('li');
-            console.log(listItems[0].querySelector('.quantity-button').textContent);
             const cartItems = await getCartItems();
             let qty_array = [];
 
@@ -441,6 +441,35 @@
                 
             });
             });
+
+
+            document.getElementById('createOrder').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            try {
+                const response = await fetch('/order/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({}) // Include necessary data here
+                });
+
+                const result = await response.json();
+                const messageContainer = document.getElementById('messageContainer');
+                messageContainer.innerHTML = result.message;
+
+                if (result.message == '') {
+                    // Redirect to viewCart if order creation was successful
+                    window.location.href = '/viewCart';
+                }
+
+            } catch (error) {
+                console.error('Error creating order:', error);
+                const messageContainer = document.getElementById('messageContainer');
+                messageContainer.innerHTML = 'An error occurred. Please try again.';
+            }
+        });
 
        </script>
 
