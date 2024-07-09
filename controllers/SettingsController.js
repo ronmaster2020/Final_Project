@@ -52,7 +52,7 @@ exports.updateUser = async (req, res) => {
         
         user.phoneNumber = phoneNumber;
         
-        user.email = email;
+        //user.email = email;
         
         //hash password so itll be sec 
         if (password) {

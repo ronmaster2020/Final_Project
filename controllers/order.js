@@ -102,3 +102,38 @@ exports.getOrderById = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+exports.deleteOrder = async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
+    try {
+        const orderId = req.params.id;
+        
+        const deletedOrder = await Order.findByIdAndDelete(orderId);
+        if (!deletedOrder) {
+            return res.status(404).send('Order not found');
+        }
+
+        res.json({ message: 'Order deleted successfully', deletedOrder });
+    } catch (err) {
+        console.error('Error deleting order by ID:', err);
+        res.status(500).send('Server error');
+    }
+};
+
+exports.getOrdersByUserId = async (req, res) => { // !!!!! specificly to populate fields !!!!!!
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
+    try {
+        const userId = req.params.userId;
+        const deliveredOrders = await Order.find({ userId: userId}).populate('order_items.productId');
+        res.json(deliveredOrders);
+    } catch (err) {
+        console.error('Error getting orders by user ID:', err);
+        res.status(500).send('Server error');
+    }
+};

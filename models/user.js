@@ -6,21 +6,22 @@ const validator = require('validator');
 const userSchema = new Schema({
     firstName: {
         type: String,
-        required: true,
+        required: false,
         trim: true, // Remove leading and trailing whitespace
         minlength: [3, 'First name must be at least 3 characters long'],
         maxlength: [30, 'First name must be less than 30 characters']
     },
     lastName: {
         type: String,
-        required: true,
+        required: false,
         trim: true, // Remove leading and trailing whitespace
         minlength: [3, 'Last name must be at least 3 characters long'],
         maxlength: [30, 'Last name must be less than 30 characters']
     },
     bio: {
         type: String,
-        required: true,
+        required: false,
+        trim: true, // Remove leading and trailing whitespace
         maxlength: [100, 'Bio must be less than 100 characters']
     },
     address: {
@@ -36,7 +37,7 @@ const userSchema = new Schema({
     },
     phoneNumber: {
         type: String,
-        required: true,
+        required: false,
     },
     email: {
         type: String,

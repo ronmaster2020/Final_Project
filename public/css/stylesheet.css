@@ -66,6 +66,10 @@ body > .container-fluid, #main-content {
     'opsz' 48;
 }
 
+.outOfStock {
+    background-color: rgb(255, 204, 204);
+}
+
 /*********************/
 /* 2.  sections      */
 /*********************/
@@ -540,10 +544,6 @@ body > .container-fluid, #main-content {
 /* 8.   table         */
 /**********************/
 
-table .outOfStock {
-    background-color: rgb(255, 204, 204);
-}
-
 table th, table td {
     text-align: center;
     vertical-align: middle;
@@ -556,4 +556,27 @@ table img {
     padding: 0;
     margin: 0;
     object-fit: cover;
+}
+
+table .action-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.5rem;
+    margin: 0;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    border-radius: 40%;
+    color: black;
+}
+
+table .action-btn:hover {
+    background-color: rgb(241, 241, 241);
+}
+
+table .action-btn > .material-symbols-sharp {
+    font-size: 1.5rem;
 }
