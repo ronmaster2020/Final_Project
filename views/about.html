@@ -1,87 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>About Us</title>
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="/public/js/about_func.js"></script>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-    <link rel="stylesheet" href="/public/css/about_style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - COLstore</title>
+    
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script type="text/javascript" src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/auth.css">
+ 
+
+
 </head>
+<style>
+    html, body {
+        overflow: auto; /* Ensure overflow is not hidden */
+    }
+    #readMoreBtn1, #readMoreBtn2, #readMoreBtn3 {
+        width: auto;
+        height: auto;
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+       
+    }
+</style>
 <body>
-    <!-- navbar -->
+
     <div id="navbar-placeholder"></div>
 
-    <div class="descriptions">
-        <h1>Welcome to GlobalScentsations</h1>
-        <p>At GlobalScentsations, we believe in the power of scent to evoke memories, inspire emotions, and create unforgettable experiences...</p>
-        <hr>
-        <div class="section" id="vision">
-            <i class="fa fa-eye"></i>
-            <h2>Our Vision</h2>
-            <p>Our vision is to become the foremost global brand synonymous with luxury, innovation, and the art of perfumery. We aspire to transform the way people...</p>
-            <span class="read-more" onclick="toggleContent('vision')">Read More</span>
-            <div class="section-content">
-                <p>experience and enjoy scents, making the world a more fragrant place. By continuously pushing the boundaries of creativity and quality, we aim to delight our customers with exceptional fragrances that tell a story and resonate on a deeply personal level.</p>
-            </div>
-        </div>
+    <div class="container mt-5 auth">
         
-        <div class="section" id="mission">
-            <i class="fa fa-bullseye"></i>
-            <h2>Our Mission</h2>
-            <p>GlobalScentsations is dedicated to the art and science of perfumery. Our mission is to create and distribute the finest fragrances, ensuring that each bottle encapsulates the richness of its origin. We strive to:</p>
-            <span class="read-more" onclick="toggleContent('mission')">Read More</span>
-            <div class="section-content">
-                <ul>
-                    <li>
-                        <b>Deliver Excellence:</b> Every perfume we create is a masterpiece, crafted with meticulous attention to detail and the highest quality ingredients.
-                    </li>
-                    <li>
-                        <b>Diversity:</b> We celebrate the beauty of different cultures by incorporating unique elements from various parts of the world into our scents.
-                    </li>
-                    <li>
-                        <b>Sustainability:</b> We are committed to ethical practices and sustainability, sourcing our ingredients responsibly and ensuring that our processes are environmentally friendly.
-                    </li>
-                    <li>
-                        <b>Customer Satisfaction:</b> Our customers are at the heart of everything we do. We are dedicated to providing exceptional service and ensuring a delightful experience with every purchase.
-                    </li>
-                </ul>
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1>About COLstore</h1>
+                <p class="lead">Your destination for the finest perfumes</p>
             </div>
         </div>
-
-        <div class="section" id="team">
-            <i class="fa fa-users"></i>
-            <h2>Our Team</h2>
-            <p>Our team comprises experienced perfumers, creative designers, and dedicated professionals who share a common passion for excellence...</p>
-            <span class="read-more" onclick="toggleContent('team')">Read More</span>
-            <div class="section-content">
-                <p>Together, we work tirelessly to bring our vision to life, ensuring that every GlobalScentsations product is a true reflection of our commitment to quality and artistry.</p>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <img src="https://i.ibb.co/2FBscQh/download-1.jpg" class="img-fluid" alt="Company Image">
+            </div>
+            <div class="col-md-6" >
+                <h2>Our Story</h2>
+                <p>COLstore was founded with a passion for creating exquisite fragrances that captivate the senses. Our journey began with a simple mission: to bring the world of luxury perfumes to everyone.</p>
+                <button id="readMoreBtn1" class="brandBtn">Read More</button>
+                
+                <div id="moreContent1" class="mt-3" style="display:none;">
+                    <p>We believe in the power of scent to evoke memories and emotions. Our team of expert perfumers crafts unique blends using the finest ingredients sourced from around the globe. Each fragrance tells a story, and we invite you to discover yours with COLstore.</p>
+                    <p>Our commitment to quality and innovation has made us a trusted name in the perfume industry. Join us on a journey of olfactory discovery and experience the art of fine perfumery like never before.</p>
+                </div>
             </div>
         </div>
-
-        <div class="section" id="global_reach">
-            <i class="fa fa-globe"></i>
-            <h2>Global Reach</h2>
-            <p>With a robust distribution network, GlobalScentsations has a presence in major markets around the world. Our perfumes are...</p>
-            <span class="read-more" onclick="toggleContent('global_reach')">Read More</span>
-            <div class="section-content">
-                <p>available in exclusive boutiques, high-end department stores, and through our online platform, making it easy for fragrance lovers everywhere to indulge in our luxurious scents.</p>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h2>Our Vision</h2>
+                <p>At COLstore, we envision a world where everyone can experience the luxury of fine fragrances. We strive to make our perfumes accessible and enjoyable for all.</p>
+                <button id="readMoreBtn2" class="brandBtn">Read More</button>
+                <div id="moreContent2" class="mt-3" style="display:none;">
+                    <p>Our vision is to become a global leader in the perfume industry, known for our innovative scents and commitment to sustainability. We aim to inspire and delight our customers with every bottle.</p>
+                    <p>We are dedicated to reducing our environmental footprint by using eco-friendly packaging and sustainable sourcing practices. Our vision is to create a beautiful and sustainable future for the perfume industry.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img src="https://i.ibb.co/MhvS528/image.png" class="img-fluid" alt="Vision Image">
             </div>
         </div>
-
-        <div class="section" id="join_us">
-            <i class="fa fa-globe"></i>
-            <h2>Join Us on Our Journey</h2>
-            <p>We invite you to explore the world of GlobalScentsations and discover the perfect scent that resonates with your spirit. Experience the...</p>
-            <span class="read-more" onclick="toggleContent('join_us')">Read More</span>
-            <div class="section-content">
-                <p>art of perfumery like never before and let our fragrances become a part of your story.</p>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <img src="https://www.albawaba.com/sites/default/files/im/Business/Job_Market_Success/teamwork-hands-shutterstock_288464495.jpg" class="img-fluid" alt="Team Image">
+            </div>
+            <div class="col-md-6">
+                <h2>Meet Our Team</h2>
+                <p>Our team is the heart of COLstore. We are a group of passionate individuals who love what we do and are dedicated to bringing you the best perfumes.</p>
+                <button id="readMoreBtn3" class="brandBtn">Read More</button>
+                <div id="moreContent3" class="mt-3" style="display:none;">
+                    <p>From our talented perfumers to our customer service representatives, everyone at COLstore is committed to excellence. We work together to create a welcoming and inspiring environment for our customers and ourselves.</p>
+                    <p>We believe in fostering a culture of creativity, collaboration, and continuous learning. Meet the people behind the scents and discover the passion that drives us.</p>
+                </div>
             </div>
         </div>
     </div>
+    
+    <script>
+        $(document).ready(function(){
+            $('#readMoreBtn1').click(function(){
+                $('#moreContent1').toggle('slow');
+            });
+            $('#readMoreBtn2').click(function(){
+                $('#moreContent2').toggle('slow');
+            });
+            $('#readMoreBtn3').click(function(){
+                $('#moreContent3').toggle('slow');
+            });
+        });
+    </script>
 </body>
 </html>
