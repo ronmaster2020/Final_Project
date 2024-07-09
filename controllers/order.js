@@ -101,7 +101,7 @@ exports.getOrdersGroupByDate = async (req, res) => {
     let orders;
     try {
         const byDateUnit = req.query.dateUnit || 'day';
-        if (!['month', 'year', 'yearMonthWeek', 'yearMonth'].includes(byDateUnit)) {
+        if (!['month', 'year', 'yearWeek', 'yearMonth'].includes(byDateUnit)) {
             console.error('Invalid date unit:', byDateUnit);
             return res.status(400).send('Invalid date unit');
         }
@@ -135,11 +135,29 @@ exports.getOrdersGroupByDate = async (req, res) => {
                 }
             ]);
         }
-        else if (byDateUnit === 'yearMonthWeek') {
+        else if (byDateUnit === 'yearWeek') {
+            if (!req.query.startDate || !req.query.endDate) {
+                return res.status(400).send('Missing start date or end date');
+            }
+
+            const startDate = new Date(req.query.startDate);
+            const endDate = new Date(req.query.endDate);
+
             orders = await Order.aggregate([
                 {
+                    $match: {
+                        order_date: {
+                            $gte: startDate,
+                            $lte: endDate
+                        }
+                    }
+                },
+                {
                     $group: {
-                        _id: { $dateToString: { format: "%Y-%m-%U", date: "$order_date" } },
+                        _id: {
+                            year: { $year: "$order_date" },
+                            week: { $week: "$order_date" }
+                        },
                         totalIncome: { $sum: '$total_price' }
                     }
                 }
