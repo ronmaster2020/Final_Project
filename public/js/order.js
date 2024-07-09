@@ -160,6 +160,18 @@ $(document).ready(function() {
     }
 
     // Event listener for filter form submission
+    function filterOrdersClientSide(status) {
+        $('#ordersBody tr').each(function() {
+            const orderStatus = $(this).find('td:nth-child(4)').text().trim();
+            if (status === '' || orderStatus.toLowerCase() === status.toLowerCase()) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+    // Event listener for filter form submission
     $('#filterForm').on('submit', function(e) {
         e.preventDefault();
         var status = $('#statusFilter').val();
