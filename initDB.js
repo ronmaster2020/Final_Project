@@ -148,20 +148,23 @@ async function initializeOrdersData(users, numOfOrdersRange = { min: 0, max: 3})
             return Array.from({ length: numberOfOrders }, () => {
                 // Get a random number of products between 1 and 5
                 const selectedProducts = products.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 5) + 1);
+                const order_items = selectedProducts.map((product) => {
+                    const maxBudget = 500;
+                    const maxQuantity = Math.floor(maxBudget / product.price);
+                    const quantity = Math.floor(Math.random() * maxQuantity) + 1;
+                    return {
+                        productId: product._id,
+                        quantity: quantity,
+                        price: product.price,
+                    };
+                });
+                const total_price = order_items.reduce((total, item) => total + (item.price * item.quantity), 0);
                 return {
                     userId: user._id,
-                    order_items: selectedProducts.map((product) => {
-                        const maxBudget = 500;
-                        const maxQuantity = Math.floor(maxBudget / product.price);
-                        const quantity = Math.floor(Math.random() * maxQuantity) + 1;
-                        return {
-                            productId: product._id,
-                            quantity: quantity,
-                            price: product.price,
-                        };
-                    }),
+                    order_items: order_items,
                     status: getRandomStatus(), // Assign a random status
                     order_date: new Date(Date.now() - Math.floor(Math.random() * 2 * 365 * 24 * 60 * 60 * 1000)), // Maximum 2 years ago
+                    total_price: total_price
                 };
             });
         }).reduce((acc, val) => acc.concat(val), []);
