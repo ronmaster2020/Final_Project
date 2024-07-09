@@ -1,25 +1,82 @@
 $(document).ready(async function() {
+    const today = new Date();
+    
+    const lastMonth = (new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())).toISOString();
+    const lastWeek = (new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7)).toISOString();
+    const lastHalfYear = (new Date(today.getFullYear(), today.getMonth() - 6, today.getDate())).toISOString();
+    const lastYear = (new Date(today.getFullYear() - 1, today.getMonth(), today.getDate())).toISOString();
+    const last2Years = (new Date(today.getFullYear() - 2, today.getMonth(), today.getDate())).toISOString();
+
+    $('#lastMonth').attr('startDate', lastMonth);
+    $('#lastWeek').attr('startDate', lastWeek);
+    $('#lastHalfYear').attr('startDate', lastHalfYear);
+    $('#lastYear').attr('startDate', lastYear);
+    $('#last2Years').attr('startDate', last2Years);
+
     const response = await fetchData({ dateUnit: "yearMonth"}, '/order/grouped/date', 'GET', $('#graph-sales'));
     const dataset = await response.map(groupOfOrders => {
-        const dateParts = groupOfOrders._id.split('-');
-        const year = parseInt(dateParts[0]);
-        const month = parseInt(dateParts[1]) - 1; // month is zero-based in JavaScript Date object
-        const date = new Date(year, month);
-        return {
-            _id: date,
-            total_income: groupOfOrders.totalIncome
-        };
-    }).sort((a, b) => a._id - b._id);
+        if (groupOfOrders._id) {
+            const dateParts = groupOfOrders._id.split('-');
+            const year = parseInt(dateParts[0]);
+            const month = parseInt(dateParts[1]) - 1; // month is zero-based in JavaScript Date object
+            const date = new Date(year, month);
+            return {
+                _id: date,
+                total_income: groupOfOrders.totalIncome
+            };
+        } else {
+            console.error('Invalid _id:', groupOfOrders);
+            return null;
+        }
+    }).filter(item => item !== null).sort((a, b) => a._id - b._id);
 
-    drawLinearGraph(dataset, $('#graph-sales'));
+    let dateRange = { startDate: dataset[0]._id.toISOString(), endDate: (new Date()).toISOString() }
+
+    drawLinearGraph(dataset, $('#graph-sales'), dateRange);
+
+    $('#dateRange').on('change', function() {
+        const selectedDateRange = $('#dateRange option:selected');
+        const startDate = selectedDateRange.attr('startDate') || null;
+        const endDate = selectedDateRange.attr('endDate') || null;
+        if (startDate) {
+            dateRange = { ...dateRange, startDate: startDate };
+        }
+        if (endDate) {
+            dateRange = { ...dateRange, endDate: endDate };
+        }
+        if (selectedDateRange.attr('id') === 'allTime') {
+            dateRange.startDate = dataset[0]._id.toISOString();
+        }
+        const datasetStartRange = new Date(dateRange.startDate);
+        const datasetEndRange = new Date(dateRange.endDate);
+        const filteredDataset = dataset.filter(item => item._id >= datasetStartRange && item._id <= datasetEndRange);
+        
+        $('#graph-sales').empty();
+
+        drawLinearGraph(filteredDataset, $('#graph-sales'), dateRange);
+        // const response = await fetchData({ dateUnit: "yearMonth"}, '/order/grouped/date', 'GET', $('#graph-sales'));
+        // const dataset = await response.map(groupOfOrders => {
+        //     const dateParts = groupOfOrders._id.split('-');
+        //     const year = parseInt(dateParts[0]);
+        //     const month = parseInt(dateParts[1]) - 1; // month is zero-based in JavaScript Date object
+        //     const date = new Date(year, month);
+        //     return {
+        //         _id: date,
+        //         total_income: groupOfOrders.totalIncome
+        //     };
+        // }).sort((a, b) => a._id - b._id);
+    });
 
     $(window).resize(function() {
         $('#graph-sales').empty();
-        drawLinearGraph(dataset, $('#graph-sales'));
+        drawLinearGraph(dataset, $('#graph-sales'), dateRange);
     });
 });
 
-function drawLinearGraph(data, container) {
+
+
+// function that draws a linear graph
+function drawLinearGraph(data, container, dateRange) {
     const containerElement = container[0];
     // D3.js Line Chart
     const margin = { top: 20, right: 30, bottom: 50, left: 70 };
@@ -33,8 +90,11 @@ function drawLinearGraph(data, container) {
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
+    const startDate = new Date(dateRange.startDate);
+    const endDate = new Date(dateRange.endDate);
+
     const x = d3.scaleTime()
-        .domain([d3.min(data, d => d._id), d3.max(data, d => d._id)])
+        .domain([startDate, endDate])
         .range([0, width]);
 
     const y = d3.scaleLinear()

@@ -21,19 +21,15 @@
         <div class="my-4">
             <form class="border-bottom pb-2 mb-3">
                 <div class="input-group m-3">
-                    <label class="form-label" for="stockRange">Date Range</label>
-                    <select class="form-select" id="stockRange" name="stockRange">
-                        <option value="2" selected>last 30 days</option>
-                        <option value="1">last week</option>
-                        <option value="3">last 180 days</option>
-                        <option value="4">last year</option>
-                        <option value="5">last 2 years</option>
-                        <option value="6">all</option>
+                    <label class="form-label" for="dateRange">Date Range</label>
+                    <select class="form-select" id="dateRange" name="dateRange">
+                        <option id="lastWeek">last week</option>
+                        <option id="lastMonth">last month</option>
+                        <option id="lastHalfYear">last half year</option>
+                        <option id="lastYear">last year</option>
+                        <option id="last2Years">last 2 years</option>
+                        <option id="allTime" selected>all time</option>
                     </select>
-                </div>
-                <div class="p-2 w-100">
-                    <button class="btn btn-outline-secondary" type="submit">Filter</button>
-                    <button class="btn btn-outline-secondary mx-3" id="resetBtn">Reset</button>
                 </div>
             </form>
             <div id="graph-sales" style="width: 100%;height: auto;overflow-x: auto;box-sizing: border-box;">
