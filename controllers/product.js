@@ -137,7 +137,7 @@ exports.deleteProduct = async (req, res) => {
     }
 };
 
-// Search for products by attributes (f-letter, price, gender, size)
+// Search for products by query parameters
 exports.searchProducts = async (req, res) => {
     const query = {};
 
