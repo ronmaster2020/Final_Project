@@ -72,6 +72,7 @@ exports.getProductById = async (req, res) => {
     }
 };
 
+
 // Update a product by ID
 exports.updateProduct = async (req, res) => {
     // Check if the database is connected

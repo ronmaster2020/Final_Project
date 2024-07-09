@@ -9,6 +9,22 @@
     <script type="text/javascript" src="/js/order.js"></script> <!-- Order page specific JavaScript -->
 
     <style>
+          .product-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .product-item img {
+    max-width: 100px; /* Adjust the size as needed */
+    height: auto;
+    display: block;
+    margin: 10px 0;
+}
+
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
     .toast {
         position: fixed;
         bottom: 20px;
@@ -86,6 +102,27 @@
     </div>
     
     <div class="toast-container" style="position: fixed; bottom: 20px; right: 20px;"></div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="viewProductsModal" tabindex="-1" role="dialog" aria-labelledby="viewProductsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title " id="viewProductsModalLabel">Order Details - Order ID: <span id="modalOrderID"></span></h5>
+                    
+                </div>
+                <div class="modal-body">
+                    <div id="modalProductsList">
+                        <!-- Products will be populated dynamically -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id = "closemodal" type="button" class="btn btn-secondary closemodal" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  
 
 </body>
 </html>
