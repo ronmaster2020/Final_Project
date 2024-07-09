@@ -64,6 +64,10 @@ const orderSchema = new Schema({
   order_date: {
     type: Date,
     default: Date.now,
+  },
+  total_price: {
+    type: Number,
+    required: true,
   }
 });
 
