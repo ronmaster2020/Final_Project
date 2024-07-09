@@ -36,7 +36,14 @@
                     <button class="btn btn-outline-secondary mx-3" id="resetBtn">Reset</button>
                 </div>
             </form>
-            <div id="graph-sales"></div>
+            <div id="graph-sales" style="width: 100%;height: auto;overflow-x: auto;box-sizing: border-box;">
+                <div id="loadingIndicator" class="d-none">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div id="loadTxt" style="font-size: x-large; margin-left: 10px;">Loading</div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
