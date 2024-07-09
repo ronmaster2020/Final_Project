@@ -111,7 +111,7 @@ exports.deleteOrder = async (req, res) => {
     }
 };
 
-exports.getOrdersByUserId = async (req, res) => {
+exports.getOrdersByUserId = async (req, res) => { // !!!!! specificly to populate fields !!!!!!
     if (mongoose.connection.readyState !== 1) {
         return res.status(503).send('Service unavailable. Please try again later.');
     }
