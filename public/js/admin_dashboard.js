@@ -1,24 +1,32 @@
 $(document).ready(async function() {
-    function totalCalc(order) {
-        let total = 0;
-        order.order_items.forEach(item => {
-            total += item.quantity * item.price;
-        });
-        return total;
-    }
+    const response = await fetchData({ dateUnit: "yearMonth"}, '/order/grouped/date', 'GET', $('#graph-sales'));
+    const dataset = await response.map(groupOfOrders => {
+        const dateParts = groupOfOrders._id.split('-');
+        const year = parseInt(dateParts[0]);
+        const month = parseInt(dateParts[1]) - 1; // month is zero-based in JavaScript Date object
+        const date = new Date(year, month);
+        return {
+            _id: date,
+            total_income: groupOfOrders.totalIncome
+        };
+    }).sort((a, b) => a._id - b._id);
 
-    const response = await fetchData({}, '/order/all', 'GET', $('#graph-sales'));
-    const dataset = await response.map(d => ({
-        date: new Date(d.order_date),
-        value: totalCalc(d)
-    })).sort((a, b) => a.date - b.date);
+    drawLinearGraph(dataset, $('#graph-sales'));
 
+    $(window).resize(function() {
+        $('#graph-sales').empty();
+        drawLinearGraph(dataset, $('#graph-sales'));
+    });
+});
+
+function drawLinearGraph(data, container) {
+    const containerElement = container[0];
     // D3.js Line Chart
-    const margin = { top: 20, right: 30, bottom: 50, left: 50 };
-    const width = 1000 - margin.left - margin.right;
+    const margin = { top: 20, right: 30, bottom: 50, left: 70 };
+    const width = containerElement.clientWidth - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
-    const svg = d3.select("#graph-sales")
+    const svg = d3.select(containerElement)
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -26,11 +34,11 @@ $(document).ready(async function() {
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
     const x = d3.scaleTime()
-        .domain(d3.extent(dataset, d => d.date))
+        .domain([d3.min(data, d => d._id), d3.max(data, d => d._id)])
         .range([0, width]);
 
     const y = d3.scaleLinear()
-        .domain([0, d3.max(dataset, d => d.value)])
+        .domain([0, d3.max(data, d => d.total_income)])
         .range([height, 0]);
 
     const xAxis = d3.axisBottom(x);
@@ -44,11 +52,11 @@ $(document).ready(async function() {
         .call(yAxis);
 
     const line = d3.line()
-        .x(d => x(d.date))
-        .y(d => y(d.value));
+        .x(d => x(d._id))
+        .y(d => y(d.total_income));
 
     svg.append("path")
-        .datum(dataset)
+        .datum(data)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
@@ -67,19 +75,24 @@ $(document).ready(async function() {
 
     // Add circles for data points
     svg.selectAll("dot")
-        .data(dataset)
+        .data(data)
         .enter().append("circle")
-        .attr("cx", d => x(d.date))
-        .attr("cy", d => y(d.value))
+        .attr("cx", d => x(d._id))
+        .attr("cy", d => y(d.total_income))
         .attr("r", 5)
         .attr("fill", "steelblue")
         .on("mouseover", function(event, d) {
             tooltip.transition()
                 .duration(200)
                 .style("opacity", .9);
-            tooltip.html(`Date: ${d.date.toLocaleDateString()}<br>Value: ${d.value}`)
+            tooltip.html(`${getMonthString(d._id.getMonth() + 1)} ${d._id.getFullYear()}<br>Total: ${d.total_income}$`)
                 .style("left", (event.pageX + 5) + "px")
                 .style("top", (event.pageY - 28) + "px");
+
+            function getMonthString(month) {
+                const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                return months[month - 1];
+            }
         })
         .on("mousemove", function(event) {
             tooltip.style("left", (event.pageX + 5) + "px")
@@ -103,4 +116,4 @@ $(document).ready(async function() {
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2)
         .attr("y", -margin.left + 20)
-});
+}

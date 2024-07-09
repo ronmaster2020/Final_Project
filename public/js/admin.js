@@ -56,5 +56,10 @@ async function fetchData(query, url, method, data_container) {
     loadingIndicator.addClass('d-none');
     data_container.removeClass('d-none');
 
+    if (!response.ok) {
+        console.error('Error fetching data:', response.statusText);
+        return;
+    }
+
     return await response.json();
 }
