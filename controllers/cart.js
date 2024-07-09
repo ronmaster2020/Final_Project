@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Cart = require('../models/cart');
+const Product = require('../models/product');
 const globalState = require('../globalState'); // Import global state
+
+const { ObjectId } = require('mongodb');
 
 // !!!!!!!!!!! sprint 2 - because we need users !!!!!
 // this one is just an intuition
@@ -61,6 +64,38 @@ exports.AddToCart = async(req, res) => {
         res.status(500).send('Server error');
     }
 }
+
+
+exports.updateCart = async(req, res) => {
+    // Check if the database is connected
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
+    try {
+        const qty_array = req.body.qty_array;
+
+        const cartId = globalState.cartId;
+        const cart = await Cart.findById(cartId);
+
+        console.log("Sever side " + qty_array);
+        for(let i = 0; i < cart.products.length; i++) {
+            cart.products[i].quantity = qty_array[i];
+        }
+
+
+        await cart.save();
+        console.log('Whole cart is updated!');
+        res.json(cart);
+
+    } catch (err) {
+        // Handle errors (e.g., parsing local storage data)
+        console.error('Error updating cart item:', err);
+        res.status(500).send('Server error');
+    }
+};
+
+
 
 exports.getAllCarts = async(req, res) => {
     // Check if the database is connected

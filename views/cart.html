@@ -57,6 +57,12 @@
                 
                 
                 <div class="list-title" id="list-title"></div>
+
+                <form action="/cart/item/update" method="post">
+                    <input type="hidden" name="productId" value="668c095007d18a6c9e4a7cbe">
+                    <input type="hidden" name="quantity" value="15">
+                    <button type="submit">Cart update</button>
+                </form>
                 
                 <div class="params">
                     <p class="perfume">Perfume</p>
@@ -331,6 +337,47 @@
                console.log("Total amount - " + final_price); // Logs the text content of each item
            }
 
+           async function updateCart(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const cartList = document.getElementById('cart-list');
+            const listItems = cartList.querySelectorAll('li');
+            console.log(listItems[0].querySelector('.quantity-button').textContent);
+            const cartItems = await getCartItems();
+            let qty_array = [];
+
+            try {
+                listItems.forEach(async (listItem) => {
+                    const new_qty = listItem.querySelector('.quantity-button').textContent;
+                    qty_array.push(new_qty);
+                })
+                
+                const response = await fetch('/cart/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ qty_array })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Cart update failed');
+                }
+
+                const data = await response.json();
+                console.log(data);
+
+            } catch (error) {
+                console.error('Error during cart update:', error);
+                alert('An error occurred during cart update. Please try again.');
+            }
+        }
+
+        // Adding event listener to the button
+        document.getElementById('checkoutForm').addEventListener('submit', updateCart); 
+
+
            
 
            function buildToast() {
@@ -383,7 +430,7 @@
 
                 $('#checkoutToast').toast('show');
 
-                $('#blur-effect').addClass('disabled'); // Or other elements as needed
+                $('#blur-effect').addClass('disabled'); 
                 $('#blur-effect').addClass('blur-effect');
 
 
