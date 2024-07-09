@@ -31,6 +31,7 @@ $(document).ready(async function() {
     }).filter(item => item !== null).sort((a, b) => a._id - b._id);
 
     let dateRange = { startDate: dataset[0]._id.toISOString(), endDate: (new Date()).toISOString() }
+    let filteredDataset = dataset.filter(item => item._id >= new Date(dateRange.startDate) && item._id <= new Date(dateRange.endDate));
 
     drawLinearGraph(dataset, $('#graph-sales'), dateRange);
 
@@ -49,7 +50,7 @@ $(document).ready(async function() {
         }
         const datasetStartRange = new Date(dateRange.startDate);
         const datasetEndRange = new Date(dateRange.endDate);
-        const filteredDataset = dataset.filter(item => item._id >= datasetStartRange && item._id <= datasetEndRange);
+        filteredDataset = dataset.filter(item => item._id >= datasetStartRange && item._id <= datasetEndRange);
         
         $('#graph-sales').empty();
 
@@ -69,7 +70,7 @@ $(document).ready(async function() {
 
     $(window).resize(function() {
         $('#graph-sales').empty();
-        drawLinearGraph(dataset, $('#graph-sales'), dateRange);
+        drawLinearGraph(filteredDataset, $('#graph-sales'), dateRange);
     });
 });
 

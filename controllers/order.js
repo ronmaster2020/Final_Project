@@ -101,7 +101,7 @@ exports.getOrdersGroupByDate = async (req, res) => {
     let orders;
     try {
         const byDateUnit = req.query.dateUnit || 'day';
-        if (!['day', 'month', 'year', 'yearMonth'].includes(byDateUnit)) {
+        if (!['month', 'year', 'yearMonthWeek', 'yearMonth'].includes(byDateUnit)) {
             console.error('Invalid date unit:', byDateUnit);
             return res.status(400).send('Invalid date unit');
         }
@@ -130,6 +130,16 @@ exports.getOrdersGroupByDate = async (req, res) => {
                 {
                     $group: {
                         _id: { $dateToString: { format: "%Y-%m", date: "$order_date" } },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else if (byDateUnit === 'yearMonthWeek') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $dateToString: { format: "%Y-%m-%U", date: "$order_date" } },
                         totalIncome: { $sum: '$total_price' }
                     }
                 }
