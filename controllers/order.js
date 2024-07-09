@@ -35,11 +35,14 @@ exports.createOrder = async (req, res) => {
             };
         }));
 
+        let total_price = orderItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+
         // Save the order
         const order = new Order({
             order_items: orderItems,
             userId: currentUser._id,
             status: 2,
+            total_price: total_price
         });
 
         console.log(order);
@@ -87,6 +90,64 @@ exports.getOrderById = async (req, res) => {
         res.json(order);
     } catch (err) {
         console.error('Error getting order by ID:', err);
+        res.status(500).send('Server error');
+    }
+};
+
+exports.getOrdersGroupByDate = async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+    let orders;
+    try {
+        const byDateUnit = req.query.dateUnit || 'day';
+        if (!['day', 'month', 'year', 'yearMonth'].includes(byDateUnit)) {
+            console.error('Invalid date unit:', byDateUnit);
+            return res.status(400).send('Invalid date unit');
+        }
+        if (byDateUnit === 'year') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $year: '$order_date' },
+                        averageTotalPrice: { $avg: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else if (byDateUnit === 'month') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $month: '$order_date' },
+                        averageTotalPrice: { $avg: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else if (byDateUnit === 'yearMonth') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $dateToString: { format: "%Y-%m", date: "$order_date" } },
+                        averageTotalPrice: { $avg: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $dayOfMonth: '$order_date' },
+                        averageTotalPrice: { $avg: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        res.json(orders);
+    } catch (err) {
+        console.error('Error getting orders grouped by date:', err);
         res.status(500).send('Server error');
     }
 };

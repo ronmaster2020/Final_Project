@@ -141,6 +141,8 @@ app.get('/order/all'/*, validateAdmin()*/, orderController.getOrders);
 
 app.get('/order/:id', orderController.getOrderById);
 
+app.get('/order/grouped/date', orderController.getOrdersGroupByDate);
+
 
 
 // all routes for cart (CRUD)
