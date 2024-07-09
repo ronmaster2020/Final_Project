@@ -78,7 +78,6 @@ exports.updateCart = async(req, res) => {
         const cartId = globalState.cartId;
         const cart = await Cart.findById(cartId);
 
-        console.log("Sever side " + qty_array);
         for(let i = 0; i < cart.products.length; i++) {
             cart.products[i].quantity = qty_array[i];
         }
