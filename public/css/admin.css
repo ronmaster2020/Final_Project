@@ -197,3 +197,27 @@ form {
     font-size: 0.8rem;
     margin-bottom: 0.2rem;
 }
+
+/*********************/
+/* 5.  d3 graph      */
+/*********************/
+#graph-sales circle {
+    r: 10;
+    fill: steelblue;
+    stroke: white;
+    stroke-width: 7;
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.tooltip {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 1200px) {
+    #graph-sales circle {
+        stroke-width: 3;
+        r: 6;
+    }
+
+}

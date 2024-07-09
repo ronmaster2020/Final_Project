@@ -23,7 +23,7 @@ function drawLinearGraph(data, container) {
     const containerElement = container[0];
     // D3.js Line Chart
     const margin = { top: 20, right: 30, bottom: 50, left: 70 };
-    const width = containerElement.clientWidth - margin.left - margin.right;
+    const width = Math.max(containerElement.clientWidth - margin.left - margin.right, 500);
     const height = 400 - margin.top - margin.bottom;
 
     const svg = d3.select(containerElement)
@@ -79,29 +79,34 @@ function drawLinearGraph(data, container) {
         .enter().append("circle")
         .attr("cx", d => x(d._id))
         .attr("cy", d => y(d.total_income))
-        .attr("r", 5)
-        .attr("fill", "steelblue")
         .on("mouseover", function(event, d) {
+            $(this).css("stroke", "rgb(189, 225, 255)");
             tooltip.transition()
-                .duration(200)
+                .duration(100)
                 .style("opacity", .9);
-            tooltip.html(`${getMonthString(d._id.getMonth() + 1)} ${d._id.getFullYear()}<br>Total: ${d.total_income}$`)
-                .style("left", (event.pageX + 5) + "px")
-                .style("top", (event.pageY - 28) + "px");
 
             function getMonthString(month) {
                 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                 return months[month - 1];
             }
+            const formattedTotal = d.total_income.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            
+            tooltip.html(`${getMonthString(d._id.getMonth() + 1)} ${d._id.getFullYear()}<br>Total: ${formattedTotal}$`)
+                .style("left", (event.pageX + 5) + "px")
+                .style("top", (event.pageY - 28) + "px");
         })
         .on("mousemove", function(event) {
             tooltip.style("left", (event.pageX + 5) + "px")
                 .style("top", (event.pageY - 28) + "px");
         })
         .on("mouseout", function() {
+            $(this).css("stroke", "white");
             tooltip.transition()
-                .duration(500)
+                .duration(100)
                 .style("opacity", 0);
+        })
+        .on("click", function(event, d) {
+            window.location.href = `/orders?year=${d._id.getFullYear()}&month=${d._id.getMonth() + 1}`;
         });
 
     // Add X Axis Label
