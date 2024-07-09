@@ -110,7 +110,7 @@ exports.getOrdersGroupByDate = async (req, res) => {
                 {
                     $group: {
                         _id: { $year: '$order_date' },
-                        averageTotalPrice: { $avg: '$total_price' }
+                        totalIncome: { $sum: '$total_price' }
                     }
                 }
             ]);
@@ -120,7 +120,7 @@ exports.getOrdersGroupByDate = async (req, res) => {
                 {
                     $group: {
                         _id: { $month: '$order_date' },
-                        averageTotalPrice: { $avg: '$total_price' }
+                        totalIncome: { $sum: '$total_price' }
                     }
                 }
             ]);
@@ -130,7 +130,7 @@ exports.getOrdersGroupByDate = async (req, res) => {
                 {
                     $group: {
                         _id: { $dateToString: { format: "%Y-%m", date: "$order_date" } },
-                        averageTotalPrice: { $avg: '$total_price' }
+                        totalIncome: { $sum: '$total_price' }
                     }
                 }
             ]);
@@ -140,7 +140,7 @@ exports.getOrdersGroupByDate = async (req, res) => {
                 {
                     $group: {
                         _id: { $dayOfMonth: '$order_date' },
-                        averageTotalPrice: { $avg: '$total_price' }
+                        totalIncome: { $sum: '$total_price' }
                     }
                 }
             ]);
