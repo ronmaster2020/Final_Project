@@ -55,19 +55,17 @@ $(document).ready(async function() {
         startDate = new Date(dateRange.startDate);
         endDate = new Date(dateRange.endDate);
 
-        if (endDate.getDay() !== 0) {
-            endDate.setDate(0);
-            endDate.setMonth(endDate.getMonth() + 1);
-        }
+        const halfYear = 180 * 24 * 60 * 60 * 1000;
 
-        const halfYearInMs =  98 * 24 * 60 * 60 * 1000;
-        if (endDate - startDate <= halfYearInMs) {
-            console.log(dateRange.startDate, dateRange.endDate)
-            console.log(endDate.toISOString());
-            endDate.setDate(endDate.getDate() + (6 - (endDate.getDay()) % 7));
-            console.log(endDate.toISOString());
+        if (endDate - startDate < halfYear && endDate.getMonth() - startDate.getMonth() <= 3) {
+            if (endDate.getDay() !== 0) {
+                endDate.setDate(0);
+                endDate.setMonth(endDate.getMonth() + 1);
+                endDate.setDate(endDate.getDate() + (6 - (endDate.getDay()) % 7));
+            }
+            console.log(startDate.toISOString(), endDate.toISOString());
             const response = await fetchData({ dateUnit: "yearWeek", startDate: dateRange.startDate, endDate: endDate }, '/order/grouped/date', 'GET', $('#graph-sales'));
-            const dataset = await response.map(groupOfOrders => {
+            const zoomedDataset = await response.map(groupOfOrders => {
                 if (groupOfOrders._id) {
                     const dateParts = groupOfOrders._id;
                     const year = dateParts.year;
@@ -82,9 +80,8 @@ $(document).ready(async function() {
                     return null;
                 }
             }).filter(item => item !== null).sort((a, b) => a._id - b._id);
-            console.log(dataset);
             zoomedData = true;
-            filteredDataset = dataset.filter(item => item._id >= startDate && item._id <= endDate);
+            filteredDataset = zoomedDataset.filter(item => item._id >= startDate && item._id <= endDate);
         } else {
             zoomedData = false;
             filteredDataset = dataset.filter(item => item._id >= startDate && item._id <= endDate);
@@ -104,7 +101,7 @@ $(document).ready(async function() {
 
 
 // function that draws a linear graph
-function drawLinearGraph(data, container, dateRange) {
+function drawLinearGraph(dataset, container, dateRange) {
     const containerElement = container[0];
     // D3.js Line Chart
     const margin = { top: 20, right: 30, bottom: 50, left: 70 };
@@ -126,7 +123,7 @@ function drawLinearGraph(data, container, dateRange) {
         .range([0, width]);
 
     const y = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.total_income)])
+        .domain([0, d3.max(dataset, d => d.total_income)])
         .range([height, 0]);
 
     const xAxis = d3.axisBottom(x);
@@ -144,7 +141,7 @@ function drawLinearGraph(data, container, dateRange) {
         .y(d => y(d.total_income));
 
     svg.append("path")
-        .datum(data)
+        .datum(dataset)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
@@ -163,7 +160,7 @@ function drawLinearGraph(data, container, dateRange) {
 
     // Add circles for data points
     svg.selectAll("dot")
-        .data(data)
+        .data(dataset)
         .enter().append("circle")
         .attr("cx", d => x(d._id))
         .attr("cy", d => y(d.total_income))
@@ -172,6 +169,7 @@ function drawLinearGraph(data, container, dateRange) {
             tooltip.transition()
                 .duration(100)
                 .style("opacity", .9);
+            tooltip.style("display", "block");
 
             function getMonthString(month) {
                 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -198,7 +196,8 @@ function drawLinearGraph(data, container, dateRange) {
             $(this).css("stroke", "white");
             tooltip.transition()
                 .duration(100)
-                .style("opacity", 0);
+                .style("opacity", 0)
+            tooltip.style("display", "none");
         })
         .on("click", function(event, d) {
             window.location.href = `/orders?year=${d._id.getFullYear()}&month=${d._id.getMonth() + 1}`;

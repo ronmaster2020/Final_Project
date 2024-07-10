@@ -33,13 +33,10 @@
                     </select>
                 </div>
             </form>
-            <div id="graph-sales" style="width: 100%;height: auto;overflow-x: auto;box-sizing: border-box;">
-                <div id="loadingIndicator" class="d-none">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <div id="loadTxt" style="font-size: x-large; margin-left: 10px;">Loading</div>
-                </div>
+            <div id="graph-sales" style="width: 100%;height: auto;overflow-x: auto;box-sizing: border-box;"></div>
+            <!-- Progress Bar -->
+            <div class="progress" id="loadingBar">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Loading...</div>
             </div>
         </div>
     </div>
