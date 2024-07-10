@@ -33,6 +33,7 @@ $(document).ready(function() {
 
                     $('#ordersBody').append(`
                         <tr>
+                            
                             <td>${order._id}</td>
                             <td>${order.order_items.length}</td>
                             <td>${totalPrice.toFixed(2)}</td>
@@ -48,7 +49,7 @@ $(document).ready(function() {
                 // Attach click event handlers after appending orders
                 $('.delete-btn').on('click', function() {
                     const orderId = $(this).data('order-id');
-                    deleteOrder(orderId);
+                    showDeleteConfirmation(orderId);
                 });
 
                 $('.view-products-btn').on('click', function() {
@@ -70,6 +71,7 @@ $(document).ready(function() {
             method: 'GET',
             success: function(data) {
                 $('#modalOrderID').text(orderId);
+                
                 $('#modalProductsList').empty();
 
                 data.order_items.forEach(async function(item) {
@@ -94,6 +96,8 @@ $(document).ready(function() {
                 $('.closemodal').on('click', function() {
                     $('#viewProductsModal').modal('hide');
                 });
+
+
             },
             error: function(err) {
                 console.error('Error fetching products for order:', err);
@@ -191,6 +195,19 @@ $(document).ready(function() {
             }
         });
     }
+
+
+    function showDeleteConfirmation(orderId) {
+        $('#deleteConfirmationModal').modal('show');
+        $('#confirmDeleteButton').off('click').on('click', function() {
+            $('#deleteConfirmationModal').modal('hide');
+            deleteOrder(orderId);
+        });
+        $('#closeDaModal').on('click', function() {
+            $('#deleteConfirmationModal').modal('hide');
+        });
+    }
+
 
     // Initial fetch of orders when document is ready
     fetchOrders();
