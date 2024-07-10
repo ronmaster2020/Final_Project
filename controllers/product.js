@@ -72,6 +72,7 @@ exports.getProductById = async (req, res) => {
     }
 };
 
+
 // Update a product by ID
 exports.updateProduct = async (req, res) => {
     // Check if the database is connected
@@ -137,7 +138,7 @@ exports.deleteProduct = async (req, res) => {
     }
 };
 
-// Search for products by attributes (f-letter, price, gender, size)
+// Search for products by query parameters
 exports.searchProducts = async (req, res) => {
     const query = {};
 

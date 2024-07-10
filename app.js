@@ -141,6 +141,8 @@ app.get('/order/all'/*, validateAdmin()*/, orderController.getOrders);
 
 app.get('/order/:id', orderController.getOrderById);
 
+app.get('/order/grouped/date', orderController.getOrdersGroupByDate);
+
 app.post('/order/delete/:id', orderController.deleteOrder);
 
 app.get('/orders/byid/:userId', orderController.getOrdersByUserId);

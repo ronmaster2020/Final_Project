@@ -44,13 +44,16 @@ exports.createOrder = async (req, res) => {
             };
         }));
 
+        let total_price = orderItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+
         if(orderOk) {
             // Save the order
             const order = new Order({
                 order_items: orderItems,
                 userId: currentUser._id,
                 status: 2,
-            });
+                total_price: total_price
+        });
 
             console.log(order);
 
@@ -99,6 +102,92 @@ exports.getOrderById = async (req, res) => {
         res.json(order);
     } catch (err) {
         console.error('Error getting order by ID:', err);
+        res.status(500).send('Server error');
+    }
+};
+
+exports.getOrdersGroupByDate = async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+    let orders;
+    try {
+        const byDateUnit = req.query.dateUnit || 'day';
+        if (!['month', 'year', 'yearWeek', 'yearMonth'].includes(byDateUnit)) {
+            console.error('Invalid date unit:', byDateUnit);
+            return res.status(400).send('Invalid date unit');
+        }
+        if (byDateUnit === 'year') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $year: '$order_date' },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else if (byDateUnit === 'month') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $month: '$order_date' },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else if (byDateUnit === 'yearMonth') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $dateToString: { format: "%Y-%m", date: "$order_date" } },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else if (byDateUnit === 'yearWeek') {
+            if (!req.query.startDate || !req.query.endDate) {
+                return res.status(400).send('Missing start date or end date');
+            }
+
+            const startDate = new Date(req.query.startDate);
+            const endDate = new Date(req.query.endDate);
+
+            orders = await Order.aggregate([
+                {
+                    $match: {
+                        order_date: {
+                            $gte: startDate,
+                            $lte: endDate
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            year: { $year: "$order_date" },
+                            week: { $week: "$order_date" }
+                        },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $dayOfMonth: '$order_date' },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        res.json(orders);
+    } catch (err) {
+        console.error('Error getting orders grouped by date:', err);
         res.status(500).send('Server error');
     }
 };

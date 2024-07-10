@@ -1,38 +1,9 @@
 async function loadProducts(query = {}) {
-    // initialize the products table
-    $('#productsTable table tbody').empty();
-
-    // Start loading indicator
-    let loadingText = 'loading';
-    const loadingIndicator = $('#loadingIndicator');
-    const tableBody = $('#productsTable table tbody');
-    const loadTxt = $('#loadTxt');
-    loadTxt.text(loadingText);
-
-    loadingIndicator.removeClass('d-none');
-    tableBody.addClass('d-none');
-
-    const interval = setInterval(() => {
-        loadingText = loadingText.length < 10 ? loadingText + '.' : 'loading';
-        loadTxt.text(loadingText);
-    }, 500);
-    
-    // get products data from the server route
-    const queryParams = new URLSearchParams(query).toString();
-    const response = await fetch(`/products/search?${queryParams}`, {
-        method: 'GET', // GET request
-        headers: {
-            'Content-Type': 'application/json', // Assuming the server expects JSON
-        },
-    });
-    const products = await response.json();
-
-    // Stop loading indicator
-    clearInterval(interval);
-    loadingIndicator.addClass('d-none');
-    tableBody.removeClass('d-none');
+    $('#productsTable h2').text('fetching data...')
+    let products = await fetchData(query, '/products/search', 'GET', $('#productsTable table tbody'));
     
     // display the products data in the products table
+    $('#productsTable table tbody').empty();
     $('#productsTable h2').text(products.length + ' items')
     for (let i = 0; i < products.length; i++) {
         let product = products[i];
@@ -71,16 +42,6 @@ async function loadProducts(query = {}) {
 document.addEventListener('DOMContentLoaded', function() {
     loadProducts(); // Load all products when the page loads
     const form = document.querySelector('form'); // Assuming there's only one form on the page
-    const deleteBtns = document.querySelectorAll('.action-btn.delete');
-
-    $("#resetBtn").click(function() {
-        $("#name").val('');
-        $("#priceRange").val('');
-        $("#genderCategory").val('');
-        $("#sizeRange").val('');
-        $("#stockRange").val('');
-        loadProducts();
-    });
 
     form.addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the form from submitting traditionally
