@@ -32,15 +32,15 @@ $(document).ready(function() {
             let totalPrice = order.order_items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
 
             const orderElement = `
-                <div class="order" data-order-id="${order._id}" data-status="${order.status}">
-                    <div class="order-header" onclick="toggleOrderDetails('${order._id}')">
+                <div class="order" data-order-id="${order._id}" data-status="${order.status} ">
+                    <div class="order-header hover-div" onclick="toggleOrderDetails('${order._id}')">
                         <span class="order-date">${new Date(order.order_date).toLocaleDateString()}</span>
                         <span class="order-id">Order ID: ${order._id}</span>
                         <span class="order-total">Total: $${totalPrice.toFixed(2)}</span>
                     </div>
                     <div class="order-details" id="order-details-${order._id}">
                         ${order.order_items.map(item => `
-                            <div class="order-item">
+                            <div class="order-item" >
                                 <img src="${item.productId.images[0]}" alt="${item.productId.name}">
                                 <p>Product: ${item.productId.name}</p>
                                 <p>Quantity: ${item.quantity}</p>

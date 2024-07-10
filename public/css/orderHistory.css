@@ -78,6 +78,10 @@ margin-bottom: 20px; /* Add some bottom margin */
     margin-bottom: 10px; /* Add spacing between buttons */
     transition: background-color 0.3s;
 }
+.hover-div {
+        
+    cursor: pointer; 
+}
 .filter-btn.active {
     background-color: black;
     color: white;
