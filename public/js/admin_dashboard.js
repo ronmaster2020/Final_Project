@@ -72,7 +72,7 @@ $(document).ready(async function() {
                     const dateParts = groupOfOrders._id;
                     const year = dateParts.year;
                     const week = dateParts.week;
-                    const date = new Date(year, 0, (week - 1) * 7);
+                    const date = new Date(year, 0, week * 7);
                     return {
                         _id: date,
                         total_income: groupOfOrders.totalIncome
