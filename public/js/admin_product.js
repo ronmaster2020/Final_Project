@@ -1,12 +1,40 @@
-async function loadProducts(query = {}) {
-    $('#productsTable h2').text('fetching data...')
-    let products = await fetchData(query, '/products/search', 'GET', $('#productsTable table tbody'));
-    
+async function loadProducts(products, query = {}) {
+    // Filter products based on the query
+    const filteredProducts = products.filter(product => {
+        let matches = true;
+
+        if (query.name && !product.name.toLowerCase().includes(query.name.toLowerCase())) {
+            matches = false;
+        }
+        if (query.gender && product.gender !== query.gender) {
+            matches = false;
+        }
+        if (query.priceMin && product.price < query.priceMin) {
+            matches = false;
+        }
+        if (query.priceMax && product.price > query.priceMax) {
+            matches = false;
+        }
+        if (query.sizeMin && product.size < query.sizeMin) {
+            matches = false;
+        }
+        if (query.sizeMax && product.size > query.sizeMax) {
+            matches = false;
+        }
+        if (query.stockMin && product.stock < query.stockMin) {
+            matches = false;
+        }
+        if (query.stockMax && product.stock > query.stockMax) {
+            matches = false;
+        }
+
+        return matches;
+    });
     // display the products data in the products table
     $('#productsTable table tbody').empty();
-    $('#productsTable h2').text(products.length + ' items')
-    for (let i = 0; i < products.length; i++) {
-        let product = products[i];
+    $('#productsTable h2').text(filteredProducts.length + ' items')
+    for (let i = 0; i < filteredProducts.length; i++) {
+        let product = filteredProducts[i];
 
         let outOfStock = "";
         if (product.stock === 0) {
@@ -39,11 +67,20 @@ async function loadProducts(query = {}) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    loadProducts(); // Load all products when the page loads
-    const form = document.querySelector('form'); // Assuming there's only one form on the page
+$(document).ready(async function() {
+    $('#productsTable h2').text('fetching data...')
 
-    form.addEventListener('submit', function(event) {
+    let products = await fetchData({}, '/products/search', 'GET', $('#productsTable table tbody'));
+
+    loadProducts(products); // Load all products when the page loads
+    const form = $('form');
+
+    $("#resetBtn").click(function() {
+        form.trigger('reset');
+        loadProducts(products);
+    });
+
+    form.on('change', function(event) {
         event.preventDefault(); // Prevent the form from submitting traditionally
 
         // Construct the query from form inputs
@@ -62,12 +99,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const stockMin = selectedStockOption.attr('data-min') || null;
         const stockMax = selectedStockOption.attr('data-max') || null;
 
+        const query = {
+            name,
+            gender,
+            priceMin,
+            priceMax,
+            sizeMin,
+            sizeMax,
+            stockMin,
+            stockMax
+        };
 
-        // Assuming you want to construct a query string
-        const query = `name=${name}&priceMin=${priceMin}&priceMax=${priceMax}&gender=${gender}&sizeMin=${sizeMin}&sizeMax=${sizeMax}&stockMin=${stockMin}&stockMax=${stockMax}`;
-
-        // Call your loadProducts function with the query
-        loadProducts(query);
+        loadProducts(products, query);
     });
 });
 
