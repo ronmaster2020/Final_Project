@@ -1,4 +1,4 @@
-let zoomedData = false;
+let zoomedData = 1;
 
 $(document).ready(async function() {
     const today = new Date();
@@ -57,20 +57,36 @@ $(document).ready(async function() {
 
         const halfYear = 180 * 24 * 60 * 60 * 1000;
 
-        if (endDate - startDate < halfYear && endDate.getMonth() - startDate.getMonth() <= 3) {
-            if (endDate.getDay() !== 0) {
-                endDate.setDate(0);
-                endDate.setMonth(endDate.getMonth() + 1);
-                endDate.setDate(endDate.getDate() + (6 - (endDate.getDay()) % 7));
+        if (endDate - startDate < halfYear) {
+            let dateUnit = "yearWeek";
+            zoomedData = 2;
+            if (endDate.getMonth() - startDate.getMonth() <= 1) {
+                dateUnit = "yearMonthDay";
+                zoomedData = 3;
+            } else {
+                if (endDate.getDay() !== 0) {
+                    endDate.setDate(0);
+                    endDate.setMonth(endDate.getMonth() + 1);
+                }
             }
-            console.log(startDate.toISOString(), endDate.toISOString());
-            const response = await fetchData({ dateUnit: "yearWeek", startDate: dateRange.startDate, endDate: endDate }, '/order/grouped/date', 'GET', $('#graph-sales'));
+            endDate.setDate(endDate.getDate() + (6 - (endDate.getDay()) % 7));
+
+            const response = await fetchData({ dateUnit: dateUnit, startDate: dateRange.startDate, endDate: endDate }, '/order/grouped/date', 'GET', $('#graph-sales'));
             const zoomedDataset = await response.map(groupOfOrders => {
                 if (groupOfOrders._id) {
-                    const dateParts = groupOfOrders._id;
-                    const year = dateParts.year;
-                    const week = dateParts.week;
-                    const date = new Date(year, 0, week * 7);
+                    let date = null;
+                    if (dateUnit==="yearWeek") {
+                        const dateParts = groupOfOrders._id;
+                        const year = dateParts.year;
+                        const week = dateParts.week;
+                        date = new Date(year, 0, week * 7);
+                    } else {
+                        const dateParts = groupOfOrders._id;
+                        const year = dateParts.year;
+                        const month = dateParts.month - 1;
+                        const day = dateParts.day;
+                        date = new Date(year, month, day);
+                    }
                     return {
                         _id: date,
                         total_income: groupOfOrders.totalIncome
@@ -80,7 +96,6 @@ $(document).ready(async function() {
                     return null;
                 }
             }).filter(item => item !== null).sort((a, b) => a._id - b._id);
-            zoomedData = true;
             filteredDataset = zoomedDataset.filter(item => item._id >= startDate && item._id <= endDate);
         } else {
             zoomedData = false;
@@ -178,10 +193,15 @@ function drawLinearGraph(dataset, container, dateRange) {
 
             const formattedTotal = d.total_income.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             
-            if (zoomedData) {
+            if (zoomedData === 2) {
                 tooltip.html(`${d._id.getFullYear()}<br>${d._id.getDate() - 6}-${d._id.getDate()} ${getMonthString(d._id.getMonth() + 1)}<br>Total: ${formattedTotal}$`)
                     .style("left", (event.pageX + 5) + "px")
                     .style("top", (event.pageY - 28) + "px");
+            } else if (zoomedData === 3) {
+                tooltip.html(`${d._id.getDate()} ${getMonthString(d._id.getMonth() + 1)} ${d._id.getFullYear()}<br>Total: ${formattedTotal}$`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            
             } else {
                 tooltip.html(`${getMonthString(d._id.getMonth() + 1)} ${d._id.getFullYear()}<br>Total: ${formattedTotal}$`)
                     .style("left", (event.pageX + 5) + "px")
