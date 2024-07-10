@@ -1,4 +1,16 @@
 $(document).ready(function() {
+    // Animate loading bar to 100% width
+    $('#loadingBar .progress-bar').animate({ width: '100%' }, 2500, function() {
+        // Function to fetch orders and populate the table
+       
+        $('#ordersBody').hide();
+        fetchOrders();
+        $('#loadingBar').hide();
+        $('#ordersBody').show();
+       
+        
+
+    });
 
     // Function to fetch orders and populate the table
     function fetchOrders() {
@@ -57,17 +69,15 @@ $(document).ready(function() {
             url: `/order/${orderId}`,
             method: 'GET',
             success: function(data) {
-                
                 $('#modalOrderID').text(orderId);
                 $('#modalProductsList').empty();
-    
+
                 data.order_items.forEach(async function(item) {
                     try {
                         const product = await getProductDetails(item.productId);
                         if (product) {
                             $('#modalProductsList').append(`
                                 <div class="product-item">
-                                    
                                     <p><strong>${product.name}</strong></p>
                                     <p>Price: ${item.price}, Quantity: ${item.quantity}</p>
                                     <img src="http://localhost:8080/${product.images[0]}" alt="Product Image">
@@ -78,7 +88,7 @@ $(document).ready(function() {
                         console.error('Error fetching product details:', err);
                     }
                 });
-    
+
                 // Show the modal
                 $('#viewProductsModal').modal('show');
                 $('.closemodal').on('click', function() {
@@ -89,15 +99,13 @@ $(document).ready(function() {
                 console.error('Error fetching products for order:', err);
                 showToast('Failed to fetch products for order', 'error');
             }
-           
-
         });
     }
-    
+
+    // Function to fetch product details using async/await
     async function getProductDetails(productId) {
         try {
             const response = await fetch(`/product/${productId}`);
-            
             if (!response.ok) {
                 throw new Error('Failed to fetch product');
             }
@@ -108,7 +116,6 @@ $(document).ready(function() {
             throw err;
         }
     }
-    
 
     // Function to delete an order
     function deleteOrder(id) {
@@ -160,18 +167,6 @@ $(document).ready(function() {
     }
 
     // Event listener for filter form submission
-    function filterOrdersClientSide(status) {
-        $('#ordersBody tr').each(function() {
-            const orderStatus = $(this).find('td:nth-child(4)').text().trim();
-            if (status === '' || orderStatus.toLowerCase() === status.toLowerCase()) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
-    }
-
-    // Event listener for filter form submission
     $('#filterForm').on('submit', function(e) {
         e.preventDefault();
         var status = $('#statusFilter').val();
@@ -184,6 +179,18 @@ $(document).ready(function() {
         $('#statusFilter').val('');
         filterOrdersClientSide('');
     });
+
+    // Client-side filtering of orders based on status
+    function filterOrdersClientSide(status) {
+        $('#ordersBody tr').each(function() {
+            const orderStatus = $(this).find('td:nth-child(4)').text().trim();
+            if (status === '' || orderStatus.toLowerCase() === status.toLowerCase()) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
 
     // Initial fetch of orders when document is ready
     fetchOrders();
