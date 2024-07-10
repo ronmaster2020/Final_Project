@@ -40,6 +40,15 @@ $(document).ready(async function() {
 
     $('#dateRange').on('change', async function() {
         const selectedDateRange = $('#dateRange option:selected');
+        if (selectedDateRange.attr('id') === 'custom') {
+            $('#customDateRange').removeClass('d-none');
+            $('#startDate').val(dateRange.startDate.split('T')[0]);
+            $('#endDate').val(dateRange.endDate.split('T')[0]);
+            return;
+        } else {
+            $('#customDateRange').addClass('d-none');
+        }
+
         let startDate = selectedDateRange.attr('startDate') || null;
         let endDate = selectedDateRange.attr('endDate') || null;
         dateUnit = selectedDateRange.attr('dateUnit') || "yearMonth";
@@ -68,6 +77,15 @@ $(document).ready(async function() {
     });
 
     $(window).resize(function() {
+        $('#graph-sales').empty();
+        drawLinearGraph(filteredDataset, $('#graph-sales'), dateRange, dateUnit);
+    });
+
+    $('#applyDateRange').on('click', async function() {
+        dateRange.startDate = $('#startDate').val() ? $('#startDate').val() : dateRange.startDate;
+        dateRange.endDate = $('#endDate').val() ? $('#endDate').val() : dateRange.endDate;
+
+        filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
         $('#graph-sales').empty();
         drawLinearGraph(filteredDataset, $('#graph-sales'), dateRange, dateUnit);
     });
