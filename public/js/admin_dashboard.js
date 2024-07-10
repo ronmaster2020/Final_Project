@@ -42,7 +42,9 @@ $(document).ready(async function() {
         const selectedDateRange = $('#dateRange option:selected');
         if (selectedDateRange.attr('id') === 'custom') {
             $('#customDateRange').removeClass('d-none');
-            $('#startDate').val(dateRange.startDate.split('T')[0]);
+            const startDate = new Date(dateRange.startDate);
+            startDate.setDate(startDate.getDate() + 1);
+            $('#startDate').val(startDate.toISOString().split('T')[0]);
             $('#endDate').val(dateRange.endDate.split('T')[0]);
             return;
         } else {
@@ -82,8 +84,9 @@ $(document).ready(async function() {
     });
 
     $('#applyDateRange').on('click', async function() {
-        dateRange.startDate = $('#startDate').val() ? $('#startDate').val() : dateRange.startDate;
-        dateRange.endDate = $('#endDate').val() ? $('#endDate').val() : dateRange.endDate;
+        dateRange.startDate = $('#startDate').val() ? new Date($('#startDate').val()) : dateRange.startDate;
+        dateRange.startDate.setDate(dateRange.startDate.getDate() - 1);
+        dateRange.endDate = $('#endDate').val() ? new Date($('#endDate').val()) : dateRange.endDate;
 
         filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
         $('#graph-sales').empty();
