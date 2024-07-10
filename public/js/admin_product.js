@@ -40,13 +40,27 @@ async function loadProducts(products, query = {}) {
         if (product.stock === 0) {
             outOfStock = "outOfStock";
         }
+        let gender = "transgender"
+        switch (product.gender) {
+            case '1':
+                gender = 'male'
+                break;
+            case '2':
+                gender = 'female'
+                break;
+        }
         $('#productsTable table tbody').append(`
             <tr id="row-${product._id}" class="${outOfStock}">
                 <td>${product._id}</td>
                 <td>
-                    <div class="d-flex flex-row flex-nowrap align-items-center justify-content-start">
-                        <img src="/${product.images[0]}" alt="${product.name}" style="margin-right: 1rem">
-                        ${product.name}
+                    <div class="d-flex flex-row flex-nowrap align-items-center justify-content-between">
+                        <div class="d-flex flex-row flex-nowrap align-items-center justify-content-start" style="margin-right: 0.5rem">
+                            <img src="/${product.images[0]}" alt="${product.name}" style="margin-right: 0.5rem">
+                            ${product.name}
+                        </div>
+                        <span class="material-symbols-sharp">
+                            ${gender}
+                        </span>
                     </div>
                 </td>
                 <td>${product.price}<span style="color: rgb(63, 115, 63)">$</span></td>
