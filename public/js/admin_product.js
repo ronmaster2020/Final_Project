@@ -1,36 +1,5 @@
 async function loadProducts(query = {}) {
-    // initialize the products table
-    $('#productsTable table tbody').empty();
-
-    // Start loading indicator
-    let loadingText = 'loading';
-    const loadingIndicator = $('#loadingIndicator');
-    const tableBody = $('#productsTable table tbody');
-    const loadTxt = $('#loadTxt');
-    loadTxt.text(loadingText);
-
-    loadingIndicator.removeClass('d-none');
-    tableBody.addClass('d-none');
-
-    const interval = setInterval(() => {
-        loadingText = loadingText.length < 10 ? loadingText + '.' : 'loading';
-        loadTxt.text(loadingText);
-    }, 500);
-    
-    // get products data from the server route
-    const queryParams = new URLSearchParams(query).toString();
-    const response = await fetch(`/products/search?${queryParams}`, {
-        method: 'GET', // GET request
-        headers: {
-            'Content-Type': 'application/json', // Assuming the server expects JSON
-        },
-    });
-    const products = await response.json();
-
-    // Stop loading indicator
-    clearInterval(interval);
-    loadingIndicator.addClass('d-none');
-    tableBody.removeClass('d-none');
+    let products = await fetchData(query, '/products/search', 'GET', $('#productsTable table tbody'));
     
     // display the products data in the products table
     $('#productsTable h2').text(products.length + ' items')

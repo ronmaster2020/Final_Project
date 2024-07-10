@@ -126,9 +126,12 @@ async function initializeUsersData() {
     }
 }
 
-async function initializeOrdersData() {
+async function initializeOrdersData(users, numOfOrdersRange = { min: 0, max: 3}) {
     try {
-        const users = await User.find({});
+        if (!users) {
+            users = await User.find({});
+        }
+
         const products = await Product.find({});
 
         // Function to get a weighted random status
@@ -139,29 +142,32 @@ async function initializeOrdersData() {
             return 3; // 70% chance
         }
 
-        const orders = users.flatMap(user => {
+        const orders = users.map(user => {
             // Create a random number of orders for each user (between 0 and 3)
-            const numberOfOrders = Math.floor(Math.random() * 4);
+            const numberOfOrders = Math.floor(Math.random() * (numOfOrdersRange.max - numOfOrdersRange.min + 1)) + numOfOrdersRange.min;
             return Array.from({ length: numberOfOrders }, () => {
                 // Get a random number of products between 1 and 5
                 const selectedProducts = products.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 5) + 1);
+                const order_items = selectedProducts.map((product) => {
+                    const maxBudget = 500;
+                    const maxQuantity = Math.floor(maxBudget / product.price);
+                    const quantity = Math.floor(Math.random() * maxQuantity) + 1;
+                    return {
+                        productId: product._id,
+                        quantity: quantity,
+                        price: product.price,
+                    };
+                });
+                const total_price = order_items.reduce((total, item) => total + (item.price * item.quantity), 0);
                 return {
                     userId: user._id,
-                    order_items: selectedProducts.map((product) => {
-                        const maxBudget = 500;
-                        const maxQuantity = Math.floor(maxBudget / product.price);
-                        const quantity = Math.floor(Math.random() * maxQuantity) + 1;
-                        return {
-                            productId: product._id,
-                            quantity: quantity,
-                            price: product.price,
-                        };
-                    }),
+                    order_items: order_items,
                     status: getRandomStatus(), // Assign a random status
                     order_date: new Date(Date.now() - Math.floor(Math.random() * 2 * 365 * 24 * 60 * 60 * 1000)), // Maximum 2 years ago
+                    total_price: total_price
                 };
             });
-        });
+        }).reduce((acc, val) => acc.concat(val), []);
 
         await Order.deleteMany({});
         await Order.insertMany(orders);
@@ -177,7 +183,10 @@ async function initializeData() {
     await initializeProductsData();
     await initializeCartsData();
     await initializeUsersData();
-    await initializeOrdersData();
+    const notBotUsers = await User.find({ email: { $not: /@example.com$/ }});
+    await initializeOrdersData(notBotUsers, { min: 0, max: 3 });
+    const bots = await User.find({ email: { $regex: /@example.com$/ }});
+    await initializeOrdersData(bots, { min: 30, max: 100 });
 }
 
 initializeData()

@@ -9,11 +9,39 @@
     <link rel="stylesheet" href="/css/admin.css">
     <!-- admin page js -->
     <script type="text/javascript" src="/js/admin.js"></script>
+    <!-- dashboard js -->
+    <script type="text/javascript" src="/js/admin_dashboard.js"></script>
+    <!-- D3.js library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
     <div id="main-content">
         <h1>Dashboard</h1>
+        <div class="my-4">
+            <form class="border-bottom pb-2 mb-3">
+                <div class="input-group m-3">
+                    <label class="form-label" for="dateRange">Date Range</label>
+                    <select class="form-select" id="dateRange" name="dateRange">
+                        <option id="lastWeek">last week</option>
+                        <option id="lastMonth">last month (4 weeks)</option>
+                        <option id="lastQuarter">last quarter</option>
+                        <option id="lastHalfYear">last half year</option>
+                        <option id="lastYear">last year</option>
+                        <option id="last2Years">last 2 years</option>
+                        <option id="allTime" selected>all time</option>
+                    </select>
+                </div>
+            </form>
+            <div id="graph-sales" style="width: 100%;height: auto;overflow-x: auto;box-sizing: border-box;">
+                <div id="loadingIndicator" class="d-none">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div id="loadTxt" style="font-size: x-large; margin-left: 10px;">Loading</div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
