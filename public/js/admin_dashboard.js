@@ -192,9 +192,12 @@ function drawLinearGraph(dataset, container, dateRange) {
             }
 
             const formattedTotal = d.total_income.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            const dateMinus6Days = new Date(d._id);
+            dateMinus6Days.setDate(dateMinus6Days.getDate() - 6);
             
             if (zoomedData === 2) {
-                tooltip.html(`${d._id.getFullYear()}<br>${d._id.getDate() - 6}-${d._id.getDate()} ${getMonthString(d._id.getMonth() + 1)}<br>Total: ${formattedTotal}$`)
+                tooltip.html(`${d._id.getFullYear()}<br>${dateMinus6Days.getDate()} ${getMonthString(dateMinus6Days.getMonth() + 1)}-${d._id.getDate()} ${getMonthString(d._id.getMonth() + 1)}<br>Total: ${formattedTotal}$`)
                     .style("left", (event.pageX + 5) + "px")
                     .style("top", (event.pageY - 28) + "px");
             } else if (zoomedData === 3) {
