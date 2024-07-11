@@ -20,10 +20,16 @@ $(document).ready(function() {
                 }
 
                 const sortOrder = $('#dateSort').val();
+                const statusFilter = $('#statusFilter').val();
+
+                // Sort orders by date
                 data = sortOrdersByDate(data, sortOrder);
 
-                $('#ordersBody').empty();
+                // Filter orders by status
+                data = filterOrdersByStatus(data, statusFilter);
 
+                // Populate orders table
+                $('#ordersBody').empty();
                 data.forEach(function(order) {
                     let totalPrice = order.order_items.reduce((acc, item) => {
                         return acc + (item.price * item.quantity);
@@ -64,10 +70,23 @@ $(document).ready(function() {
 
     // Function to sort orders by date
     function sortOrdersByDate(orders, sortOrder) {
+        if (sortOrder === 'all') {
+            return orders; // No sorting needed
+        }
         return orders.sort((a, b) => {
             const dateA = new Date(a.order_date);
             const dateB = new Date(b.order_date);
             return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+        });
+    }
+
+    // Function to filter orders by status
+    function filterOrdersByStatus(orders, status) {
+        if (!status) {
+            return orders; // No filtering needed
+        }
+        return orders.filter(order => {
+            return getStatusText(order.status).toLowerCase() === status.toLowerCase();
         });
     }
 
@@ -131,7 +150,7 @@ $(document).ready(function() {
             url: '/order/delete/' + id,
             method: 'POST',
             success: function() {
-                fetchOrders();  // Refresh orders after deletion
+                fetchOrders(); // Refresh orders after deletion
                 showToast('Order deleted successfully', 'success');
             },
             error: function(err) {
@@ -184,7 +203,7 @@ $(document).ready(function() {
     $('#resetBtn').on('click', function(e) {
         e.preventDefault();
         $('#statusFilter').val('');
-        $('#dateSort').val('desc');
+        $('#dateSort').val('all');
         fetchOrders();
     });
 
