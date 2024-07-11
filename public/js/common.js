@@ -10,40 +10,51 @@ $(function() {
 $(function() {
     $(document).ready(function() {
         // Load the navbar
-        try {
-            $.get("/partials/navbar.html", function(data) {
-                $("#navbar-placeholder").append(data);
-                console.log("Navbar loaded successfully.");
-            });
-        } catch (error) {
-            console.error("Error loading navbar", error);
-        }
-        try {
-            // Fetch and add the sidebar content to #main-content without replacing existing content
-            $.get("/partials/contactSidebar.html", function(data) {
-                $("body").append(data);
-                console.log("Contact sidebar loaded successfully into body.");
-            });
-        } catch (error) {
-            console.error("Error loading 'contact' sidebar", error);
-        }
-        try {
-            // Fetch and add the sidebar content to #main-content without replacing existing content
-            $.get("/partials/accountSidebar.html", function(data) {
-                $("body").append(data);
-                console.log("Account sidebar loaded successfully into body.");
-            });
-        } catch (error) {
-            console.error("Error loading 'account' sidebar", error);
-        }
-        try {
-            // Fetch and add the sidebar content to #main-content without replacing existing content
-            $.get("/partials/menuSidebar.html", function(data) {
-                $("body").append(data);
-                console.log("Menu sidebar loaded successfully into body.");
-            });
-        } catch (error) {
-            console.error("Error loading 'menu' sidebar", error);
+        if (window.location.pathname.includes("/admin")) {
+            try {
+                $.get("/partials/adminNavbar.html", function(data) {
+                    $("#navbar-placeholder").append(data);
+                    console.log("Admin navbar loaded successfully.");
+                });
+            } catch (error) {
+                console.error("Error loading admin navbar", error);
+            }
+        } else {
+            try {
+                $.get("/partials/navbar.html", function(data) {
+                    $("#navbar-placeholder").append(data);
+                    console.log("Navbar loaded successfully.");
+                });
+            } catch (error) {
+                console.error("Error loading navbar", error);
+            }
+            try {
+                // Fetch and add the sidebar content to #main-content without replacing existing content
+                $.get("/partials/contactSidebar.html", function(data) {
+                    $("body").append(data);
+                    console.log("Contact sidebar loaded successfully into body.");
+                });
+            } catch (error) {
+                console.error("Error loading 'contact' sidebar", error);
+            }
+            try {
+                // Fetch and add the sidebar content to #main-content without replacing existing content
+                $.get("/partials/accountSidebar.html", function(data) {
+                    $("body").append(data);
+                    console.log("Account sidebar loaded successfully into body.");
+                });
+            } catch (error) {
+                console.error("Error loading 'account' sidebar", error);
+            }
+            try {
+                // Fetch and add the sidebar content to #main-content without replacing existing content
+                $.get("/partials/menuSidebar.html", function(data) {
+                    $("body").append(data);
+                    console.log("Menu sidebar loaded successfully into body.");
+                });
+            } catch (error) {
+                console.error("Error loading 'menu' sidebar", error);
+            }
         }
 
 
@@ -74,24 +85,6 @@ function addToCart(productId) {
         error: function(xhr, status, error) {
             console.error('Error adding product to cart', error);
         }
-    });
-}
-
-// delete product
-function deleteProduct(productId) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: `/product/delete/${productId}`,
-            method: 'POST',
-            success: function(response) {
-                console.log('Product deleted', response);
-                resolve(response);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error deleting a product', error);
-                reject(error);
-            }
-        });
     });
 }
 

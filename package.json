@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "test": "node initDB.js"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +20,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "mongodb": "^6.7.0",
-    "mongoose": "^8.4.1",
+    "mongoose": "^8.4.5",
     "multer": "^1.4.5-lts.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",

@@ -1,107 +1,67 @@
 const express = require('express');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
+const router = express.Router();
 const User = require('../models/user');
 const Cart = require('../models/cart');
-const { ObjectId } = require('mongodb');
-const router = express.Router();
 
-// Passport Local Strategy
-passport.use(new LocalStrategy(
-  { usernameField: 'email' }, // Specify that the username field is 'email'
-  async function(username, password, done) {
-    try {
-      const user = await User.findOne({ email: username });
-      if (!user) {
-        return done(null, false, { message: 'Incorrect email.' });
-      }
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    } catch (err) {
-      return done(err);
+// Middleware to protect routes
+const ensureAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
     }
-  }
-));
+    res.status(401).send('You need to log in first');
+};
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
+// Login route
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/auth/success',
+    failureRedirect: '/auth/failure'
+}));
 
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err, null);
-  }
-});
-
-// Registration Route
+// Register route
 router.post('/register', async (req, res) => {
-  const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
+    try {
+        const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
 
-  console.log('Registration request received:', req.body);
+        const newCart = new Cart();
+        await newCart.save();
 
-  try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      console.log('Email already registered:', email);
-      return res.status(400).json({ message: 'Email already registered.' });
+        const cartId = newCart._id;
+        const user = new User({ firstName, lastName, bio, address, access, phoneNumber, email, cartId });
+        await user.setPassword(password);
+        await user.save();
+
+        res.status(201).send('User registered successfully!');
+    } catch (err) {
+        console.error('Error registering user:', err);
+        res.status(500).send('Server error');
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newCartId = new ObjectId();
-
-    const user = new User({
-      firstName,
-      lastName,
-      bio,
-      address,
-      access,
-      phoneNumber,
-      email,
-      password: hashedPassword,
-      cartId: newCartId,
-      orders: [],
-    });
-
-    const savedUser = await user.save();
-    console.log('User saved:', savedUser);
-
-    const newCart = new Cart({
-      _id: newCartId,
-      products: [],
-    });
-
-    const savedCart = await newCart.save();
-    console.log('Cart saved:', savedCart);
-
-    req.session.cartId = newCartId;
-    req.session.isLogedIn = true;
-
-    res.status(201).json({ message: 'User registered successfully', user: savedUser, cart: savedCart });
-  } catch (err) {
-    console.error('Error in registration:', err);
-    res.status(500).json({ error: err.message });
-  }
 });
 
+// Logout route
+router.get('/logout', (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            console.error('Error logging out:', err);
+            return res.status(500).send('Server error');
+        }
+        res.status(200).send('Logged out successfully!');
+    });
+});
 
-// Login Route using Passport.js
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-      if (err) return next(err);
-      if (!user) return res.status(400).send('Invalid email or password');
-      req.logIn(user, (err) => {
-        if (err) return next(err);
-        req.session.userId = user._id;
-        res.status(200).send('Login successful!');
-      });
-    })(req, res, next);
-  });
-  
-  module.exports = router;
+// Protected route example
+router.get('/profile', ensureAuthenticated, (req, res) => {
+    res.json(req.user);
+});
+
+// Login success handler
+router.get('/success', (req, res) => {
+    res.status(200).send('Logged in successfully!');
+});
+
+// Login failure handler
+router.get('/failure', (req, res) => {
+    res.status(401).send('Failed to log in.');
+});
+
+module.exports = router;

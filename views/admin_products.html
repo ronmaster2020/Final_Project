@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>shop</title>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <!-- admin page css -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <!-- admin page js -->
+    <script type="text/javascript" src="/js/admin.js"></script>
+    <!-- products page js -->
+    <script type="text/javascript" src="/js/product.js"></script>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <div id="main-content">
+        <h1>Products</h1>
+        <div class="my-4">
+            <style>
+                form div.input-group {
+                    max-width: 15rem;
+                    height: 2rem;
+                }
+            </style>
+            <form method="GET" class="border-bottom pb-2 mb-3">
+                <label class="form-label" for="name">Search by first letters</label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="name" id="name">
+                </div>
+                <label class="form-label" for="priceRange">Price Range</label>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="priceRange" name="priceRange">
+                        <option value="" selected>all</option>
+                        <option value="1" data-min="0" data-max="19">0-19 $</option>
+                        <option value="2" data-min="20" data-max="49">20-49 $</option>
+                        <option value="3" data-min="50" data-max="99">50-99 $</option>
+                        <option value="4" data-min="100" data-max="149">100-149 $</option>
+                        <option value="5" data-min="150" data-max="199">150-199 $</option>
+                        <option value="6" data-min="200">200+ $</option>
+                    </select>
+                </div>
+                <label class="form-label" for="genderCategory">Gender category</label>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="genderCategory" name="genderCategory">
+                        <option value="" selected>all</option>
+                        <option value="1">male</option>
+                        <option value="2">female</option>
+                        <option value="3">unisex</option>
+                    </select>
+                </div>
+                <label class="form-label" for="sizeRange">Size Range</label>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="sizeRange" name="sizeRange">
+                        <option value="" selected>all</option>
+                        <option value="1" data-min="0" data-max="19">0-19 ml</option>
+                        <option value="2" data-min="20" data-max="49">20-49 ml</option>
+                        <option value="3" data-min="50" data-max="99">50-99 ml</option>
+                        <option value="4" data-min="100" data-max="149">100-149 ml</option>
+                        <option value="5" data-min="150" data-max="199">150-199 ml</option>
+                        <option value="6" data-min="200">200+ ml</option>
+                    </select>
+                </div>
+                <div class="p-2">
+                    <button class="btn btn-outline-secondary" type="submit">Filter</button>
+                    <button class="btn btn-outline-secondary mx-3" id="resetBtn">Reset</button>
+                </div>
+            </form>
+            <div id="productsTable">
+                <h2 class="mb-3"></h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col">Size</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div id="loadingIndicator" class="d-none">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div id="loadTxt" style="font-size: x-large; margin-left: 10px;">Loading</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .toast {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+    <div class="toast-container" style="position: fixed; bottom: 20px; right: 20px;"></div>
+</body>
+</html>

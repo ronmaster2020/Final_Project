@@ -1,65 +1,56 @@
-// user.js
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const bcrypt = require('bcrypt');
 const validator = require('validator');
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     firstName: {
         type: String,
-        required: true,
-        trim: true, // Remove leading and trailing whitespace
-        minlength: [3, 'First name must be at least 3 characters long'],
-        maxlength: [30, 'First name must be less than 30 characters']
+        required: true
     },
     lastName: {
         type: String,
-        required: true,
-        trim: true, // Remove leading and trailing whitespace
-        minlength: [3, 'Last name must be at least 3 characters long'],
-        maxlength: [30, 'Last name must be less than 30 characters']
+        required: true
     },
     bio: {
         type: String,
-        required: true,
-        maxlength: [100, 'Bio must be less than 100 characters']
+        required: true
     },
     address: {
         type: String,
-        required: true,
-        minlength: [3, 'Address must be at least 3 characters long'],
-        maxlength: [100, 'Address must be less than 100 characters']
+        required: true
     },
     access: {
         type: String,
-        enum: ['user', 'admin'],
         required: true
     },
     phoneNumber: {
         type: String,
-        required: true,
+        required: true
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        validate: {
-          validator: validator.isEmail, // Use validator for email format
-          message: 'Invalid email format'
-        }
-    },
-    password: {
-        type: String,
-        required: true
+        validate: [validator.isEmail, 'Invalid email']
     },
     cartId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'cart',
+        type: Schema.Types.ObjectId,
+        ref: 'Cart'
     },
-    orders: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Order',
-    }
+    hash: String,
+    salt: String
 });
+
+userSchema.methods.setPassword = async function (password) {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    this.salt = salt;
+    this.hash = hash;
+};
+
+userSchema.methods.validatePassword = function (password) {
+    return bcrypt.compare(password, this.hash);
+};
 
 module.exports = mongoose.model('User', userSchema);

@@ -10,6 +10,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script type="text/javascript" src="/js/common.js"></script>
         <script type="text/javascript" src="/js/login.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" href="/css/cart.css">
@@ -141,21 +144,27 @@
                     const listItem = document.createElement('li');
                     listItem.classList.add('cart-item', 'row'); // Apply cart-item and row classes
 
-                    //const imageContainer = document.createElement('div');
-                    //imageContainer.classList.add('col-md-3'); // Use Bootstrap grid for layout
+
+                    let product;
+                    for(let i = 0; i < products.length; i++) {
+                        if(item.productId === products[i]._id) {
+                            product = products[i];
+                        }
+                    }
+
 
                     // Assuming you have a product image URL property in item:
-                    //const image = document.createElement('img');
-                    //image.src = item.imageUrl;
-                    //image.classList.add('img-fluid'); // Responsive image
-                    //imageContainer.appendChild(image);
+                    const image = document.createElement('img');
+                    image.src = '/' + product.images[0];
+                    image.classList.add('image'); // Responsive image
+                    listItem.appendChild(image);
 
                     //const detailsContainer = document.createElement('div');
                     //detailsContainer.classList.add('col-md-9');
 
                     const qty_change = false;
                     const productNameSpan = document.createElement('span');
-                    productNameSpan.classList.add('product-id');
+                    productNameSpan.classList.add('product-name');
                     productNameSpan.textContent = productNames[product_index];
                     listItem.appendChild(productNameSpan);
 
@@ -166,23 +175,19 @@
                     // Option 1: Add click event listener for manual quantity change
                     quantityButton.addEventListener('click', () => {
                         // Handle quantity update logic here (e.g., prompt, increment/decrement)
-                        const newQuantity = prompt("Enter new quantity:"); // Prompt for new quantity
+                        const newQuantity = prompt("How many do you want to order?"); // Prompt for new quantity
                         if (newQuantity && !isNaN(newQuantity)) { // Validate numeric input
-                            for(let i = 0; i < products.length; i++) {
-                                if(item.productId === products[i]._id) {
-                                    if(newQuantity > products[i].stock) {
-                                        alert("We are not able to provide you with that amount of parfumes. There are only " + 
-                                        + products[i].stock + " left.");
-                                    }
-                                    else {
-                                        quantityButton.textContent = newQuantity; // Update button text with new quantity
-                                        item.quantity = newQuantity;
-                                        console.log("Changed Qty - " + item.quantity);
-                                        const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
-                                        totalSpan.textContent = "$" + new_total;
-                                        getTotal();
-                                    }
-                                }
+                            if(newQuantity > product.stock) {
+                                alert("We are not able to provide you with that amount of parfumes. There are only " + 
+                                + product.stock + " left.");
+                            }
+                            else {
+                                quantityButton.textContent = newQuantity; // Update button text with new quantity
+                                item.quantity = newQuantity;
+                                console.log("Changed Qty - " + item.quantity);
+                                const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
+                                totalSpan.textContent = "$" + new_total;
+                                getTotal();
                             }
                             // Update your cart data with the new quantity (implementation depends on your setup)
                         } 
@@ -202,7 +207,6 @@
 
                     // Add more details as needed (e.g., product name, price)
 
-                    //listItem.appendChild(imageContainer);
                     //listItem.appendChild(detailsContainer);
 
                     product_index++;
@@ -221,6 +225,7 @@
 
             function getTotal() {
                 const cartList = document.getElementById('cart-list');
+
                 final_price = 0;
                 const listItems = cartList.querySelectorAll('li');
                 listItems.forEach(listItem => {
@@ -238,6 +243,49 @@
                 console.log("Total amount - " + final_price); // Logs the text content of each item
             }
             
+
+            $(document).ready(function() {
+                $('#checkoutForm').submit(function(event) {
+                    event.preventDefault(); // Prevent form from submitting normally
+                    
+                    // Show the toast
+                    $('#checkoutToast').toast('show');
+                    
+                });
+            }); 
+
+
+            function buildToast() {
+                const toastBody = document.getElementById('toast-body');
+
+                const total = document.querySelector('#est-total');
+                const overall = document.getElementById('overall-payment');
+                const textContent = total.textContent;
+                const dollarIndex = textContent.indexOf('$');
+                const slicedText = textContent.slice(dollarIndex); // Slice from dollar sign index
+                overall.textContent = "Overall payment is " + slicedText; // Set the toast body text
+
+
+                const itemList = document.getElementById('item-list');
+                const cartList = document.getElementById('cart-list');
+                const listItems = cartList.querySelectorAll('li');
+    
+                // Clear the previous list items
+                itemList.innerHTML = '';
+
+                // Iterate through list items to collect product names and quantities
+                listItems.forEach(item => {
+                    const productName = item.querySelector('.product-name').textContent.trim();
+                    const quantity = item.querySelector('.quantity-button').textContent.trim();
+                    
+                    if (productName && quantity) {
+                        const newItem = document.createElement('li');
+                        newItem.textContent = `${productName} (Qty: ${quantity})`; // Combine name and qty with formatting
+                        itemList.appendChild(newItem);
+                    }
+
+                })
+            }
 
         </script>
 
@@ -281,6 +329,7 @@
                 <p>Total</p>
             </div>
 
+
             <div id="cart-list"></div>
             
             
@@ -293,20 +342,33 @@
                 <!-- <button type="submit" onclick="getTotal()">Get total</button> -->
                 <h3 id="subtotal"></h3>
                 <h3 id="est-total"></h3>
+
+                <form id="checkoutForm">
+                    <button type="submit" class="btn btn-primary" onclick="buildToast()">Proceed to checkout</button>
+                </form>
                 </div>
             </div>
 
-            <form action="/order/create" method="post">
-                <button type="submit">Proceed to checkout</button>
-            </form>
-
-
-
-            <!--<div class="empty_bag">
-                <h2>Your shopping bag is empty</h2>
-                <a href="/">Continue shopping</a>
-            </div>-->
             
+
+            <div class="toast-container">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="checkoutToast">
+                    <div class="toast-header">
+                      <img src="https://i.pinimg.com/564x/4b/67/b2/4b67b221dad53e271950e25cc92736e0.jpg" class="rounded me-2" alt="...">
+                      <strong class="me-auto" style="font-weight: bold;">Your order</strong>
+                      <small class="text-body-secondary">Seamless Checkout, Speedy Delivery!</small>
+                      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div id="toast-body" class="toast-body">
+                        <div id="overall-payment" class="overall"></div>
+                        <div id="item-list" class="pop-up-items"></div>
+                    </div>
+                    <form action="order/create" method="post">
+                        <button type="submit">Make an order</button>
+                    </form>
+                  </div>
+            </div>
+
 
             <br>
         </div>
