@@ -157,7 +157,7 @@ function drawLinearGraph(dataset, container, dateRange, dateUnit) {
     const endDate = new Date(dateRange.endDate);
 
     const x = d3.scaleTime()
-        .domain([startDate, endDate])
+        .domain([dataset[0]._id, dataset[dataset.length - 1]._id])
         .range([0, width]);
 
     const y = d3.scaleLinear()
