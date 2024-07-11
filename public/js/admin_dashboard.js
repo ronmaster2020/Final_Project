@@ -44,7 +44,6 @@ $(document).ready(async function() {
             const startDate = new Date(dateRange.startDate);
             startDate.setDate(startDate.getDate() + 1);
             $('#startDate').val(startDate.toISOString().split('T')[0]);
-            console.log(dateRange.endDate);
             $('#endDate').val(dateRange.endDate.toISOString().split('T')[0]);
             return;
         } else {
@@ -75,6 +74,22 @@ $(document).ready(async function() {
     });
 
     $('#dateUnit').on('change', async function() {
+        const selectedDateRange = $('#dateRange option:selected');
+        let startDate = selectedDateRange.attr('startDate') || null;
+        let endDate = selectedDateRange.attr('endDate') || null;
+
+        if (startDate) {
+            dateRange.startDate = new Date(startDate);
+        }
+        if (endDate) {
+            dateRange.endDate = new Date(endDate);
+        } else {
+            dateRange.endDate = new Date();
+        }
+        if (selectedDateRange.attr('id') === 'allTime') {
+            dateRange.startDate = dataset[0]._id;
+            dateRange.endDate = new Date();
+        }
         dateUnit = $('#dateUnit option:selected').val();
         filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
         $('#graph-sales').empty();
@@ -107,7 +122,7 @@ async function fetchingFilteredDataset(dataset, dateRange, dateUnit) {
                     const dateParts = groupOfOrders._id;
                     const year = dateParts.year;
                     const week = dateParts.week;
-                    date = new Date(year, 0, week * 7);
+                    date = new Date(year, 0, week * 7 + 6);
                 } else {
                     const dateParts = groupOfOrders._id;
                     const year = dateParts.year;
@@ -168,9 +183,11 @@ function adjustDateRange(dateRange, dateUnit) {
     let startDate = new Date(dateRange.startDate);
     let endDate = new Date(dateRange.endDate);
 
-    if (dateUnit === "yearWeek" && startDate.getDay() !== 1) {
+    console.log(startDate, endDate);
+
+    if (dateUnit === "yearWeek") {
         startDate.setDate(startDate.getDate() - startDate.getDay());
-        endDate.setDate(endDate.getDate() + (7 - (endDate.getDay()) % 7));
+        endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
     } else if (dateUnit === "yearMonth") {
         startDate.setDate(1);
         if (endDate.getDate() !== 0) {
@@ -180,6 +197,8 @@ function adjustDateRange(dateRange, dateUnit) {
     }
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
+
+    console.log(startDate, endDate);
 
     return { startDate, endDate };
 }
@@ -262,10 +281,9 @@ function drawLinearGraph(dataset, container, dateUnit) {
             const dateMinus6Days = new Date(d._id);
             dateMinus6Days.setDate(dateMinus6Days.getDate() - 6);
             
-            if (dateUnit === "yearWeek") {
+          if (dateUnit === "yearWeek") {
                 tooltip.html(`${d._id.getFullYear()}<br>${dateMinus6Days.getDate()} ${getMonthString(dateMinus6Days.getMonth() + 1)}-${d._id.getDate()} ${getMonthString(d._id.getMonth() + 1)}<br>Total: ${formattedTotal}$`)
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
+                    .style("left", (event.pageX + 5) + "px")                  .style("top", (event.pageY - 28) + "px");
             } else if (dateUnit === "yearMonthDay") {
                 tooltip.html(`${d._id.getDate()} ${getMonthString(d._id.getMonth() + 1)} ${d._id.getFullYear()}<br>Total: ${formattedTotal}$`)
                     .style("left", (event.pageX + 5) + "px")
