@@ -1,15 +1,10 @@
 $(document).ready(function() {
     // Animate loading bar to 100% width
     $('#loadingBar .progress-bar').animate({ width: '100%' }, 2500, function() {
-        // Function to fetch orders and populate the table
-       
         $('#ordersBody').hide();
         fetchOrders();
         $('#loadingBar').hide();
         $('#ordersBody').show();
-       
-        
-
     });
 
     // Function to fetch orders and populate the table
@@ -24,6 +19,9 @@ $(document).ready(function() {
                     return;
                 }
 
+                const sortOrder = $('#dateSort').val();
+                data = sortOrdersByDate(data, sortOrder);
+
                 $('#ordersBody').empty();
 
                 data.forEach(function(order) {
@@ -33,11 +31,11 @@ $(document).ready(function() {
 
                     $('#ordersBody').append(`
                         <tr>
-                            
                             <td>${order._id}</td>
                             <td>${order.order_items.length}</td>
                             <td>${totalPrice.toFixed(2)}</td>
                             <td>${getStatusText(order.status)}</td>
+                            <td>${new Date(order.order_date).toLocaleString()}</td>
                             <td>
                                 <button class="btn btn-outline-secondary delete-btn" data-order-id="${order._id}">Delete Order</button>
                                 <button class="btn btn-outline-secondary view-products-btn" data-order-id="${order._id}">View Products</button>
@@ -64,6 +62,15 @@ $(document).ready(function() {
         });
     }
 
+    // Function to sort orders by date
+    function sortOrdersByDate(orders, sortOrder) {
+        return orders.sort((a, b) => {
+            const dateA = new Date(a.order_date);
+            const dateB = new Date(b.order_date);
+            return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+        });
+    }
+
     // Function to fetch products for a specific order
     function fetchProductsForOrder(orderId) {
         $.ajax({
@@ -71,7 +78,6 @@ $(document).ready(function() {
             method: 'GET',
             success: function(data) {
                 $('#modalOrderID').text(orderId);
-                
                 $('#modalProductsList').empty();
 
                 data.order_items.forEach(async function(item) {
@@ -96,8 +102,6 @@ $(document).ready(function() {
                 $('.closemodal').on('click', function() {
                     $('#viewProductsModal').modal('hide');
                 });
-
-
             },
             error: function(err) {
                 console.error('Error fetching products for order:', err);
@@ -173,29 +177,16 @@ $(document).ready(function() {
     // Event listener for filter form submission
     $('#filterForm').on('submit', function(e) {
         e.preventDefault();
-        var status = $('#statusFilter').val();
-        filterOrdersClientSide(status);
+        fetchOrders();
     });
 
     // Event listener for reset button click
     $('#resetBtn').on('click', function(e) {
         e.preventDefault();
         $('#statusFilter').val('');
-        filterOrdersClientSide('');
+        $('#dateSort').val('desc');
+        fetchOrders();
     });
-
-    // Client-side filtering of orders based on status
-    function filterOrdersClientSide(status) {
-        $('#ordersBody tr').each(function() {
-            const orderStatus = $(this).find('td:nth-child(4)').text().trim();
-            if (status === '' || orderStatus.toLowerCase() === status.toLowerCase()) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
-    }
-
 
     function showDeleteConfirmation(orderId) {
         $('#deleteConfirmationModal').modal('show');
@@ -207,7 +198,6 @@ $(document).ready(function() {
             $('#deleteConfirmationModal').modal('hide');
         });
     }
-
 
     // Initial fetch of orders when document is ready
     fetchOrders();
