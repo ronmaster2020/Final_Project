@@ -2,7 +2,7 @@ $(document).ready(async function() {
     const today = new Date();
     
     const lastWeek = (new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7)).toISOString();
-    const lastMonth = (new Date(today.getTime() - (4 * 7 * 24 * 60 * 60 * 1000))).toISOString();
+    const lastMonth = (new Date(today.getFullYear(), today.getMonth() - 1, today.getDate() + 1)).toISOString();
     const lastQuarter = (new Date(today.getFullYear(), today.getMonth() - 3, today.getDate())).toISOString();
     const lastHalfYear = (new Date(today.getFullYear(), today.getMonth() - 6, today.getDate())).toISOString();
     const lastYear = (new Date(today.getFullYear() - 1, today.getMonth(), today.getDate())).toISOString();
@@ -18,9 +18,8 @@ $(document).ready(async function() {
     const response = await fetchData({ dateUnit: "yearMonth"}, '/order/grouped/date', 'GET', $('#graph-sales'));
     const dataset = await response.map(groupOfOrders => {
         if (groupOfOrders._id) {
-            const dateParts = groupOfOrders._id.split('-');
-            const year = parseInt(dateParts[0]);
-            const month = parseInt(dateParts[1]) - 1; // month is zero-based in JavaScript Date object
+            const year = groupOfOrders._id.year;
+            const month = groupOfOrders._id.month - 1;
             const date = new Date(year, month);
             return {
                 _id: date,
@@ -32,9 +31,9 @@ $(document).ready(async function() {
         }
     }).filter(item => item !== null).sort((a, b) => a._id - b._id);
 
-    let dateRange = { startDate: dataset[0]._id.toISOString(), endDate: (new Date()).toISOString() }
-    let filteredDataset = dataset.filter(item => item._id >= new Date(dateRange.startDate) && item._id <= new Date(dateRange.endDate));
     let dateUnit = "yearMonth";
+    let dateRange = adjustDateRange({ startDate: dataset[0]._id, endDate: new Date()}, dateUnit);
+    let filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
 
     drawLinearGraph(dataset, $('#graph-sales'), dateRange, dateUnit);
 
@@ -45,7 +44,8 @@ $(document).ready(async function() {
             const startDate = new Date(dateRange.startDate);
             startDate.setDate(startDate.getDate() + 1);
             $('#startDate').val(startDate.toISOString().split('T')[0]);
-            $('#endDate').val(dateRange.endDate.split('T')[0]);
+            console.log(dateRange.endDate);
+            $('#endDate').val(dateRange.endDate.toISOString().split('T')[0]);
             return;
         } else {
             $('#customDateRange').addClass('d-none');
@@ -57,55 +57,49 @@ $(document).ready(async function() {
         $('#dateUnit').val(dateUnit);
 
         if (startDate) {
-            dateRange = { ...dateRange, startDate: startDate };
+            dateRange.startDate = new Date(startDate);
         }
         if (endDate) {
-            dateRange = { ...dateRange, endDate: endDate };
+            dateRange.endDate = new Date(endDate);
+        } else {
+            dateRange.endDate = new Date();
         }
         if (selectedDateRange.attr('id') === 'allTime') {
-            dateRange.startDate = dataset[0]._id.toISOString();
+            dateRange.startDate = dataset[0]._id;
+            dateRange.endDate = new Date();
         }
 
         filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
         $('#graph-sales').empty();
-        drawLinearGraph(filteredDataset, $('#graph-sales'), dateRange, dateUnit);
+        drawLinearGraph(filteredDataset, $('#graph-sales'), dateUnit);
     });
 
     $('#dateUnit').on('change', async function() {
         dateUnit = $('#dateUnit option:selected').val();
         filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
         $('#graph-sales').empty();
-        drawLinearGraph(filteredDataset, $('#graph-sales'), dateRange, dateUnit);
+        drawLinearGraph(filteredDataset, $('#graph-sales'), dateUnit);
     });
 
     $(window).resize(function() {
         $('#graph-sales').empty();
-        drawLinearGraph(filteredDataset, $('#graph-sales'), dateRange, dateUnit);
+        drawLinearGraph(filteredDataset, $('#graph-sales'), dateUnit);
     });
 
     $('#applyDateRange').on('click', async function() {
         dateRange.startDate = $('#startDate').val() ? new Date($('#startDate').val()) : dateRange.startDate;
-        dateRange.startDate.setDate(dateRange.startDate.getDate() - 1);
         dateRange.endDate = $('#endDate').val() ? new Date($('#endDate').val()) : dateRange.endDate;
-
         filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
         $('#graph-sales').empty();
-        drawLinearGraph(filteredDataset, $('#graph-sales'), dateRange, dateUnit);
+        drawLinearGraph(filteredDataset, $('#graph-sales'), dateUnit);
     });
 });
 
 async function fetchingFilteredDataset(dataset, dateRange, dateUnit) {
-    startDate = new Date(dateRange.startDate);
-    endDate = new Date(dateRange.endDate);
-
+    dateRange = adjustDateRange(dateRange, dateUnit);
+    
     if (dateUnit === "yearWeek" || dateUnit === "yearMonthDay") {
-        if (dateUnit === "yearMonthDay" && endDate.getDay() !== 0) {
-            endDate.setDate(0);
-            endDate.setMonth(endDate.getMonth() + 1);
-        }
-        endDate.setDate(endDate.getDate() + (6 - (endDate.getDay()) % 7));
-
-        const response = await fetchData({ dateUnit: dateUnit, startDate: dateRange.startDate, endDate: endDate }, '/order/grouped/date', 'GET', $('#graph-sales'));
+        const response = await fetchData({ dateUnit: dateUnit, startDate: dateRange.startDate, endDate: dateRange.endDate }, '/order/grouped/date', 'GET', $('#graph-sales'));
         const zoomedDataset = await response.map(groupOfOrders => {
             if (groupOfOrders._id) {
                 let date = null;
@@ -129,17 +123,69 @@ async function fetchingFilteredDataset(dataset, dateRange, dateUnit) {
                 console.error('Invalid _id:', groupOfOrders);
                 return null;
             }
-        }).filter(item => item !== null).sort((a, b) => a._id - b._id);
-        return filteredDataset = zoomedDataset.filter(item => item._id >= startDate && item._id <= endDate);
+        })
+        let filteredDataset = zoomedDataset.filter(item => item._id >= dateRange.startDate && item._id <= dateRange.endDate);
+        filteredDataset = await fillEmptyDates( filteredDataset, dateRange, dateUnit);
+        filteredDataset = filteredDataset.sort((a, b) => a._id - b._id);
+        return filteredDataset;
     } else {
-        return filteredDataset = dataset.filter(item => item._id >= startDate && item._id <= endDate);
+        let filteredDataset = dataset.filter(item => item._id >= dateRange.startDate && item._id <= dateRange.endDate);
+        filteredDataset = await fillEmptyDates( filteredDataset, dateRange, dateUnit)
+        filteredDataset = filteredDataset.sort((a, b) => a._id - b._id);
+        return filteredDataset;
     }
 }
 
+async function fillEmptyDates(dataset, dateRange, dateUnit) {
+    let currentDate = new Date(dateRange.startDate); // Clone the start date
 
+    if (dateUnit === "yearWeek") {
+        while (currentDate <= dateRange.endDate) {
+            if (!dataset.find(item => item._id.getFullYear() === currentDate.getFullYear() && item._id.getWeek() === currentDate.getWeek())) {
+                dataset.push({ _id: new Date(currentDate), total_income: 0 }); // Clone the date
+            }
+            currentDate.setDate(currentDate.getDate() + 7);
+        }
+    } else if (dateUnit === "yearMonth") {
+        while (currentDate <= dateRange.endDate) {
+            if (!dataset.find(item => item._id.getFullYear() === currentDate.getFullYear() && item._id.getMonth() === currentDate.getMonth())) {
+                dataset.push({ _id: new Date(currentDate), total_income: 0 }); // Clone the date
+            }
+            currentDate.setMonth(currentDate.getMonth() + 1);
+        }
+    } else {
+        while (currentDate <= dateRange.endDate) {
+            if (!dataset.find(item => item._id.getFullYear() === currentDate.getFullYear() && item._id.getMonth() === currentDate.getMonth() && item._id.getDate() === currentDate.getDate())) {
+                dataset.push({ _id: new Date(currentDate), total_income: 0 }); // Clone the date
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+    }
+    return dataset;
+}
+
+function adjustDateRange(dateRange, dateUnit) {
+    let startDate = new Date(dateRange.startDate);
+    let endDate = new Date(dateRange.endDate);
+
+    if (dateUnit === "yearWeek" && startDate.getDay() !== 1) {
+        startDate.setDate(startDate.getDate() - startDate.getDay());
+        endDate.setDate(endDate.getDate() + (7 - (endDate.getDay()) % 7));
+    } else if (dateUnit === "yearMonth") {
+        startDate.setDate(1);
+        if (endDate.getDate() !== 0) {
+            endDate.setDate(0);
+            endDate.setMonth(endDate.getMonth() + 1);
+        }
+    }
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    return { startDate, endDate };
+}
 
 // function that draws a linear graph
-function drawLinearGraph(dataset, container, dateRange, dateUnit) {
+function drawLinearGraph(dataset, container, dateUnit) {
     const containerElement = container[0];
     // D3.js Line Chart
     const margin = { top: 20, right: 30, bottom: 50, left: 70 };
@@ -152,9 +198,6 @@ function drawLinearGraph(dataset, container, dateRange, dateUnit) {
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    const startDate = new Date(dateRange.startDate);
-    const endDate = new Date(dateRange.endDate);
 
     const x = d3.scaleTime()
         .domain([dataset[0]._id, dataset[dataset.length - 1]._id])

@@ -131,7 +131,10 @@ exports.getOrdersGroupByDate = async (req, res) => {
             orders = await Order.aggregate([
                 {
                     $group: {
-                        _id: { $dateToString: { format: "%Y-%m", date: "$order_date" } },
+                        _id: { 
+                            year: { $year: "$order_date" },
+                            month: { $month: "$order_date" }
+                        },
                         totalIncome: { $sum: '$total_price' }
                     }
                 }
