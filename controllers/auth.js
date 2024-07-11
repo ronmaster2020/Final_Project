@@ -1,67 +1,74 @@
-const express = require('express');
-const passport = require('passport');
-const router = express.Router();
-const User = require('../models/user');
-const Cart = require('../models/cart');
+const express = require("express"),
+    User = require("../models/user"),
+    passport = require('passport'),
+    router = express.Router();
 
-// Middleware to protect routes
-const ensureAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.status(401).send('You need to log in first');
-};
+router.get('/login', async (req, res) => {
+    res.render('login', { currentPage: 'login' });
+})
 
-// Login route
-router.post('/login', passport.authenticate('local', {
-    successRedirect: '/auth/success',
-    failureRedirect: '/auth/failure'
-}));
-
-// Register route
-router.post('/register', async (req, res) => {
-    try {
-        const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
-
-        const newCart = new Cart();
-        await newCart.save();
-
-        const cartId = newCart._id;
-        const user = new User({ firstName, lastName, bio, address, access, phoneNumber, email, cartId });
-        await user.setPassword(password);
-        await user.save();
-
-        res.status(201).send('User registered successfully!');
-    } catch (err) {
-        console.error('Error registering user:', err);
-        res.status(500).send('Server error');
-    }
+router.get('/login', (req, res) => {
+    res.render('login', { currentPage: 'login' });
+});
+router.get('/googleLogin', (req, res) => {
+    res.render('googleLogin', { currentPage: 'googleLogin' });
 });
 
-// Logout route
-router.get('/logout', (req, res) => {
-    req.logout((err) => {
-        if (err) {
-            console.error('Error logging out:', err);
-            return res.status(500).send('Server error');
-        }
-        res.status(200).send('Logged out successfully!');
+
+router.post('/register', async (req, res) => {
+    let user
+    try {
+        user = await User.register(req.body, req.body.password);
+    } catch (e) {
+        console.log("error in create user: " + e);
+        return res.status(500).send('A user with the given username is already registered.');
+    }
+    req.logIn(user, async (err) => {
+        if (err) return next(err);
+        return res.redirect('/artifacts');
     });
 });
 
-// Protected route example
-router.get('/profile', ensureAuthenticated, (req, res) => {
-    res.json(req.user);
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', function (err, user, info) {
+        if (err) {
+            console.error('Authentication error:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (!user) {
+            // No user found, handle based on info
+            if (info && (info.name === 'IncorrectPasswordError' || info.name === 'IncorrectUsernameError')) {
+                return res.status(401).send('Incorrect username or password');
+            } else {
+                return res.status(401).send('User not found');
+            }
+        }
+
+        // User authenticated, log them in
+        req.logIn(user, async function (err) {
+            if (err) {
+                console.error('Login error:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+            // Redirect user after successful login
+            return res.redirect('/artifacts');
+        });
+
+    })(req, res, next);
 });
 
-// Login success handler
-router.get('/success', (req, res) => {
-    res.status(200).send('Logged in successfully!');
+
+router.get('/logout', (req, res) => {
+    req.logOut(() => {
+        res.redirect('/auth');
+    });
 });
 
-// Login failure handler
-router.get('/failure', (req, res) => {
-    res.status(401).send('Failed to log in.');
-});
+router.get('/', (req, res) => {
+    res.locals.currentPage = 'login';
+    res.render('login');
+})
+
 
 module.exports = router;

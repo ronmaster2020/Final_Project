@@ -38,19 +38,13 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Cart'
     },
-    hash: String,
-    salt: String
+    password: {
+        type: String,
+        required: true
+    }
 });
 
-userSchema.methods.setPassword = async function (password) {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    this.salt = salt;
-    this.hash = hash;
-};
 
-userSchema.methods.validatePassword = function (password) {
-    return bcrypt.compare(password, this.hash);
-};
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+module.exports = User;
