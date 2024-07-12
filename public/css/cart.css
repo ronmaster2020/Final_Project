@@ -30,40 +30,41 @@ body {
 }
 
 /*Cart info */
-
 .cart-info {
-    width: 100%;  /* Adjust the width as desired (e.g., 500px) */
-    height: 100px;  /* Adjust the height as desired */
+    width: 100%;  /* Always occupy full width on mobile */
+    height: auto;  /* Allow height to adjust based on content */
     display: flex; /* Make the container a flexbox */
     background-color: #f5f5f5; /* Light gray background */
     border-radius: 5px; /* Rounded corners */
     padding: 1rem; /* Inner padding */
     font-family: Arial, sans-serif; /* Base font family */
 }
-  
+
 .left-part,
 .right-part {
     flex: 1; /* Make both parts equally sized */
+    flex-wrap: wrap; /* Allow content to wrap on mobile */
+    padding: 0.5rem;
 }
-  
+
 .left-part {
     background-color: #e0e0e0; /* Light gray background for left part */
     text-align: center; /* Center text in left part */
-    display: flex; /* Make the right-part a flex container */
+    display: flex; /* Make the left part a flex container */
     flex-direction: column; /* Stack items vertically */
-    align-items: flex; /* Align items at the end (right) */
-    justify-content: space-around; 
+    align-items: center; /* Align items at the center */
+    justify-content: space-around;
     font-family: Open Sans, sans-serif;
     text-transform: uppercase; /* Make text uppercase */
     /* align-self: center; */
 }
-  
+
 .left-part p {
     font-weight: bold; /* Bold text for "Continue Shopping" */
     color: #333; /* Darker text color */
     margin-bottom: 0rem;
 }
-  
+
 .left-part a {
     color: inherit; /* Inherit text color from parent */
     /* text-decoration: none; /* Remove underline from link */
@@ -73,11 +74,11 @@ body {
     color: #374086;
     cursor: pointer;
 }
-  
+
 .right-part {
     text-align: right; /* Right-align text in right part */
     color: #666; /* Lighter text color */
-    display: flex; /* Make the right-part a flex container */
+    display: flex; /* Make the right part a flex container */
     flex-direction: column; /* Stack items vertically */
     align-items: flex-end; /* Align items at the end (right) */
     justify-content: space-around;
@@ -94,11 +95,12 @@ body {
 .right-part a:hover {
     color: #374086;
 }
-  
+
 .right-part p:first-child { /* Style the first paragraph in right part */
     font-style: italic; /* Italicize "NEED ASSISTANCE?" */
     /* margin-bottom: 5px; /* Add some margin below */
 }
+
   
 
 /* List title */
@@ -136,17 +138,17 @@ body {
 
 .params p {
     margin: 0; /* Remove default margins for better spacing */
-    padding: 0 15px; /* Add some space between elements */
+    padding: 0 10px; /* Adjust padding for mobile readability */
     /* No text-align needed as flexbox handles horizontal layout */
     flex: 1; /* Make all "p" elements grow equally within the row */
     text-align: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
 }
 
 .params .perfume {
-    flex: 0 0 40%; /* Fixed 40% width for the first element */
+    flex: none; /* Allow the first element to shrink on mobile */
+    width: 40%; /* Maintain 40% width for larger screens */
 }
+
 
 
 
@@ -236,82 +238,77 @@ body {
 }
 
 /* Cart footer */ 
+/* Cart footer */
 
 .cart-footer {
-    margin-top: 20px; 
+    margin-top: 20px;
     display: flex; /* Use flexbox for layout */
     justify-content: space-around; /* Distribute content horizontally */
     align-items: center; /* Align content vertically */
-    padding: 10px 50px; /* Add some padding */
+    padding: 10px 20px; /* Adjust padding for better mobile spacing */
     background-color: #f5f5f5; /* Light gray background */
     border-radius: 5px; /* Rounded corners */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
-  
+
 .footer-left,
 .footer-right {
     flex: 1; /* Make left and right sections equally sized */
 }
-  
+
 .footer-left p {
     /* margin: 0 -0px 10px 0; /* Remove default margin for paragraph */
-    font-size: 18px;
+    font-size: 16px; /* Adjust font size for mobile readability */
     margin-bottom: 0.5rem;
 }
-  
+
 .footer-right {
     text-align: center; /* Align elements within the right section to the right */
-    margin-left: 300px;
-    align-items: end;
+    /* margin-left: 300px;  -- Remove fixed margin for mobile responsiveness */
+    flex-wrap: wrap; /* Allow content to wrap on mobile devices */
+    justify-content: center; /* Center content horizontally on mobile */
+    align-items: flex-end; /* Align content at the bottom on mobile */
 }
-  
+
 .footer-right h3 {
     margin: 5px 0; /* Add some space between headings */
 }
-  
+
 /* Optional styles to further customize the look */
-  
- .footer-left a {
+
+.footer-left a {
     color: #333; /* Darker text color for the link */
     /* text-decoration: none; /* Remove underline from link */
 }
-  
+
 .footer-left a:hover {
     text-decoration: underline; /* Underline link on hover */
 }
-  
+
 .footer-right h3 {
     color: #333; /* Darker text color for headings */
 }
-  
 
-/* Button */ 
 
-form {
-    /* Style the form container if needed (optional) */
-    /* Example: */
-    display: flex;
-    justify-content: center;
-}
-  
+/* Button */
 button[type="submit"] {
     /* Base styles for the button */
-    width: 300px;
+    width: 80%; /* Make the button full width on mobile */
     padding: 0.75rem 1.5rem;
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: rgb(0, 0, 128); /* Navy blue */
     color: #fff; /* White text */
     cursor: pointer; /* Indicate hover interaction */
-    transition: all 0.2s ease-in-out; /* Smooth hover transition */
+    /* transition: all 0.2s ease-in-out; /* Smooth hover transition */
     font-family: 'Montserrat', sans-serif; /* Cool font */
     text-transform: uppercase; /* Make all text uppercase */
     margin-top: 20px;
-    margin-left: 0px;
+    /* margin-left: 0px;  -- Remove fixed margin for mobile responsiveness*/
     /* font-weight: bold; /* Optional: Add boldness for emphasis */
 }
 
-  
+
 button[type="submit"]:hover {
     /* Hover styles for the button */
     background-color: rgb(30, 30, 100); /* Slightly darker blue on hover */
@@ -319,30 +316,22 @@ button[type="submit"]:hover {
 
 
 /* Order pop-up */
-.toast-container {
-    position: fixed; /* Ensures toast stays visible on scroll */
-    top: 50%; /* Move the container to the vertical center */
-    left: 50%; /* Move the container to the horizontal center */
-    transform: translate(-50%, -50%); /* Center the container within viewport */
-    width: 80%; /* Allow toasts to adapt to content width */
-    z-index: 1060; /* Ensure toast appears above most content */
-    display: flex; /* Allow stacking toasts vertically */
-    flex-direction: column; /* Stack toasts from top to bottom */
-    min-width: 250px; /* Set minimum toast width */
-    padding: 15px; /* Add some padding for better spacing */
-}
 
 /* Toast Styles */
 .toast {
+    position: fixed; /* Ensures toast stays visible on scroll */
+    top: 0; /* Reset top position for JavaScript calculation */
+    left: 50%; /* Move the container to the horizontal center */
+    transform: translate(-50%, 0); /* Center horizontally within viewport */
     flex: 0 0 auto; /* Allow toasts to shrink to content */
-    width: 100%; /* Match container width */
-    margin-bottom: 10px; /* Add some spacing between toasts */
+    width: 70%; /* Match container width */
+    margin-bottom: 10px; /* Add some spacing between toasts (optional) */
     padding: 1rem; /* Add padding for content */
     background-color: #fff; /* White background for main toast content */
     border-radius: 10px; /* Adjust corner radius for a softer look */
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    overflow: hidden;
 }
+
 
 /* Toast Body Styles */
 .toast-body {
@@ -383,3 +372,19 @@ button[type="submit"]:hover {
     font-weight: bold;
     font-size: large;
 }
+
+.toast form {
+    display: flex;
+    justify-content: center;
+  }
+  
+
+.blur-effect {
+    filter: blur(2px); /* Adjust blur amount as desired */
+}
+
+.disabled {
+    pointer-events: none; /* Prevent mouse clicks and other interactions */
+    opacity: 0.5; /* Optionally dim the element */
+  }
+  

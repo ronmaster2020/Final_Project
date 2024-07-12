@@ -80,8 +80,9 @@ async function initializeProductsData() {
 async function initializeCartsData() {
     try {
         const products = await Product.find({});
+        const numOfUsers = await User.countDocuments();
 
-        const carts = Array.from({ length: 10 }, () => {
+        const carts = Array.from({ length: numOfUsers }, () => {
             // Shuffle products array
             const shuffledProducts = products.sort(() => 0.5 - Math.random());
             // Get a random number of products between 1 and 6
@@ -109,6 +110,9 @@ async function initializeUsersData() {
 
         // Assign a random cartId to each user
         users.forEach(async (user) => {
+            if (!user.password) {
+                user.password = 'defaultPassword'; // Assign a default password if missing
+            }
             const randomIndex = Math.floor(Math.random() * carts.length);
             user.cartId = carts[randomIndex]._id;
             // remove the added cart from carts (locally) to prevent duplicate cartId
@@ -122,27 +126,49 @@ async function initializeUsersData() {
     }
 }
 
-async function initializeOrdersData() {
+async function initializeOrdersData(users, numOfOrdersRange = { min: 0, max: 3}) {
     try {
-        const users = await User.find({});
+        if (!users) {
+            users = await User.find({});
+        }
+
         const products = await Product.find({});
 
-        const orders = Array.from({ length: 10 }, () => {
-            // Shuffle users array
-            const shuffledUsers = users.sort(() => 0.5 - Math.random());
-            // Get a random user
-            const user = shuffledUsers[0];
-            // Get a random number of products between 1 and 6
-            const selectedProducts = products.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 6) + 1);
-            return {
-                userId: user._id,
-                products: selectedProducts.map((product) => ({
-                    productId: product._id,
-                    quantity: Math.floor(Math.random() * 10) + 1,
-                })),
-                totalPrice: selectedProducts.reduce((total, product) => total + product.price, 0),
-            };
-        });
+        // Function to get a weighted random status
+        function getRandomStatus() {
+            const random = Math.random();
+            if (random < 0.1) return 1; // 10% chance
+            if (random < 0.3) return 2; // 20% chance
+            return 3; // 70% chance
+        }
+
+        const orders = users.map(user => {
+            // Create a random number of orders for each user (between 0 and 3)
+            const numberOfOrders = Math.floor(Math.random() * (numOfOrdersRange.max - numOfOrdersRange.min + 1)) + numOfOrdersRange.min;
+            return Array.from({ length: numberOfOrders }, () => {
+                // Get a random number of products between 1 and 5
+                const selectedProducts = products.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 5) + 1);
+                const order_items = selectedProducts.map((product) => {
+                    const maxBudget = 500;
+                    const maxQuantity = Math.floor(maxBudget / product.price);
+                    const quantity = Math.floor(Math.random() * maxQuantity) + 1;
+                    return {
+                        productId: product._id,
+                        quantity: quantity,
+                        price: product.price,
+                    };
+                });
+                const total_price = order_items.reduce((total, item) => total + (item.price * item.quantity), 0);
+                return {
+                    userId: user._id,
+                    order_items: order_items,
+                    status: getRandomStatus(), // Assign a random status
+                    order_date: new Date(Date.now() - Math.floor(Math.random() * 2 * 365 * 24 * 60 * 60 * 1000)), // Maximum 2 years ago
+                    total_price: total_price
+                };
+            });
+        }).reduce((acc, val) => acc.concat(val), []);
+
         await Order.deleteMany({});
         await Order.insertMany(orders);
         console.log('Order data initialized.');
@@ -152,11 +178,15 @@ async function initializeOrdersData() {
     }
 }
 
+
 async function initializeData() {
     await initializeProductsData();
     await initializeCartsData();
     await initializeUsersData();
-    // await initializeOrdersData();
+    const notBotUsers = await User.find({ email: { $not: /@example.com$/ }});
+    await initializeOrdersData(notBotUsers, { min: 0, max: 3 });
+    const bots = await User.find({ email: { $regex: /@example.com$/ }});
+    await initializeOrdersData(bots, { min: 30, max: 100 });
 }
 
 initializeData()

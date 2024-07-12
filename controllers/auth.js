@@ -1,74 +1,89 @@
-const express = require("express"),
-    User = require("../models/user"),
-    passport = require('passport'),
-    router = express.Router();
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
+const User = require('../models/user');
+const Cart = require('../models/cart');
 
-router.get('/login', async (req, res) => {
-    res.render('login', { currentPage: 'login' });
-})
-
-router.get('/login', (req, res) => {
-    res.render('login', { currentPage: 'login' });
-});
-router.get('/googleLogin', (req, res) => {
-    res.render('googleLogin', { currentPage: 'googleLogin' });
-});
-
-
-router.post('/register', async (req, res) => {
-    let user
+passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     try {
-        user = await User.register(req.body, req.body.password);
-    } catch (e) {
-        console.log("error in create user: " + e);
-        return res.status(500).send('A user with the given username is already registered.');
-    }
-    req.logIn(user, async (err) => {
-        if (err) return next(err);
-        return res.redirect('/artifacts');
-    });
-});
-
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', function (err, user, info) {
-        if (err) {
-            console.error('Authentication error:', err);
-            return res.status(500).send('Internal Server Error');
-        }
-
+        const user = await User.findOne({ email });
         if (!user) {
-            // No user found, handle based on info
-            if (info && (info.name === 'IncorrectPasswordError' || info.name === 'IncorrectUsernameError')) {
-                return res.status(401).send('Incorrect username or password');
-            } else {
-                return res.status(401).send('User not found');
-            }
+            return done(null, false, { message: 'Incorrect email.' });
         }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (isMatch) {
+            return done(null, user);
+        } else {
+            return done(null, false, { message: 'Incorrect password.' });
+        }
+    } catch (err) {
+        return done(err);
+    }
+}));
 
-        // User authenticated, log them in
-        req.logIn(user, async function (err) {
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err);
+    }
+});
+
+const login = (req, res, next) => {
+    passport.authenticate('local', async (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            req.flash('error', info.message);
+            return res.redirect('/login');
+        }
+        req.logIn(user, async (err) => {
             if (err) {
-                console.error('Login error:', err);
-                return res.status(500).send('Internal Server Error');
+                return next(err);
             }
-            // Redirect user after successful login
-            return res.redirect('/artifacts');
+            try {
+                const cart = await Cart.findOne({ userId: user._id }).populate('products.productId');
+                req.session.cart = cart;
+                req.flash('success', 'You are now logged in!');
+                return res.redirect('/');
+            } catch (err) {
+                console.error('Error fetching cart items:', err);
+                req.flash('error', 'Error fetching cart items');
+                return res.redirect('/');
+            }
         });
-
     })(req, res, next);
-});
+};
 
+const register = async (req, res) => {
+    const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ firstName, lastName, bio, address, access, phoneNumber, email, password: hashedPassword });
+        await newUser.save();
+        req.flash('success', 'You are now registered and can log in!');
+        res.redirect('/login');
+    } catch (err) {
+        console.error('Error creating user:', err);
+        req.flash('error', 'Error creating user');
+        res.redirect('/register');
+    }
+};
 
-router.get('/logout', (req, res) => {
-    req.logOut(() => {
-        res.redirect('/auth');
+const logout = (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+        req.flash('success', 'You are logged out');
+        res.redirect('/login');
     });
-});
+};
 
-router.get('/', (req, res) => {
-    res.locals.currentPage = 'login';
-    res.render('login');
-})
-
-
-module.exports = router;
+module.exports = { login, register, logout };

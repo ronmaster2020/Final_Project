@@ -1,378 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>shop</title>
-        <!-- Bootstrap -->
-        <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-
-        <!-- JQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script type="text/javascript" src="/js/common.js"></script>
-        <script type="text/javascript" src="/js/login.js"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-        <!-- CSS -->
-        <link rel="stylesheet" href="/css/cart.css">
-
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
-
-    </head>
-
-    
-
-    <body>
-        <script>
-
-             window.onload = function() {
-                displayCartItems();
-            };
-
-
-            async function getProducts() {
-                try {
-                    const response = await fetch('/product/all');
-                    if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const productData = await response.json();
-                    return productData; // Return the cart data
-                } catch (error) {
-                    console.error('Error fetching cart data:', error);
-                    // Handle errors gracefully (e.g., display an error message)
-                }
-            }
-
-            async function getProductNames() {
-                const products = await getProducts();
-                const cartItems = await getCartItems();
-                names = [];
-                cartItems.forEach(item => {
-                    for(i = 0; i < products.length; i++) {
-                        if(item.productId === products[i]._id) {
-                            names.push(products[i].name);
-                        }
-                    }
-                });
-                return names;
-            }
-
-            async function getPrices() {
-                const products = await getProducts();
-                const cartItems = await getCartItems();
-                prices = [];
-                cartItems.forEach(item => {
-                    for(i = 0; i < products.length; i++) {
-                        if(item.productId === products[i]._id) {
-                            prices.push(products[i].price);
-                        }
-                    }
-                });
-                return prices;
-            }
-
-            async function getCartItems() {
-                try {
-                    // Fetch the cart ID from the server
-                    const cartIdResponse = await fetch('/api/cart');
-                    if (!cartIdResponse.ok) {
-                        throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
-                    }
-                    const cartIdData = await cartIdResponse.json();
-                    const cartId = cartIdData.cartId;
-
-                    if (!cartId) {
-                        console.error('No cart ID found. Please log in first.');
-                        return [];
-                    }
-                    //console.log('Cart ID from server:', cartId);
-                    //console.log('Is loged-in from server:', cartIdData.isLogedIn);
-
-                    // Fetch the cart items using the cart ID
-                    const response = await fetch('/cart/all');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const cartData = await response.json();
-
-                    for (let i = 0; i < cartData.length; i++) {
-                        if (cartId === cartData[i]._id) {
-                            return cartData[i].products || [];
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error fetching cart data:', error);
-                    // Handle errors gracefully (e.g., display an error message)
-                }
-            }
-
-        
-            async function displayCartItems() {
-                const cartItems = await getCartItems();
-                const products = await getProducts();
-                const num_of_cart_products = cartItems.length;
-                const prices = await getPrices();
-                const productNames = await getProductNames();
-                console.log(productNames);
-                console.log(prices);
-                console.log(cartItems);
-
-                const listTitle = document.getElementById('list-title');
-                listTitle.innerHTML = '';
-                listTitle.textContent = "Shopping bag  (" + num_of_cart_products + ")";
-
-                const cartList = document.getElementById('cart-list');
-                const mainContent = document.getElementById('main-content');
-
-                if (!cartItems) {
-                    // Handle case where cartItems or cartItems.products is missing or empty
-                    cartList.innerHTML = '<li>Error: Cart data unavailable.</li>';
-                    return;
-                }
-
-                if (cartItems.length === 0) {
-                    window.location.href = '/emptyCart';
-                    return;
-                }
-                const cartListContainer = document.createElement('ul'); // Use an unordered list for cart items
-                cartListContainer.classList.add('cart-list'); // Apply the cart-list class
-
-                product_index = 0;
-                cartItems.forEach(item => {
-                    const listItem = document.createElement('li');
-                    listItem.classList.add('cart-item', 'row'); // Apply cart-item and row classes
-
-
-                    let product;
-                    for(let i = 0; i < products.length; i++) {
-                        if(item.productId === products[i]._id) {
-                            product = products[i];
-                        }
-                    }
-
-
-                    // Assuming you have a product image URL property in item:
-                    const image = document.createElement('img');
-                    image.src = '/' + product.images[0];
-                    image.classList.add('image'); // Responsive image
-                    listItem.appendChild(image);
-
-                    //const detailsContainer = document.createElement('div');
-                    //detailsContainer.classList.add('col-md-9');
-
-                    const qty_change = false;
-                    const productNameSpan = document.createElement('span');
-                    productNameSpan.classList.add('product-name');
-                    productNameSpan.textContent = productNames[product_index];
-                    listItem.appendChild(productNameSpan);
-
-                    const quantityButton = document.createElement('button');
-                    quantityButton.classList.add('quantity-button');
-                    quantityButton.textContent = `${item.quantity}`;
-
-                    // Option 1: Add click event listener for manual quantity change
-                    quantityButton.addEventListener('click', () => {
-                        // Handle quantity update logic here (e.g., prompt, increment/decrement)
-                        const newQuantity = prompt("How many do you want to order?"); // Prompt for new quantity
-                        if (newQuantity && !isNaN(newQuantity)) { // Validate numeric input
-                            if(newQuantity > product.stock) {
-                                alert("We are not able to provide you with that amount of parfumes. There are only " + 
-                                + product.stock + " left.");
-                            }
-                            else {
-                                quantityButton.textContent = newQuantity; // Update button text with new quantity
-                                item.quantity = newQuantity;
-                                console.log("Changed Qty - " + item.quantity);
-                                const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
-                                totalSpan.textContent = "$" + new_total;
-                                getTotal();
-                            }
-                            // Update your cart data with the new quantity (implementation depends on your setup)
-                        } 
-                    });
-                    listItem.appendChild(quantityButton);
-
-                    const priceSpan = document.createElement('span');
-                    priceSpan.classList.add('price');
-                    priceSpan.textContent = "$" + parseFloat(prices[product_index]);
-                    listItem.appendChild(priceSpan);
-
-                    const totalSpan = document.createElement('span');
-                    totalSpan.classList.add('total');
-                    const total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
-                    totalSpan.textContent = "$" + total;
-                    listItem.appendChild(totalSpan);
-
-                    // Add more details as needed (e.g., product name, price)
-
-                    //listItem.appendChild(detailsContainer);
-
-                    product_index++;
-
-                    cartListContainer.appendChild(listItem);
-                });
-
-                cartList.appendChild(cartListContainer);
-
-                getTotal();
-            }
-
-        
-            // Call the display function (e.g., on page load)
-            //displayCartItems();
-
-            function getTotal() {
-                const cartList = document.getElementById('cart-list');
-
-                final_price = 0;
-                const listItems = cartList.querySelectorAll('li');
-                listItems.forEach(listItem => {
-                    const totalSpan = listItem.querySelector('.total');
-                    const priceString = totalSpan.textContent.slice(1); // Extract price string
-                    const price = parseFloat(priceString); // Parse to number
-                    final_price += price;
-                });
-                const subtotal = document.getElementById('subtotal');
-                subtotal.textContent = "Subtotal ------ $" + final_price;
-
-                const estTotal = document.getElementById('est-total');
-                estTotal.textContent = "Estimated total $" + final_price;
-
-                console.log("Total amount - " + final_price); // Logs the text content of each item
-            }
-            
-
-            $(document).ready(function() {
-                $('#checkoutForm').submit(function(event) {
-                    event.preventDefault(); // Prevent form from submitting normally
-                    
-                    // Show the toast
-                    $('#checkoutToast').toast('show');
-                    
-                });
-            }); 
-
-
-            function buildToast() {
-                const toastBody = document.getElementById('toast-body');
-
-                const total = document.querySelector('#est-total');
-                const overall = document.getElementById('overall-payment');
-                const textContent = total.textContent;
-                const dollarIndex = textContent.indexOf('$');
-                const slicedText = textContent.slice(dollarIndex); // Slice from dollar sign index
-                overall.textContent = "Overall payment is " + slicedText; // Set the toast body text
-
-
-                const itemList = document.getElementById('item-list');
-                const cartList = document.getElementById('cart-list');
-                const listItems = cartList.querySelectorAll('li');
-    
-                // Clear the previous list items
-                itemList.innerHTML = '';
-
-                // Iterate through list items to collect product names and quantities
-                listItems.forEach(item => {
-                    const productName = item.querySelector('.product-name').textContent.trim();
-                    const quantity = item.querySelector('.quantity-button').textContent.trim();
-                    
-                    if (productName && quantity) {
-                        const newItem = document.createElement('li');
-                        newItem.textContent = `${productName} (Qty: ${quantity})`; // Combine name and qty with formatting
-                        itemList.appendChild(newItem);
-                    }
-
-                })
-            }
-
-        </script>
-
-
-        <!-- navbar -->
-        <nav id="navbar-placeholder">
-            <ul class="navbar-nav"></ul>
-        </nav>
-        
-        <div class="container-fluid" id="main-content">
-            <!-- <button onclick="displayCartItems()">Get items</button> -->
-        
-            <!-- <form action="/cart/create" method="post">
-                <input type="hidden" name="productId" value="12345">
-                <button type="submit">Create a cart</button>
-            </form> -->
-
-
-            <h2 class="cart-title">Your Shopping Cart</h2>
-
-            
-            <div class="cart-info">
+<head>
+    <title>Shop</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/login.js"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/cart.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav id="navbar-placeholder">
+        <ul class="navbar-nav"></ul>
+    </nav>
+    <div class="container-fluid" id="main-content">
+        <div id="blur-effect">
+            <h2 class="cart-title" id="cart-title">Your Shopping Cart</h2>
+            <div class="cart-info" id="cart-info">
                 <div class="left-part">
                     <p>Explore our latest arrivals</p>
                     <a href="/">Continue Shopping</a>
-                  </div>                  
-
+                </div>
                 <div class="right-part">
                     <p>Discover what makes us unique! <a href="/about">Learn About Us</a>.</p>
                     <p>ALL TRANSACTIONS ARE SAFE AND SECURE.</p>
                 </div>
             </div>
-            
-            
             <div class="list-title" id="list-title"></div>
-            
             <div class="params">
                 <p class="perfume">Perfume</p>
                 <p>Quantity</p>
                 <p>Price</p>
                 <p>Total</p>
             </div>
-
-
             <div id="cart-list"></div>
-            
-            
             <div class="cart-footer" style="margin-top: 20px;">
                 <div class="footer-left">
                     <p>No promo codes available yet.</p>
                     <p>Sign up for our newsletter to be notified of future promotions!</p>
                 </div>
                 <div class="footer-right">
-                <!-- <button type="submit" onclick="getTotal()">Get total</button> -->
-                <h3 id="subtotal"></h3>
-                <h3 id="est-total"></h3>
-
-                <form id="checkoutForm">
-                    <button type="submit" class="btn btn-primary" onclick="buildToast()">Proceed to checkout</button>
-                </form>
+                    <h3 id="subtotal"></h3>
+                    <h3 id="est-total"></h3>
+                    <form id="checkoutForm">
+                        <button type="submit" class="btn btn-primary">Proceed to checkout</button>
+                    </form>
                 </div>
             </div>
-
-            
-
-            <div class="toast-container">
-                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="checkoutToast">
-                    <div class="toast-header">
-                      <img src="https://i.pinimg.com/564x/4b/67/b2/4b67b221dad53e271950e25cc92736e0.jpg" class="rounded me-2" alt="...">
-                      <strong class="me-auto" style="font-weight: bold;">Your order</strong>
-                      <small class="text-body-secondary">Seamless Checkout, Speedy Delivery!</small>
-                      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div id="toast-body" class="toast-body">
-                        <div id="overall-payment" class="overall"></div>
-                        <div id="item-list" class="pop-up-items"></div>
-                    </div>
-                    <form action="order/create" method="post">
-                        <button type="submit">Make an order</button>
-                    </form>
-                  </div>
-            </div>
-
-
-            <br>
         </div>
-    </body>
-    
-</html>
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="checkoutToast">
+            <div class="toast-header">
+                <img src="https://i.pinimg.com/564x/4b/67/b2/4b67b221dad53e271950e25cc92736e0.jpg" class="rounded me-2" alt="...">
+                <strong class="me-auto" style="font-weight: bold;">Your order</strong>
+                <small class="text-body-secondary">Seamless Checkout, Speedy Delivery!</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div id="toast-body" class="toast-body">
+                <div id="overall-payment" class="overall"></div>
+                <div id="item-list" class="pop-up-items"></div>
+            </div>
+            <div id="messageContainer" style="margin-top: 5px;"></div>
+            <form action="order/create" method="post" id="createOrder">
+                <button type="submit">Make an order</button>
+            </form>
+        </div>
+        <br>
+    </div>
+    <script>
+        window.onload = function() {
+            displayCartItems();
+        };
 
+        async function getProducts() {
+            try {
+                const response = await fetch('/product/all');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching product data:', error);
+                alert('Error fetching product data. Please try again later.');
+            }
+        }
+
+        async function getProductNames() {
+            const products = await getProducts();
+            const cartItems = await getCartItems();
+            return cartItems.map(item => products.find(product => product._id === item.productId)?.name || 'Unknown');
+        }
+
+        async function getPrices() {
+            const products = await getProducts();
+            const cartItems = await getCartItems();
+            return cartItems.map(item => products.find(product => product._id === item.productId)?.price || 0);
+        }
+
+        async function getCartItems() {
+    try {
+        const response = await fetch(`/cart/${userId}`); // Adjust URL to fetch cart items for the current user
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Fetched cart data:', data);
+        return data.products || []; // Adjust based on your API response structure
+    } catch (error) {
+        console.error('Error fetching cart data:', error);
+        alert('Error fetching cart data. Please try again later.');
+        return [];
+    }
+}
+
+
+        async function displayCartItems() {
+            try {
+                const cartItems = await getCartItems();
+                const products = await getProducts();
+                const prices = await getPrices();
+                const productNames = await getProductNames();
+                const num_of_cart_products = cartItems.length;
+
+                document.getElementById('list-title').textContent = `Shopping bag (${num_of_cart_products})`;
+                const cartList = document.getElementById('cart-list');
+                cartList.innerHTML = ''; // Clear previous content
+
+                if (cartItems.length === 0) {
+                    window.location.href = '/emptyCart'; // Redirect if cart is empty
+                    return;
+                }
+
+                const cartListContainer = document.createElement('ul');
+                cartListContainer.classList.add('cart-list');
+
+                cartItems.forEach((item, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('cart-item', 'row');
+
+                    const product = products.find(prod => prod._id === item.productId);
+                    if (!product) {
+                        console.error(`Product with ID ${item.productId} not found.`);
+                        return; // Skip rendering this item if product data is missing
+                    }
+
+                    const image = document.createElement('img');
+                    image.src = `/${product.images[0]}`; // Adjust image URL as per your setup
+                    image.classList.add('image');
+                    listItem.appendChild(image);
+
+                    const productNameSpan = document.createElement('span');
+                    productNameSpan.classList.add('product-name');
+                    productNameSpan.textContent = productNames[index]; // Default name if not found
+                    listItem.appendChild(productNameSpan);
+
+                    const quantityButton = document.createElement('button');
+                    quantityButton.classList.add('quantity-button');
+                    quantityButton.textContent = `${item.quantity}`;
+
+                    quantityButton.addEventListener('click', async () => {
+                        const newQuantity = prompt("How many do you want to order?");
+                        if (newQuantity && !isNaN(newQuantity)) {
+                            if (newQuantity > product.stock) {
+                                alert(`We are unable to provide ${newQuantity} units. Only ${product.stock} units are available.`);
+                            } else {
+                                quantityButton.textContent = newQuantity;
+                                item.quantity = newQuantity;
+                                const newTotal = item.quantity * parseFloat(priceSpan.textContent.slice(1));
+                                totalSpan.textContent = `$${newTotal.toFixed(2)}`;
+                                updateSubtotal();
+                            }
+                        }
+                    });
+
+                    listItem.appendChild(quantityButton);
+
+                    const priceSpan = document.createElement('span');
+                    priceSpan.classList.add('price');
+                    priceSpan.textContent = `$${prices[index]}`;
+                    listItem.appendChild(priceSpan);
+
+                    const totalSpan = document.createElement('span');
+                    totalSpan.classList.add('total');
+                    const total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
+                    totalSpan.textContent = `$${total.toFixed(2)}`;
+                    listItem.appendChild(totalSpan);
+
+                    const removeButton = document.createElement('button');
+                    removeButton.classList.add('btn', 'btn-danger');
+                    removeButton.textContent = 'Remove';
+
+                    removeButton.addEventListener('click', async () => {
+                        try {
+                            const response = await fetch(`/cart/remove/${item.productId}`, { method: 'DELETE' });
+                            if (!response.ok) {
+                                throw new Error(`Failed to remove item: ${response.status}`);
+                            }
+                            window.location.reload(); // Refresh page after successful removal
+                        } catch (error) {
+                            console.error('Error removing item:', error);
+                            alert('Failed to remove item. Please try again.');
+                        }
+                    });
+
+                    listItem.appendChild(removeButton);
+
+                    cartListContainer.appendChild(listItem);
+                });
+
+                cartList.appendChild(cartListContainer);
+                updateSubtotal();
+            } catch (error) {
+                console.error('Error displaying cart items:', error);
+                alert('Error displaying cart items');
+            }
+        }
+
+        function updateSubtotal() {
+            const cartItems = document.querySelectorAll('.cart-item');
+            let subtotal = 0;
+            cartItems.forEach(item => {
+                const totalSpan = item.querySelector('.total');
+                subtotal += parseFloat(totalSpan.textContent.slice(1));
+            });
+
+            document.getElementById('subtotal').textContent = `Subtotal: $${subtotal.toFixed(2)}`;
+            document.getElementById('est-total').textContent = `Estimated Total: $${subtotal.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>

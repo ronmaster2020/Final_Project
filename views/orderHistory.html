@@ -4,50 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order History</title>
-    <!-- Include necessary CSS files -->
     <link rel="stylesheet" href="/css/userpage.css">
     <link rel="stylesheet" href="/css/auth.css">
-    <!-- Include Bootstrap CSS if needed -->
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
-    <style>
-        
-        .order {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .order-date {
-            font-size: 14px;
-            color: #888;
-        }
-        .order-details {
-            font-size: 16px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/orderhistory.css">
 </head>
+
 <body>
-    <!-- Navbar -->
     <div id="navbar-placeholder"></div>
 
     <div class="container">
+        
         <div id="main-content" class="container-fluid" style="padding-top: 0.5rem; font-family: 'Ralewa', sans-serif;">
-            <div class="auth px-3 px-md-5">
-                <h2 class="mb-4">Order History</h2>
-                <!-- Orders will be dynamically populated here -->
-                <div id="order-history"></div>
+            <div class="order-container">
+               
+                <div class="order-history">
+                    <h2 class="mb-4">Order History</h2>
+                    <div class="order-filters">
+                    
+                        <button class="filter-btn active" data-status="all">All Orders</button>
+                        <button class="filter-btn" data-status="1">Pending</button>
+                        <button class="filter-btn" data-status="2">Processed</button>
+                        <button class="filter-btn" data-status="3">Delivered</button>
+                    </div>
+                    <div id="order-history"></div>
+                    
+                </div>
+               
             </div>
         </div>
     </div>
 
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
     <script type="text/javascript" src="/js/orderhistory.js"></script>
