@@ -3,7 +3,7 @@ async function loadProducts(products, query = {}) {
     const filteredProducts = products.filter(product => {
         let matches = true;
 
-        if (query.name && !product.name.toLowerCase().includes(query.name.toLowerCase())) {
+        if (query.name && !product.name.toLowerCase().startsWith(query.name.toLowerCase())) {
             matches = false;
         }
         if (query.gender && product.gender !== query.gender) {
@@ -87,16 +87,31 @@ $(document).ready(async function() {
     let products = await fetchData({}, '/products/search', 'GET', $('#productsTable table tbody'));
 
     loadProducts(products); // Load all products when the page loads
-    const form = $('form');
 
     $("#resetBtn").click(function() {
-        form.trigger('reset');
+        $("form").trigger('reset');
         loadProducts(products);
     });
 
-    form.on('change', function(event) {
-        event.preventDefault(); // Prevent the form from submitting traditionally
+    // Event listener for the name input field
+    $('input[name="name"]').on('input', function() {
+        filterProducts();
+    });
 
+    // Prevent form submission on Enter key press in the name input field
+    $('input[name="name"]').on('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    });
+
+    // Event listener for other form inputs
+    $("form").on('change', function(event) {
+        event.preventDefault(); // Prevent the form from submitting traditionally
+        filterProducts();
+    });
+
+    function filterProducts() {
         // Construct the query from form inputs
         const name = $('input[name="name"]').val();
         const gender = $("#genderCategory").val();
@@ -125,7 +140,7 @@ $(document).ready(async function() {
         };
 
         loadProducts(products, query);
-    });
+    }
 });
 
 // delete product
