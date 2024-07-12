@@ -90,6 +90,9 @@ $(document).ready(async function() {
             dateRange.startDate = dataset[0]._id;
             dateRange.endDate = new Date();
         }
+        dateRange.startDate = $('#startDate').val() ? new Date($('#startDate').val()) : dateRange.startDate;
+        dateRange.endDate = $('#endDate').val() ? new Date($('#endDate').val()) : dateRange.endDate;
+        
         dateUnit = $('#dateUnit option:selected').val();
         filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
         $('#graph-sales').empty();
