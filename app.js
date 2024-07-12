@@ -111,6 +111,7 @@ app.post('/login', authController.login);
 
 app.get('/user/all', authController.getUsers);
 
+app.get('/user/search', authController.searchUsers);
 
 
 // all routes for products (CRUD)
