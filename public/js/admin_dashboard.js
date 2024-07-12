@@ -32,7 +32,7 @@ $(document).ready(async function() {
     }).filter(item => item !== null).sort((a, b) => a._id - b._id);
 
     let dateUnit = "yearMonth";
-    let dateRange = adjustDateRange({ startDate: dataset[0]._id, endDate: new Date()}, dateUnit);
+    let dateRange = {startDate: dataset[0]._id, endDate: new Date()};
     let filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
 
     drawLinearGraph(dataset, $('#graph-sales'), dateRange, dateUnit);
