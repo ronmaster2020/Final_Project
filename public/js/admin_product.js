@@ -1,24 +1,66 @@
-async function loadProducts(query = {}) {
-    $('#productsTable h2').text('fetching data...')
-    let products = await fetchData(query, '/products/search', 'GET', $('#productsTable table tbody'));
-    
+async function loadProducts(products, query = {}) {
+    // Filter products based on the query
+    const filteredProducts = products.filter(product => {
+        let matches = true;
+
+        if (query.name && !product.name.toLowerCase().startsWith(query.name.toLowerCase())) {
+            matches = false;
+        }
+        if (query.gender && product.gender !== query.gender) {
+            matches = false;
+        }
+        if (query.priceMin && product.price < query.priceMin) {
+            matches = false;
+        }
+        if (query.priceMax && product.price > query.priceMax) {
+            matches = false;
+        }
+        if (query.sizeMin && product.size < query.sizeMin) {
+            matches = false;
+        }
+        if (query.sizeMax && product.size > query.sizeMax) {
+            matches = false;
+        }
+        if (query.stockMin && product.stock < query.stockMin) {
+            matches = false;
+        }
+        if (query.stockMax && product.stock > query.stockMax) {
+            matches = false;
+        }
+
+        return matches;
+    });
     // display the products data in the products table
     $('#productsTable table tbody').empty();
-    $('#productsTable h2').text(products.length + ' items')
-    for (let i = 0; i < products.length; i++) {
-        let product = products[i];
+    $('#productsTable h2').text(filteredProducts.length + ' items')
+    for (let i = 0; i < filteredProducts.length; i++) {
+        let product = filteredProducts[i];
 
         let outOfStock = "";
         if (product.stock === 0) {
             outOfStock = "outOfStock";
         }
+        let gender = "transgender"
+        switch (product.gender) {
+            case '1':
+                gender = 'male'
+                break;
+            case '2':
+                gender = 'female'
+                break;
+        }
         $('#productsTable table tbody').append(`
             <tr id="row-${product._id}" class="${outOfStock}">
                 <td>${product._id}</td>
                 <td>
-                    <div class="d-flex flex-row flex-nowrap align-items-center justify-content-start">
-                        <img src="/${product.images[0]}" alt="${product.name}" style="margin-right: 1rem">
-                        ${product.name}
+                    <div class="d-flex flex-row flex-nowrap align-items-center justify-content-between">
+                        <div class="d-flex flex-row flex-nowrap align-items-center justify-content-start" style="margin-right: 0.5rem">
+                            <img src="/${product.images[0]}" alt="${product.name}" style="margin-right: 0.5rem">
+                            ${product.name}
+                        </div>
+                        <span class="material-symbols-sharp">
+                            ${gender}
+                        </span>
                     </div>
                 </td>
                 <td>${product.price}<span style="color: rgb(63, 115, 63)">$</span></td>
@@ -39,13 +81,37 @@ async function loadProducts(query = {}) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    loadProducts(); // Load all products when the page loads
-    const form = document.querySelector('form'); // Assuming there's only one form on the page
+$(document).ready(async function() {
+    $('#productsTable h2').text('fetching data...')
 
-    form.addEventListener('submit', function(event) {
+    let products = await fetchData({}, '/products/search', 'GET', $('#productsTable table tbody'));
+
+    loadProducts(products); // Load all products when the page loads
+
+    $("#resetBtn").click(function() {
+        $("form").trigger('reset');
+        loadProducts(products);
+    });
+
+    // Event listener for the name input field
+    $('input[name="name"]').on('input', function() {
+        filterProducts();
+    });
+
+    // Prevent form submission on Enter key press in the name input field
+    $('input[name="name"]').on('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    });
+
+    // Event listener for other form inputs
+    $("form").on('change', function(event) {
         event.preventDefault(); // Prevent the form from submitting traditionally
+        filterProducts();
+    });
 
+    function filterProducts() {
         // Construct the query from form inputs
         const name = $('input[name="name"]').val();
         const gender = $("#genderCategory").val();
@@ -62,13 +128,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const stockMin = selectedStockOption.attr('data-min') || null;
         const stockMax = selectedStockOption.attr('data-max') || null;
 
+        const query = {
+            name,
+            gender,
+            priceMin,
+            priceMax,
+            sizeMin,
+            sizeMax,
+            stockMin,
+            stockMax
+        };
 
-        // Assuming you want to construct a query string
-        const query = `name=${name}&priceMin=${priceMin}&priceMax=${priceMax}&gender=${gender}&sizeMin=${sizeMin}&sizeMax=${sizeMax}&stockMin=${stockMin}&stockMax=${stockMax}`;
-
-        // Call your loadProducts function with the query
-        loadProducts(query);
-    });
+        loadProducts(products, query);
+    }
 });
 
 // delete product

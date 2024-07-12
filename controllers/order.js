@@ -111,9 +111,11 @@ exports.getOrdersGroupByDate = async (req, res) => {
         return res.status(503).send('Service unavailable. Please try again later.');
     }
     let orders;
+    const startDate = req.query.startDate;
+    const endDate = req.query.endDate;
     try {
         const byDateUnit = req.query.dateUnit || 'day';
-        if (!['month', 'year', 'yearWeek', 'yearMonth'].includes(byDateUnit)) {
+        if (!['month', 'year', 'yearMonth', 'yearWeek', 'yearMonthDay'].includes(byDateUnit)) {
             console.error('Invalid date unit:', byDateUnit);
             return res.status(400).send('Invalid date unit');
         }
@@ -141,26 +143,26 @@ exports.getOrdersGroupByDate = async (req, res) => {
             orders = await Order.aggregate([
                 {
                     $group: {
-                        _id: { $dateToString: { format: "%Y-%m", date: "$order_date" } },
+                        _id: { 
+                            year: { $year: "$order_date" },
+                            month: { $month: "$order_date" }
+                        },
                         totalIncome: { $sum: '$total_price' }
                     }
                 }
             ]);
         }
         else if (byDateUnit === 'yearWeek') {
-            if (!req.query.startDate || !req.query.endDate) {
+            if (!startDate || !endDate) {
                 return res.status(400).send('Missing start date or end date');
             }
-
-            const startDate = new Date(req.query.startDate);
-            const endDate = new Date(req.query.endDate);
 
             orders = await Order.aggregate([
                 {
                     $match: {
                         order_date: {
-                            $gte: startDate,
-                            $lte: endDate
+                            $gte: new Date(startDate),
+                            $lte: new Date(endDate)
                         }
                     }
                 },
@@ -175,11 +177,27 @@ exports.getOrdersGroupByDate = async (req, res) => {
                 }
             ]);
         }
-        else {
+        else if (byDateUnit === 'yearMonthDay') {
+            if (!startDate || !endDate) {
+                return res.status(400).send('Missing start date or end date');
+            }
+
             orders = await Order.aggregate([
                 {
+                    $match: {
+                        order_date: {
+                            $gte: new Date(startDate),
+                            $lte: new Date(endDate)
+                        }
+                    }
+                },
+                {
                     $group: {
-                        _id: { $dayOfMonth: '$order_date' },
+                        _id: { 
+                            year: { $year: "$order_date" },
+                            month: { $month: "$order_date" },
+                            day: { $dayOfMonth: "$order_date" }
+                        },
                         totalIncome: { $sum: '$total_price' }
                     }
                 }
