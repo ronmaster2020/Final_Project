@@ -32,7 +32,7 @@ const userSchema = new Schema({
     },
     access: {
         type: String,
-        enum: ['user', 'admin'],
+        enum: ['user', 'staff', 'admin'],
         required: true
     },
     phoneNumber: {

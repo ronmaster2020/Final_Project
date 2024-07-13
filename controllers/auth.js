@@ -89,3 +89,56 @@ exports.getUsers = async(req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+// Search for users by query parameters
+exports.searchUsers = async (req, res) => {
+    const query = req.query || {};
+
+    if (req.query.firstName) {
+        const firstName = req.query.firstName.substring(0, 100); // Limit to 100 characters
+        query.firstName = { $regex: new RegExp(`^${firstName}`), $options: 'i' }; // Case-insensitive
+    }
+
+    if (req.query.lastName) {
+        const lastName = req.query.lastName.substring(0, 100); // Limit to 100 characters
+        query.lastName = { $regex: new RegExp(`^${lastName}`), $options: 'i' }; // Case-insensitive
+    }
+
+    if (req.query.bio) {
+        const bio = req.query.bio.substring(0, 100); // Limit to 100 characters
+        query.bio = { $regex: new RegExp(`^${bio}`), $options: 'i' }; // Case-insensitive
+    }
+
+    if (req.query.address) {
+        const address = req.query.address.substring(0, 100); // Limit to 100 characters
+        query.address = { $regex: new RegExp(`^${address}`), $options: 'i' }; // Case-insensitive
+    }
+
+    if (req.query.access) {
+        const access = req.query.access.substring(0, 100); // Limit to 100 characters
+        query.access = { $regex: new RegExp(`^${access}`), $options: 'i' }; // Case-insensitive
+    }
+
+    if (req.query.phoneNumber) {
+        const phoneNumber = req.query.phoneNumber.substring(0, 100); // Limit to 100 characters
+        query.phoneNumber = { $regex: new RegExp(`^${phoneNumber}`), $options: 'i' }; // Case-insensitive
+    }
+
+    if (req.query.email) {
+        const email = req.query.email.substring(0, 100); // Limit to 100 characters
+        query.email = { $regex: new RegExp(`^${email}`), $options: 'i' }; // Case-insensitive
+    }
+
+    if (req.query.cartId) {
+        const cartId = req.query.cartId.substring(0, 100); // Limit to 100 characters
+        query.cartId = { $regex: new RegExp(`^${cartId}`), $options: 'i' }; // Case-insensitive
+    }
+
+    try {
+        const users = await User.find(query);
+        res.json(users);
+    } catch (err) {
+        console.error('Error searching users:', err);
+        res.status(500).send('Server error');
+    }
+};
