@@ -50,6 +50,18 @@ app.get('/contact', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'contact.html'));
 });
 
+app.get('/leadership', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'leadership.html'));
+});
+
+app.get('/privacy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'privacy.html'));
+});
+
+app.get('/terms', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'terms.html'));
+});
+
 app.get('/admin'/*, validateAdmin()*/, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin.html'));
 });
