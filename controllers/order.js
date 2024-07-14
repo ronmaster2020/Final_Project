@@ -70,6 +70,10 @@ exports.createOrder = async (req, res) => {
 
 // Get all orders
 exports.getOrders = async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
     try {
         const orders = await Order.find();
         res.json(orders);
@@ -81,6 +85,10 @@ exports.getOrders = async (req, res) => {
 
 // Get order by ID
 exports.getOrderById = async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
     try {
         const order = await Order.findById(req.params.id);
         if (!order) {
@@ -95,6 +103,10 @@ exports.getOrderById = async (req, res) => {
 
 // Get orders grouped by date
 exports.getOrdersGroupByDate = async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
     try {
         const byDateUnit = req.query.dateUnit || 'day';
         let orders;
@@ -156,11 +168,18 @@ exports.getOrdersGroupByDate = async (req, res) => {
 
 // Delete order by ID
 exports.deleteOrder = async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
     try {
-        const deletedOrder = await Order.findByIdAndDelete(req.params.id);
+        const orderId = req.params.id;
+        
+        const deletedOrder = await Order.findByIdAndDelete(orderId);
         if (!deletedOrder) {
             return res.status(404).send('Order not found');
         }
+
         res.json({ message: 'Order deleted successfully', deletedOrder });
     } catch (err) {
         console.error('Error deleting order by ID:', err);
@@ -170,6 +189,10 @@ exports.deleteOrder = async (req, res) => {
 
 // Get orders by user ID
 exports.getOrdersByUserId = async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
     try {
         const userId = req.params.userId;
         const deliveredOrders = await Order.find({ userId: userId }).populate('order_items.productId');

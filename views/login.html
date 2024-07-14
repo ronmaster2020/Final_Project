@@ -6,7 +6,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
     <link rel="stylesheet" href="/css/auth.css">
-    <script type="text/javascript" src="/js/login.js"></script>
 </head>
 <body>
     <!-- navbar -->
@@ -28,14 +27,14 @@
             <button class="brandBtn mb-4">
                 <img 
                     src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-1024.png" 
-                    alt="google">
+                    alt="facebook">
                 <span>CONTINUE WITH FACEBOOK</span>
             </button>
             <!-- apple -->
             <button class="brandBtn">
                 <img 
                     src="https://cdn2.iconfinder.com/data/icons/black-white-social-media/32/online_social_media_apple-1024.png" 
-                    alt="google">
+                    alt="apple">
                 <span>CONTINUE WITH APPLE</span>
             </button>
             <h5 class="my-4">OR</h5>
@@ -69,9 +68,12 @@
         </div>
     </div>
 
+    <div id="footer-placeholder"></div>
+
     <script>
         $(function() {
             $('#navbar-placeholder').load('/partials/navbar.html');
+            $('#footer-placeholder').load('/partials/footer.html');
         });
 
         function showPassword() {

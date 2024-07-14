@@ -7,18 +7,22 @@
     <script type="text/javascript" src="/js/common.js"></script>
 </head>
 <body onload="CheckLogin()">
-    <script>
-        async function CheckLogin() {
-            const cartIdResponse = await fetch('/api/cart');
-            if (!cartIdResponse.ok) {
-                throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
+ <script>
+    async function CheckLogin() {
+        try {
+            const response = await fetch('/api/cart');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const cartIdData = await cartIdResponse.json();
-
-            console.log('Cart ID from server:', cartIdData.cartId);
-            console.log('Is loged-in from server:', cartIdData.isLogedIn);
+            const data = await response.json();
+            console.log('Cart ID from server:', data.cartId);
+            console.log('Is logged-in from server:', data.isLoggedIn);
+        } catch (error) {
+            console.error('Error during CheckLogin:', error);
         }
-    </script>
+    }
+</script>
+
     <!-- navbar -->
     <div id="navbar-placeholder"></div>
 

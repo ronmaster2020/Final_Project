@@ -5,9 +5,10 @@ const multer = require('multer');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
-const upload = multer();
 const app = express();
 const PORT = process.env.PORT || 8080;
+const Cart = require('./models/cart');
+const User = require('./models/user');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -15,7 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/products_files', express.static(path.join(__dirname, 'file_uploads', 'products_files')));
 app.use('/partials', express.static(path.join(__dirname, 'views', 'partials')));
-const { ensureAuthenticated, isLoggedIn, displayCartItems } = require('./controllers/isloggedin');
 
 app.use(session({
     secret: '0802',
@@ -42,6 +42,7 @@ app.use((req, res, next) => {
     next();
 });
 
+const { ensureAuthenticated, isLoggedIn } = require('./controllers/isloggedin');
 
 mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => {
@@ -74,6 +75,18 @@ app.get('/about', (req, res) => {
 
 app.get('/contact', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'contact.html'));
+});
+
+app.get('/leadership', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'leadership.html'));
+});
+
+app.get('/privacy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'privacy.html'));
+});
+
+app.get('/terms', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'terms.html'));
 });
 
 app.get('/admin', ensureAuthenticated, (req, res) => {
@@ -132,6 +145,8 @@ const authController = require('./controllers/auth');
 app.post('/register', authController.register);
 app.post('/login', authController.login);
 app.get('/logout', authController.logout);
+app.get('/user/all', authController.getUsers);
+app.get('/user/search', authController.searchUsers);
 
 const productController = require('./controllers/product');
 app.post('/product/create', ensureAuthenticated, product_file_upload.array('productImage', 10), productController.createProduct);
@@ -158,16 +173,18 @@ app.post('/cart/delete/:id', ensureAuthenticated, cartController.deleteCart);
 app.get('/cart/all', ensureAuthenticated, cartController.getAllCarts);
 app.get('/cartById/:cartId', ensureAuthenticated, cartController.getCartById);
 
-
-app.get('/api/cart', (req, res) => {
-    const cartId = req.session.cartId;
-    const isLoggedIn = req.session.isLoggedIn;
-
-    if (!cartId) {
-        return res.status(404).json({ error: 'No cart found' });
+app.get('/api/cart', ensureAuthenticated, async (req, res) => {
+    console.log('Request received at /api/cart');
+    try {
+        const cart = await Cart.findOne({ userId: req.user._id }).populate('products.productId');
+        if (!cart) {
+            return res.status(404).json({ error: 'No cart found' });
+        }
+        res.json({ cartId: cart._id, isLoggedIn: true });
+    } catch (err) {
+        console.error('Error fetching cart:', err);
+        res.status(500).json({ error: 'Error fetching cart' });
     }
-
-    res.json({ cartId, isLoggedIn });
 });
 
 app.use((err, req, res, next) => {

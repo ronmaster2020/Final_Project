@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>shop</title>
+    <title>Shop - Admin Staff</title>
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
@@ -9,11 +9,99 @@
     <link rel="stylesheet" href="/css/admin.css">
     <!-- admin page js -->
     <script type="text/javascript" src="/js/admin.js"></script>
+    <style>
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+        }
+        .col-12.col-xl-6 {
+            display: flex;
+        }
+        .admin-card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+            overflow-x: auto;
+            overflow-y: auto;
+            height: auto;
+            width: 100%;
+            max-height: 30rem;
+            flex: 1;
+        }
+        .admin-card img {
+            border-radius: 50%;
+            margin-right: 20px;
+            width: 100px;
+            height: 100px;
+        }
+        .admin-card .admin-info {
+            flex-grow: 1;
+        }
+        .admin-card .admin-info h2 {
+            margin: 0;
+            margin-bottom: 1rem;
+            font-size: 1.5em;
+        }
+        .admin-card .admin-info p {
+            margin: 0;
+        }
+        .admin-card .admin-info div {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: row;    
+            flex-wrap: nowrap;
+            justify-content: start;
+        }
+        .admin-card .admin-info div .label {
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .admin-card {
+                flex-direction: column;
+            }
+            .admin-card img {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            .admin-card .admin-info div {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <script>
+        $(document).ready(async function() {
+            let staff = await fetchData({ access: 'staff' }, '/user/search', 'GET', $('#staff'));
+            staff.forEach((s) => {
+                let staffCard = $('<div class="col-12 col-xl-6"></div>');
+                let adminCard = $('<div class="admin-card"></div>');
+                let img = $('<img src="https://cdn-icons-png.freepik.com/512/3135/3135715.png" alt="Profile Image">');
+                let adminInfo = $('<div class="admin-info"></div>');
+                let h2 = $('<h2>' + s.firstName + ' ' + s.lastName + '</h2>');
+                let email = $('<div><p class="label">Email:</p><p id="email">' + s.email + '</p></div>');
+                let address = $('<div><p class="label">Address:</p><p id="address">' + s.address + '</p></div>');
+                let phoneNumber = $('<div><p class="label">Phone Number:</p><p id="phoneNumber">' + s.phoneNumber + '</p></div>');
+                let bio = $('<div><p class="label">Bio:</p><p id="bio">' + s.bio + '</p></div>');
+                adminInfo.append(h2, email, address, phoneNumber, bio);
+                adminCard.append(img, adminInfo);
+                staffCard.append(adminCard);
+                $('#staff').append(staffCard);
+            });
+        });
+    </script>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
     <div id="main-content">
         <h1>Staff</h1>
+        <div class="row" id="staff"></div>
     </div>
+    <div id="footer-placeholder"></div>
 </body>
 </html>

@@ -31,7 +31,7 @@ exports.createProduct = async (req, res) => {
             res.status(400).send({ errors: messages });
         } else {
             console.error('Error creating product:', err);
-            res.status(500).send('Server error');
+            res.status(500).send('Internal server error');
         }
     }
 };
@@ -46,8 +46,8 @@ exports.getProducts = async (req, res) => {
         const products = await Product.find();
         res.json(products);
     } catch (err) {
-        console.error('Error getting products:', err);
-        res.status(500).send('Server error');
+        console.error('Error fetching products:', err);
+        res.status(500).send('Internal server error');
     }
 };
 
@@ -64,8 +64,8 @@ exports.getProductById = async (req, res) => {
         }
         res.json(product);
     } catch (err) {
-        console.error('Error getting product by ID:', err);
-        res.status(500).send('Server error');
+        console.error('Error fetching product by ID:', err);
+        res.status(500).send('Internal server error');
     }
 };
 
@@ -81,12 +81,14 @@ exports.updateProduct = async (req, res) => {
         if (!product) {
             return res.status(404).send('Product not found');
         }
+
         product.name = name;
         product.DESC = DESC;
         product.price = price;
         product.gender = gender;
         product.size = size;
         await product.save();
+
         res.send('Product updated successfully');
     } catch (err) {
         if (err.name === 'ValidationError') {
@@ -94,7 +96,7 @@ exports.updateProduct = async (req, res) => {
             res.status(400).send({ errors: messages });
         } else {
             console.error('Error updating product:', err);
-            res.status(500).send('Server error');
+            res.status(500).send('Internal server error');
         }
     }
 };
@@ -110,6 +112,7 @@ exports.deleteProduct = async (req, res) => {
         if (!product) {
             return res.status(404).send('Product not found');
         }
+
         for (const imagePath of product.images) {
             fs.unlink(imagePath, (err) => {
                 if (err) {
@@ -117,6 +120,7 @@ exports.deleteProduct = async (req, res) => {
                 }
             });
         }
+
         await Product.deleteOne({ _id: req.params.id });
         res.json({
             message: 'Product deleted successfully',
@@ -124,7 +128,7 @@ exports.deleteProduct = async (req, res) => {
         });
     } catch (err) {
         console.error('Error deleting product:', err);
-        res.status(500).send('Server error');
+        res.status(500).send('Internal server error');
     }
 };
 
@@ -187,6 +191,6 @@ exports.searchProducts = async (req, res) => {
         res.json(products);
     } catch (err) {
         console.error('Error searching products:', err);
-        res.status(500).send('Server error');
+        res.status(500).send('Internal server error');
     }
 };

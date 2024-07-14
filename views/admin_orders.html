@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/admin.css">
     <script type="text/javascript" src="/js/admin.js"></script>
     <script type="text/javascript" src="/js/order.js"></script> <!-- Order page specific JavaScript -->
+    <link rel="stylesheet" href="/css/orders_admin.css">
 
     <style>
         .product-item {
@@ -90,6 +91,12 @@
                         <option value="delivered">Delivered</option>
                         <option value="pending">Pending</option>
                     </select>
+                    <label for="dateSort" class="ml-3">Sort by Date:</label>
+                    <select class="form-select" id="dateSort" name="dateSort">
+                        <option value="all">ALL</option>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
                     <button class="btn btn-outline-secondary" type="submit">Filter</button>
                     <button class="btn btn-outline-secondary mx-3" id="resetBtn">Reset</button>
                 </div>
@@ -100,8 +107,6 @@
                 <div class="progress" id="loadingBar">
                     <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Loading...</div>
                 </div>
-              
-                
                 <table class="table">
                     <thead>
                         <tr>
@@ -109,6 +114,7 @@
                             <th scope="col">Total Items</th>
                             <th scope="col">Total Price</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Date</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -119,7 +125,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="toast-container" style="position: fixed; bottom: 20px; right: 20px;"></div>
 
     <!-- Modal -->
@@ -140,7 +146,7 @@
             </div>
         </div>
     </div>
-  
+
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -160,5 +166,7 @@
             </div>
         </div>
     </div>
+  
+    <div id="footer-placeholder"></div>
 </body>
 </html>

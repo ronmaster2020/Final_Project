@@ -23,13 +23,35 @@
                 <div class="input-group m-3">
                     <label class="form-label" for="dateRange">Date Range</label>
                     <select class="form-select" id="dateRange" name="dateRange">
-                        <option id="lastWeek">last week</option>
-                        <option id="lastMonth">last month (4 weeks)</option>
-                        <option id="lastQuarter">last quarter</option>
-                        <option id="lastHalfYear">last half year</option>
-                        <option id="lastYear">last year</option>
-                        <option id="last2Years">last 2 years</option>
-                        <option id="allTime" selected>all time</option>
+                        <option id="custom">Manual</option>
+                        <option id="lastWeek" dateUnit="yearMonthDay">last week</option>
+                        <option id="lastMonth" dateUnit="yearMonthDay">last month</option>
+                        <option id="lastQuarter" dateUnit="yearWeek">last quarter</option>
+                        <option id="lastHalfYear" dateUnit="yearWeek">last half year</option>
+                        <option id="lastYear" dateUnit="yearMonth">last year</option>
+                        <option id="last2Years" dateUnit="yearMonth">last 2 years</option>
+                        <option id="allTime" dateUnit="yearMonth" selected>all time</option>
+                    </select>
+                    <div id="customDateRange" class="d-none">
+                        <div class="input-group m-3">
+                            <label class="form-label" for="startDate">From date (MM/DD/YYYY)</label>
+                            <input type="date" class="form-control" name="startDate" id="startDate">
+                        </div>
+                        <div class="input-group m-3">
+                            <label class="form-label" for="endDate">To date (MM/DD/YYYY)</label>
+                            <input type="date" class="form-control" name="endDate" id="endDate">
+                        </div>
+                        <div class="input-group m-3">
+                            <button type="button" class="btn btn-primary" id="applyDateRange">Apply</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group m-3 d-flex justify-content-start" style="max-height: 4rem;">
+                    <label class="form-label" for="dateUnit">Date Unit</label>
+                    <select class="form-select" id="dateUnit" name="dateUnit">
+                        <option value="yearMonthDay">By Days</option>
+                        <option value="yearWeek">By Weeks</option>
+                        <option value="yearMonth" selected>By Months</option>
                     </select>
                 </div>
             </form>
@@ -40,5 +62,6 @@
             </div>
         </div>
     </div>
+    <div id="footer-placeholder"></div>
 </body>
 </html>

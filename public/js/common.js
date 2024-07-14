@@ -72,6 +72,34 @@ $(function() {
     });
 });
 
+//load footer to all pages
+$(function() {
+    $(document).ready(function() {
+        // Load the footer
+        try {
+            $.get("/partials/footer.html", function(data) {
+                $("#footer-placeholder").append(data);
+                console.log("Footer loaded successfully.");
+            });
+        } catch (error) {
+            console.error("Error loading footer", error);
+        }
+
+        // !!! must be loaded just before the closing body tag !!!
+        // DONT LOAD ANYTHING ELSE AFTER THIS
+        try {
+            $("body").append(`
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+            `);
+            console.log("Bootstrap JS loaded successfully.");
+        } catch (error) {
+            console.error("Error loading Bootstrap JS", error);
+        }
+        // DONT LOAD ANYTHING ELSE AFTER THIS
+    });
+});
+
+
 // add to cart
 function addToCart(productId) {
     $.ajax({

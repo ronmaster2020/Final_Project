@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 const validator = require('validator');
 const Schema = mongoose.Schema;
 
@@ -25,20 +24,32 @@ const userSchema = new Schema({
     },
     address: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        minlength: [5, 'Address must be at least 5 characters long'],
+        maxlength: [100, 'Address must be less than 100 characters']
     },
     access: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     phoneNumber: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: function (v) {
+                return /\d{10}/.test(v); // Simple regex for 10 digit phone number
+            },
+            message: props => `${props.value} is not a valid phone number!`
+        }
     },
     email: {
         type: String,
         required: true,
         unique: true,
+        trim: true,
+        lowercase: true,
         validate: [validator.isEmail, 'Invalid email']
     },
     cartId: {
