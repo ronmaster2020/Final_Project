@@ -160,9 +160,11 @@ async function fillEmptyDates(dataset, dateRange, dateUnit) {
     if (dateUnit === "yearWeek") {
         while (currentDate <= dateRange.endDate) {
             if (!dataset.find(item => item._id.getFullYear() === currentDate.getFullYear() && item._id.getWeek() === currentDate.getWeek())) {
-                dataset.push({ _id: new Date(currentDate), total_income: 0 }); // Clone the date
+                dataset.push({ _id: new Date(currentDate.setDate(currentDate.getDate() + 6)), total_income: 0 }); // Clone the date
+            } else {
+                currentDate.setDate(currentDate.getDate() + 7);
             }
-            currentDate.setDate(currentDate.getDate() + 7);
+            
         }
     } else if (dateUnit === "yearMonth") {
         while (currentDate <= dateRange.endDate) {
