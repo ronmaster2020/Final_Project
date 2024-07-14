@@ -62,10 +62,6 @@ app.get('/terms', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'terms.html'));
 });
 
-app.get('/admin'/*, validateAdmin()*/, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'admin.html'));
-});
-
 app.get('/admin/dashboard'/*, validateAdmin()*/, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin_dashboard.html'));
 });
@@ -80,10 +76,6 @@ app.get('/admin/orders'/*, validateAdmin()*/, (req, res) => {
 
 app.get('/admin/staff'/*, validateAdmin()*/, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin_staff.html'));
-});
-
-app.get('/admin/settings'/*, validateAdmin()*/, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'admin_settings.html'));
 });
 
 app.get('/orderhistory', (req, res) => {
