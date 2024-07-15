@@ -3,11 +3,14 @@ const Cart = require('../models/cart');
 
 const ensureAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
+        req.session.userId = req.user._id;
+        req.session.isLoggedIn = true;
         return next();
     }
     req.flash('error', 'Please log in to view this resource');
     res.redirect('/login');
 };
+
 
 const isLoggedIn = async (req, res, next) => {
     if (req.isAuthenticated()) {

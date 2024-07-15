@@ -69,6 +69,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
+app.get('/prodcuts', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'viewproducts.html'));
+});
+
+
 app.get('/about', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'about.html'));
 });
@@ -174,18 +179,19 @@ app.get('/cart/all', ensureAuthenticated, cartController.getAllCarts);
 app.get('/cartById/:cartId', ensureAuthenticated, cartController.getCartById);
 
 app.get('/api/cart', ensureAuthenticated, async (req, res) => {
-    console.log('Request received at /api/cart');
+    console.log('Request received at /cart');
     try {
         const cart = await Cart.findOne({ userId: req.user._id }).populate('products.productId');
         if (!cart) {
             return res.status(404).json({ error: 'No cart found' });
         }
-        res.json({ cartId: cart._id, isLoggedIn: true });
+        res.json({ cartId: cart._id, isLoggedIn: req.session.isLoggedIn, cart }); // Ensure these properties are returned
     } catch (err) {
         console.error('Error fetching cart:', err);
         res.status(500).json({ error: 'Error fetching cart' });
     }
 });
+
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

@@ -46,6 +46,7 @@ const addToCart = async (req, res) => {
     }
 };
 
+
 const getCart = async (req, res) => {
     try {
         const userId = req.user._id; // Assuming req.user._id is correctly set after authentication

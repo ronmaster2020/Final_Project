@@ -132,7 +132,6 @@ exports.deleteProduct = async (req, res) => {
     }
 };
 
-// Search for products by query parameters
 exports.searchProducts = async (req, res) => {
     if (!isDbConnected()) {
         return res.status(503).send('Service unavailable. Please try again later.');
@@ -157,9 +156,8 @@ exports.searchProducts = async (req, res) => {
         query.price = { $lte: maxPrice };
     }
 
-    if (req.query.gender && !isNaN(req.query.gender)) {
-        const genderCategory = parseInt(req.query.gender, 10);
-        query.gender = genderCategory;
+    if (req.query.gender) {
+        query.gender = req.query.gender;
     }
 
     if (req.query.sizeMin && req.query.sizeMax && !isNaN(req.query.sizeMin) && !isNaN(req.query.sizeMax)) {
@@ -187,7 +185,28 @@ exports.searchProducts = async (req, res) => {
     }
 
     try {
-        const products = await Product.find(query);
+        const sortBy = req.query.sort;
+        let sortCriteria = {};
+
+        switch (sortBy) {
+            case 'name':
+                sortCriteria = { name: 1 };
+                break;
+            case 'price':
+                sortCriteria = { price: 1 };
+                break;
+            case 'gender':
+                sortCriteria = { gender: 1 };
+                break;
+            case 'size':
+                sortCriteria = { size: 1 };
+                break;
+            default:
+                sortCriteria = { name: 1 }; // Default sort by name
+                break;
+        }
+
+        const products = await Product.find(query).sort(sortCriteria);
         res.json(products);
     } catch (err) {
         console.error('Error searching products:', err);

@@ -71,10 +71,7 @@
         <br>
     </div>
     <script>
-        window.onload = function() {
-            displayCartItems();
-        };
-
+        // Fetch products from the server
         async function getProducts() {
             try {
                 const response = await fetch('/product/all');
@@ -85,47 +82,32 @@
             } catch (error) {
                 console.error('Error fetching product data:', error);
                 alert('Error fetching product data. Please try again later.');
+                return [];
             }
         }
 
-        async function getProductNames() {
-            const products = await getProducts();
-            const cartItems = await getCartItems();
-            return cartItems.map(item => products.find(product => product._id === item.productId)?.name || 'Unknown');
-        }
-
-        async function getPrices() {
-            const products = await getProducts();
-            const cartItems = await getCartItems();
-            return cartItems.map(item => products.find(product => product._id === item.productId)?.price || 0);
-        }
-
+        // Fetch cart items from the server
         async function getCartItems() {
-    try {
-        const response = await fetch(`/cart/${userId}`); // Adjust URL to fetch cart items for the current user
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            try {
+                const userId = 'YOUR_USER_ID_HERE'; // Replace with actual user ID
+                const response = await fetch(`/cart/${userId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                return data.products || [];
+            } catch (error) {
+                console.error('Error fetching cart data:', error);
+                alert('Error fetching cart data. Please try again later.');
+                return [];
+            }
         }
-        const data = await response.json();
-        console.log('Fetched cart data:', data);
-        return data.products || []; // Adjust based on your API response structure
-    } catch (error) {
-        console.error('Error fetching cart data:', error);
-        alert('Error fetching cart data. Please try again later.');
-        return [];
-    }
-}
 
-
+        // Display cart items
         async function displayCartItems() {
             try {
                 const cartItems = await getCartItems();
                 const products = await getProducts();
-                const prices = await getPrices();
-                const productNames = await getProductNames();
-                const num_of_cart_products = cartItems.length;
-
-                document.getElementById('list-title').textContent = `Shopping bag (${num_of_cart_products})`;
                 const cartList = document.getElementById('cart-list');
                 cartList.innerHTML = ''; // Clear previous content
 
@@ -137,24 +119,24 @@
                 const cartListContainer = document.createElement('ul');
                 cartListContainer.classList.add('cart-list');
 
-                cartItems.forEach((item, index) => {
-                    const listItem = document.createElement('li');
-                    listItem.classList.add('cart-item', 'row');
-
+                cartItems.forEach(item => {
                     const product = products.find(prod => prod._id === item.productId);
                     if (!product) {
                         console.error(`Product with ID ${item.productId} not found.`);
                         return; // Skip rendering this item if product data is missing
                     }
 
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('cart-item', 'row');
+
                     const image = document.createElement('img');
-                    image.src = `/${product.images[0]}`; // Adjust image URL as per your setup
+                    image.src = `/${product.images[0]}`;
                     image.classList.add('image');
                     listItem.appendChild(image);
 
                     const productNameSpan = document.createElement('span');
                     productNameSpan.classList.add('product-name');
-                    productNameSpan.textContent = productNames[index]; // Default name if not found
+                    productNameSpan.textContent = product.name;
                     listItem.appendChild(productNameSpan);
 
                     const quantityButton = document.createElement('button');
@@ -169,7 +151,7 @@
                             } else {
                                 quantityButton.textContent = newQuantity;
                                 item.quantity = newQuantity;
-                                const newTotal = item.quantity * parseFloat(priceSpan.textContent.slice(1));
+                                const newTotal = item.quantity * product.price;
                                 totalSpan.textContent = `$${newTotal.toFixed(2)}`;
                                 updateSubtotal();
                             }
@@ -180,12 +162,12 @@
 
                     const priceSpan = document.createElement('span');
                     priceSpan.classList.add('price');
-                    priceSpan.textContent = `$${prices[index]}`;
+                    priceSpan.textContent = `$${product.price}`;
                     listItem.appendChild(priceSpan);
 
                     const totalSpan = document.createElement('span');
                     totalSpan.classList.add('total');
-                    const total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
+                    const total = item.quantity * product.price;
                     totalSpan.textContent = `$${total.toFixed(2)}`;
                     listItem.appendChild(totalSpan);
 
@@ -219,6 +201,7 @@
             }
         }
 
+        // Update subtotal and estimated total
         function updateSubtotal() {
             const cartItems = document.querySelectorAll('.cart-item');
             let subtotal = 0;
@@ -230,6 +213,8 @@
             document.getElementById('subtotal').textContent = `Subtotal: $${subtotal.toFixed(2)}`;
             document.getElementById('est-total').textContent = `Estimated Total: $${subtotal.toFixed(2)}`;
         }
+
+        window.onload = displayCartItems;
     </script>
 </body>
 </html>
