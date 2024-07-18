@@ -1,6 +1,8 @@
+let zoomedData = false;
+
 $(document).ready(async function() {
     const today = new Date();
-    
+
     const lastWeek = (new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7)).toISOString();
     const lastMonth = (new Date(today.getFullYear(), today.getMonth() - 1, today.getDate() + 1)).toISOString();
     const lastQuarter = (new Date(today.getFullYear(), today.getMonth() - 3, today.getDate())).toISOString();
@@ -15,11 +17,11 @@ $(document).ready(async function() {
     $('#lastYear').attr('startDate', lastYear);
     $('#last2Years').attr('startDate', last2Years);
 
-    const response = await fetchData({ dateUnit: "yearMonth"}, '/order/grouped/date', 'GET', $('#graph-sales'));
+    const response = await fetchData({ dateUnit: "yearMonth" }, '/order/grouped/date', 'GET', $('#graph-sales'));
     const dataset = await response.map(groupOfOrders => {
         if (groupOfOrders._id) {
             const year = groupOfOrders._id.year;
-            const month = groupOfOrders._id.month - 1;
+            const month = groupOfOrders._id.month - 1; // month is zero-based in JavaScript Date object
             const date = new Date(year, month);
             return {
                 _id: date,
@@ -32,10 +34,10 @@ $(document).ready(async function() {
     }).filter(item => item !== null).sort((a, b) => a._id - b._id);
 
     let dateUnit = "yearMonth";
-    let dateRange = {startDate: dataset[0]._id, endDate: new Date()};
+    let dateRange = { startDate: dataset[0]._id, endDate: new Date() };
     let filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
 
-    drawLinearGraph(dataset, $('#graph-sales'), dateRange, dateUnit);
+    drawLinearGraph(filteredDataset, $('#graph-sales'), dateUnit);
 
     $('#dateRange').on('change', async function() {
         const selectedDateRange = $('#dateRange option:selected');
@@ -92,14 +94,9 @@ $(document).ready(async function() {
         }
         dateRange.startDate = $('#startDate').val() ? new Date($('#startDate').val()) : dateRange.startDate;
         dateRange.endDate = $('#endDate').val() ? new Date($('#endDate').val()) : dateRange.endDate;
-        
+
         dateUnit = $('#dateUnit option:selected').val();
         filteredDataset = await fetchingFilteredDataset(dataset, dateRange, dateUnit);
-        $('#graph-sales').empty();
-        drawLinearGraph(filteredDataset, $('#graph-sales'), dateUnit);
-    });
-
-    $(window).resize(function() {
         $('#graph-sales').empty();
         drawLinearGraph(filteredDataset, $('#graph-sales'), dateUnit);
     });
@@ -111,17 +108,22 @@ $(document).ready(async function() {
         $('#graph-sales').empty();
         drawLinearGraph(filteredDataset, $('#graph-sales'), dateUnit);
     });
+
+    $(window).resize(function() {
+        $('#graph-sales').empty();
+        drawLinearGraph(filteredDataset, $('#graph-sales'), dateUnit);
+    });
 });
 
 async function fetchingFilteredDataset(dataset, dateRange, dateUnit) {
     dateRange = adjustDateRange(dateRange, dateUnit);
-    
+
     if (dateUnit === "yearWeek" || dateUnit === "yearMonthDay") {
         const response = await fetchData({ dateUnit: dateUnit, startDate: dateRange.startDate, endDate: dateRange.endDate }, '/order/grouped/date', 'GET', $('#graph-sales'));
         const zoomedDataset = await response.map(groupOfOrders => {
             if (groupOfOrders._id) {
                 let date = null;
-                if (dateUnit==="yearWeek") {
+                if (dateUnit === "yearWeek") {
                     const dateParts = groupOfOrders._id;
                     const year = dateParts.year;
                     const week = dateParts.week;
@@ -141,14 +143,14 @@ async function fetchingFilteredDataset(dataset, dateRange, dateUnit) {
                 console.error('Invalid _id:', groupOfOrders);
                 return null;
             }
-        })
+        });
         let filteredDataset = zoomedDataset.filter(item => item._id >= dateRange.startDate && item._id <= dateRange.endDate);
-        filteredDataset = await fillEmptyDates( filteredDataset, dateRange, dateUnit);
+        filteredDataset = await fillEmptyDates(filteredDataset, dateRange, dateUnit);
         filteredDataset = filteredDataset.sort((a, b) => a._id - b._id);
         return filteredDataset;
     } else {
         let filteredDataset = dataset.filter(item => item._id >= dateRange.startDate && item._id <= dateRange.endDate);
-        filteredDataset = await fillEmptyDates( filteredDataset, dateRange, dateUnit)
+        filteredDataset = await fillEmptyDates(filteredDataset, dateRange, dateUnit);
         filteredDataset = filteredDataset.sort((a, b) => a._id - b._id);
         return filteredDataset;
     }
@@ -164,7 +166,6 @@ async function fillEmptyDates(dataset, dateRange, dateUnit) {
             } else {
                 currentDate.setDate(currentDate.getDate() + 7);
             }
-            
         }
     } else if (dateUnit === "yearMonth") {
         while (currentDate <= dateRange.endDate) {
@@ -185,145 +186,80 @@ async function fillEmptyDates(dataset, dateRange, dateUnit) {
 }
 
 function adjustDateRange(dateRange, dateUnit) {
-    let startDate = new Date(dateRange.startDate);
-    let endDate = new Date(dateRange.endDate);
+    if (dateUnit === "yearMonth") {
+        dateRange.startDate = new Date(dateRange.startDate.getFullYear(), dateRange.startDate.getMonth());
+        dateRange.endDate = new Date(dateRange.endDate.getFullYear(), dateRange.endDate.getMonth(), 1);
+    } else if (dateUnit === "yearWeek") {
+        const startDate = new Date(dateRange.startDate);
+        const endDate = new Date(dateRange.endDate);
+        const startDay = startDate.getDay();
+        const endDay = endDate.getDay();
 
-    console.log(startDate, endDate);
-
-    if (dateUnit === "yearWeek") {
-        startDate.setDate(startDate.getDate() - startDate.getDay());
-        endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
-    } else if (dateUnit === "yearMonth") {
-        startDate.setDate(1);
-        if (endDate.getDate() !== 0) {
-            endDate.setDate(0);
-            endDate.setMonth(endDate.getMonth() + 1);
-        }
+        dateRange.startDate = new Date(startDate.setDate(startDate.getDate() - startDay));
+        dateRange.endDate = new Date(endDate.setDate(endDate.getDate() + (6 - endDay)));
+    } else {
+        dateRange.startDate = new Date(dateRange.startDate.getFullYear(), dateRange.startDate.getMonth(), dateRange.startDate.getDate());
+        dateRange.endDate = new Date(dateRange.endDate.getFullYear(), dateRange.endDate.getMonth(), dateRange.endDate.getDate());
     }
-    startDate.setHours(0, 0, 0, 0);
-    endDate.setHours(23, 59, 59, 999);
-
-    console.log(startDate, endDate);
-
-    return { startDate, endDate };
+    return dateRange;
 }
 
-// function that draws a linear graph
 function drawLinearGraph(dataset, container, dateUnit) {
-    const containerElement = container[0];
-    // D3.js Line Chart
-    const margin = { top: 20, right: 30, bottom: 50, left: 70 };
-    const width = Math.max(containerElement.clientWidth - margin.left - margin.right, 500);
-    const height = 400 - margin.top - margin.bottom;
+    const labels = dataset.map(item => item._id.toISOString().split('T')[0]);
+    const data = dataset.map(item => item.total_income);
 
-    const svg = d3.select(containerElement)
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    const x = d3.scaleTime()
-        .domain([dataset[0]._id, dataset[dataset.length - 1]._id])
-        .range([0, width]);
-
-    const y = d3.scaleLinear()
-        .domain([0, d3.max(dataset, d => d.total_income)])
-        .range([height, 0]);
-
-    const xAxis = d3.axisBottom(x);
-    const yAxis = d3.axisLeft(y);
-
-    svg.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(xAxis);
-
-    svg.append("g")
-        .call(yAxis);
-
-    const line = d3.line()
-        .x(d => x(d._id))
-        .y(d => y(d.total_income));
-
-    svg.append("path")
-        .datum(dataset)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1.5)
-        .attr("d", line);
-
-    // Tooltip
-    const tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0)
-        .style("position", "absolute")
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "1px")
-        .style("border-radius", "5px")
-        .style("padding", "10px");
-
-    // Add circles for data points
-    svg.selectAll("dot")
-        .data(dataset)
-        .enter().append("circle")
-        .attr("cx", d => x(d._id))
-        .attr("cy", d => y(d.total_income))
-        .on("mouseover", function(event, d) {
-            $(this).css("stroke", "rgb(189, 225, 255)");
-            tooltip.transition()
-                .duration(100)
-                .style("opacity", .9);
-            tooltip.style("display", "block");
-
-            function getMonthString(month) {
-                const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                return months[month - 1];
+    const ctx = container[0].getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Income',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: dateUnit === 'yearWeek' ? 'week' : (dateUnit === 'yearMonth' ? 'month' : 'day'),
+                        tooltipFormat: 'yyyy-MM-dd'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Total Income'
+                    },
+                    beginAtZero: true
+                }
             }
+        }
+    });
+}
 
-            const formattedTotal = d.total_income.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-            const dateMinus6Days = new Date(d._id);
-            dateMinus6Days.setDate(dateMinus6Days.getDate() - 6);
-            
-          if (dateUnit === "yearWeek") {
-                tooltip.html(`${d._id.getFullYear()}<br>${dateMinus6Days.getDate()} ${getMonthString(dateMinus6Days.getMonth() + 1)}-${d._id.getDate()} ${getMonthString(d._id.getMonth() + 1)}<br>Total: ${formattedTotal}$`)
-                    .style("left", (event.pageX + 5) + "px")                  .style("top", (event.pageY - 28) + "px");
-            } else if (dateUnit === "yearMonthDay") {
-                tooltip.html(`${d._id.getDate()} ${getMonthString(d._id.getMonth() + 1)} ${d._id.getFullYear()}<br>Total: ${formattedTotal}$`)
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            } else {
-                tooltip.html(`${getMonthString(d._id.getMonth() + 1)} ${d._id.getFullYear()}<br>Total: ${formattedTotal}$`)
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
+function fetchData(params, url, method, container) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: url,
+            method: method,
+            data: params,
+            beforeSend: function() {
+                container.html('<p>Loading...</p>');
+            },
+            success: function(data) {
+                resolve(data);
+            },
+            error: function(err) {
+                reject(err);
             }
-        })
-        .on("mousemove", function(event) {
-            tooltip.style("left", (event.pageX + 5) + "px")
-                .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", function() {
-            $(this).css("stroke", "white");
-            tooltip.transition()
-                .duration(100)
-                .style("opacity", 0)
-            tooltip.style("display", "none");
-        })
-        .on("click", function(event, d) {
-            window.location.href = `/orders?year=${d._id.getFullYear()}&month=${d._id.getMonth() + 1}`;
         });
-
-    // Add X Axis Label
-    svg.append("text")
-        .attr("text-anchor", "end")
-        .attr("x", width / 2)
-        .attr("y", height + margin.bottom - 10)
-
-    // Add Y Axis Label
-    svg.append("text")
-        .attr("text-anchor", "end")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -height / 2)
-        .attr("y", -margin.left + 20)
+    });
 }

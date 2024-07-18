@@ -1,5 +1,3 @@
-<!-- login.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +58,7 @@
 
                 <!-- password -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="password" id="password" name="password" required minlength="8">
+                    <input placeholder=" " type="password" id="password" name="password" required minlength="1">
                     <label for="password">PASSWORD*</label>
                     <button id="show-password" type="button" onclick="showPassword()">
                         <span class="material-symbols-sharp">
@@ -112,7 +110,7 @@
         </div>
     </div>
 
-    <div id="footer-placeholder"></div>
+    <div id="footer-placeholder"></div> <!-- This line is from the incoming change -->
 
     <script>
         let emailExists = false;

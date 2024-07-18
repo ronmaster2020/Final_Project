@@ -1,54 +1,94 @@
-async function loadProducts(products, query = {}) {
-    // Filter products based on the query
-    const filteredProducts = products.filter(product => {
-        let matches = true;
+var sideNavbar = true;
 
-        if (query.name && !product.name.toLowerCase().startsWith(query.name.toLowerCase())) {
-            matches = false;
+$(document).ready(async function() {
+    addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            $('nav').removeClass('translateX-100');
+            sideNavbar = false;
+        } else {
+            $('nav').addClass('translateX-100');
+            sideNavbar = true;
         }
-        if (query.gender && product.gender !== query.gender) {
-            matches = false;
-        }
-        if (query.priceMin && product.price < query.priceMin) {
-            matches = false;
-        }
-        if (query.priceMax && product.price > query.priceMax) {
-            matches = false;
-        }
-        if (query.sizeMin && product.size < query.sizeMin) {
-            matches = false;
-        }
-        if (query.sizeMax && product.size > query.sizeMax) {
-            matches = false;
-        }
-        if (query.stockMin && product.stock < query.stockMin) {
-            matches = false;
-        }
-        if (query.stockMax && product.stock > query.stockMax) {
-            matches = false;
-        }
-
-        return matches;
     });
-    // display the products data in the products table
-    $('#productsTable table tbody').empty();
-    $('#productsTable h2').text(filteredProducts.length + ' items')
-    for (let i = 0; i < filteredProducts.length; i++) {
-        let product = filteredProducts[i];
 
-        let outOfStock = "";
-        if (product.stock === 0) {
-            outOfStock = "outOfStock";
+    $('#productsTable h2').text('fetching data...');
+    let products = await fetchData({}, '/products/search', 'GET', $('#productsTable table tbody'));
+    loadProducts(products); // Load all products when the page loads
+
+    $("#resetBtn").click(function() {
+        $("form").trigger('reset');
+        loadProducts(products);
+    });
+
+    // Event listener for the name input field
+    $('input[name="name"]').on('input', function() {
+        filterProducts(products);
+    });
+
+    // Prevent form submission on Enter key press in the name input field
+    $('input[name="name"]').on('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
         }
-        let gender = "transgender"
-        switch (product.gender) {
-            case '1':
-                gender = 'male'
-                break;
-            case '2':
-                gender = 'female'
-                break;
-        }
+    });
+
+    // Event listener for other form inputs
+    $("form").on('change', function(event) {
+        event.preventDefault(); // Prevent the form from submitting traditionally
+        filterProducts(products);
+    });
+});
+
+function openSideNavbar() {
+    var nav = $('nav');
+    if (sideNavbar) {
+        nav.removeClass('translateX-100');
+        sideNavbar = false;
+    } else {
+        nav.addClass('translateX-100');
+        sideNavbar = true;
+    }
+}
+
+async function fetchData(query, url, method, data_container) {
+    $('#loadingBar .progress-bar').css('width', '0%');
+    data_container.addClass('d-none');
+    $('#loadingBar').removeClass('d-none');
+    $('#loadingBar .progress-bar').animate({ width: '100%' }, 1000);
+
+    // Fetch data
+    const queryParams = new URLSearchParams(query).toString();
+    const response = await fetch(`${url}?${queryParams}`, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        console.error('Error fetching data:', response.statusText);
+        $('#loadingBar').addClass('d-none');
+        return;
+    }
+
+    let data = await response.json();
+    $('#loadingBar').addClass('d-none');
+    $('#loadingBar .progress-bar').css('width', '0%');
+    data_container.removeClass('d-none');
+
+    return data;
+}
+
+async function loadProducts(products) {
+    // Display the products data in the products table
+    $('#productsTable table tbody').empty();
+    $('#productsTable h2').text(products.length + ' items');
+
+    for (let i = 0; i < products.length; i++) {
+        let product = products[i];
+        let outOfStock = product.stock === 0 ? "outOfStock" : "";
+        let gender = product.gender === '1' ? 'male' : product.gender === '2' ? 'female' : 'transgender';
+
         $('#productsTable table tbody').append(`
             <tr id="row-${product._id}" class="${outOfStock}">
                 <td>${product._id}</td>
@@ -81,69 +121,67 @@ async function loadProducts(products, query = {}) {
     }
 }
 
-$(document).ready(async function() {
-    $('#productsTable h2').text('fetching data...')
+function filterProducts(products) {
+    // Construct the query from form inputs
+    const name = $('input[name="name"]').val();
+    const gender = $("#genderCategory").val();
 
-    let products = await fetchData({}, '/products/search', 'GET', $('#productsTable table tbody'));
+    const selectedPriceOption = $("#priceRange option:selected");
+    const priceMin = selectedPriceOption.attr('data-min') || null;
+    const priceMax = selectedPriceOption.attr('data-max') || null;
 
-    loadProducts(products); // Load all products when the page loads
+    const selectedSizeOption = $("#sizeRange option:selected");
+    const sizeMin = selectedSizeOption.attr('data-min') || null;
+    const sizeMax = selectedSizeOption.attr('data-max') || null;
 
-    $("#resetBtn").click(function() {
-        $("form").trigger('reset');
-        loadProducts(products);
-    });
+    const selectedStockOption = $("#stockRange option:selected");
+    const stockMin = selectedStockOption.attr('data-min') || null;
+    const stockMax = selectedStockOption.attr('data-max') || null;
 
-    // Event listener for the name input field
-    $('input[name="name"]').on('input', function() {
-        filterProducts();
-    });
+    const query = {
+        name,
+        gender,
+        priceMin,
+        priceMax,
+        sizeMin,
+        sizeMax,
+        stockMin,
+        stockMax
+    };
 
-    // Prevent form submission on Enter key press in the name input field
-    $('input[name="name"]').on('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
+    const filteredProducts = products.filter(product => {
+        let matches = true;
+        if (query.name && !product.name.toLowerCase().startsWith(query.name.toLowerCase())) {
+            matches = false;
         }
+        if (query.gender && product.gender !== query.gender) {
+            matches = false;
+        }
+        if (query.priceMin && product.price < query.priceMin) {
+            matches = false;
+        }
+        if (query.priceMax && product.price > query.priceMax) {
+            matches = false;
+        }
+        if (query.sizeMin && product.size < query.sizeMin) {
+            matches = false;
+        }
+        if (query.sizeMax && product.size > query.sizeMax) {
+            matches = false;
+        }
+        if (query.stockMin && product.stock < query.stockMin) {
+            matches = false;
+        }
+        if (query.stockMax && product.stock > query.stockMax) {
+            matches = false;
+        }
+        return matches;
     });
 
-    // Event listener for other form inputs
-    $("form").on('change', function(event) {
-        event.preventDefault(); // Prevent the form from submitting traditionally
-        filterProducts();
-    });
+    loadProducts(filteredProducts);
+}
 
-    function filterProducts() {
-        // Construct the query from form inputs
-        const name = $('input[name="name"]').val();
-        const gender = $("#genderCategory").val();
-
-        const selectedPriceOption = $("#priceRange option:selected");
-        const priceMin = selectedPriceOption.attr('data-min') || null;
-        const priceMax = selectedPriceOption.attr('data-max') || null;
-
-        const selectedSizeOption = $("#sizeRange option:selected");
-        const sizeMin = selectedSizeOption.attr('data-min') || null;
-        const sizeMax = selectedSizeOption.attr('data-max') || null;
-
-        const selectedStockOption = $("#stockRange option:selected");
-        const stockMin = selectedStockOption.attr('data-min') || null;
-        const stockMax = selectedStockOption.attr('data-max') || null;
-
-        const query = {
-            name,
-            gender,
-            priceMin,
-            priceMax,
-            sizeMin,
-            sizeMax,
-            stockMin,
-            stockMax
-        };
-
-        loadProducts(products, query);
-    }
-});
-
-// delete product
+// Delete product
 function deleteProduct(productId) {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -166,7 +204,7 @@ function deleteProduct(productId) {
                             <div>Name: ${product.name}</div>
                         </div>
                     </div>`);
-                $('.toast-container').append(toast)
+                $('.toast-container').append(toast);
                 toast.toast('show');
                 setTimeout(() => {
                     toast.toast('hide');
@@ -179,7 +217,6 @@ function deleteProduct(productId) {
             },
             error: function(xhr, status, error) {
                 console.error('Error deleting a product', error);
-                // error deleting toast
                 const toast = $(`
                     <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                         <div class="toast-header" style="background-color: rgb(255, 230, 230)">
@@ -191,7 +228,7 @@ function deleteProduct(productId) {
                             <div>Error: ${error}</div>
                         </div>
                     </div>`);
-                $('.toast-container').append(toast)
+                $('.toast-container').append(toast);
                 toast.toast('show');
                 setTimeout(() => {
                     toast.toast('hide');

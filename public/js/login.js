@@ -1,4 +1,4 @@
-async function handleLogin(event) {
+/*async function handleLogin(event) {
     event.preventDefault(); // Prevent default form submission
 
     const emailInput = document.getElementById('email');
@@ -37,3 +37,4 @@ async function handleLogin(event) {
         alert('An error occurred during login. Please try again.');
     }
 }
+*/
