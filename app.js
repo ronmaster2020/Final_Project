@@ -72,9 +72,10 @@ const product_file_storage = multer.diskStorage({
 
 const product_file_upload = multer({ storage: product_file_storage, limits: { fileSize: 10 * 1024 * 1024 } });
 
-app.use(isLoggedIn);
+const isloggedin = require('./controllers/isloggedin');
 
 app.get('/api/userId', ensureAuthenticated, getUserAndCartId); // Place this route before the catch-all
+
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));

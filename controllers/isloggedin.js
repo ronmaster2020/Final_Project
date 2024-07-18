@@ -36,6 +36,8 @@ const getUserAndCartId = (req, res) => {
     if (req.isAuthenticated()) {
         const userId = req.user._id;
         const cartId = req.session.cart ? req.session.cart._id : null;
+        console.log("Cart ID:", cartId);
+        console.log("User ID:", userId);
         res.json({ userId, cartId });
     } else {
         res.status(401).json({ error: 'User is not authenticated' });
