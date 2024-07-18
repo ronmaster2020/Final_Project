@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>shop</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shop</title>
+        
         <!-- Bootstrap -->
         <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
@@ -16,119 +19,181 @@
 
         <!-- CSS -->
         <link rel="stylesheet" href="/css/cart.css">
-
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
 
+        <style>
+            body {
+                font-family: 'Pacifico', cursive;
+            }
+            #navbar-placeholder ul {
+                list-style: none;
+                padding: 0;
+            }
+            #navbar-placeholder ul li {
+                display: inline;
+                margin-right: 15px;
+            }
+            .cart-info .left-part, .cart-info .right-part, .cart-footer .footer-left, .cart-footer .footer-right {
+                display: inline-block;
+                vertical-align: top;
+                width: 48%;
+            }
+            .cart-footer .footer-right {
+                text-align: right;
+            }
+            .cart-footer .footer-right h3 {
+                margin: 0;
+            }
+            .cart-list {
+                list-style-type: none;
+                padding: 0;
+            }
+            .cart-item {
+                margin-bottom: 15px;
+            }
+            .cart-item .image {
+                width: 100px;
+                height: auto;
+                display: inline-block;
+                vertical-align: top;
+                margin-right: 10px;
+            }
+            .cart-item .product-name {
+                display: inline-block;
+                width: 30%;
+            }
+            .cart-item .quantity-button, .cart-item .price, .cart-item .total {
+                display: inline-block;
+                width: 15%;
+                text-align: center;
+            }
+            .blur-effect {
+                filter: blur(5px);
+            }
+        </style>
     </head>
 
-    
-
     <body>
-        <script>
+        <!-- Navbar -->
+        <nav id="navbar-placeholder">
+            <ul class="navbar-nav"></ul>
+        </nav>
+        
+        <div class="container-fluid" id="main-content">
+            <div id="blur-effect">
+                <h2 class="cart-title" id="cart-title">Your Shopping Cart</h2>
+                
+                <div class="cart-info" id="cart-info">
+                    <div class="left-part">
+                        <p>Explore our latest arrivals</p>
+                        <a href="/">Continue Shopping</a>
+                    </div>                  
+                    <div class="right-part">
+                        <p>Discover what makes us unique! <a href="/about">Learn About Us</a>.</p>
+                        <p>ALL TRANSACTIONS ARE SAFE AND SECURE.</p>
+                    </div>
+                </div>
+                
+                <div class="list-title" id="list-title"></div>
+                
+                <div class="params">
+                    <p class="perfume">Perfume</p>
+                    <p>Quantity</p>
+                    <p>Price</p>
+                    <p>Total</p>
+                </div>
+                
+                <div id="cart-list"></div>
+                
+                <div class="cart-footer" style="margin-top: 20px;">
+                    <div class="footer-left">
+                        <p>No promo codes available yet.</p>
+                        <p>Sign up for our newsletter to be notified of future promotions!</p>
+                    </div>
+                    <div class="footer-right">
+                        <h3 id="subtotal"></h3>
+                        <h3 id="est-total"></h3>
+                        <form id="checkoutForm">
+                            <button type="submit" class="btn btn-primary">Proceed to checkout</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <footer id="footer-placeholder">
+                    <ul class="footer-foot"></ul>
+                </footer>
+            </div>
+            
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="checkoutToast">
+                <div class="toast-header">
+                    <img src="https://i.pinimg.com/564x/4b/67/b2/4b67b221dad53e271950e25cc92736e0.jpg" class="rounded me-2" alt="...">
+                    <strong class="me-auto" style="font-weight: bold;">Your order</strong>
+                    <small class="text-body-secondary">Seamless Checkout, Speedy Delivery!</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div id="toast-body" class="toast-body">
+                    <div id="overall-payment" class="overall"></div>
+                    <div id="item-list" class="pop-up-items"></div>
+                </div>
+                <div id="messageContainer" style="margin-top: 5px;"></div>
+                <form action="order/create" method="post" id="createOrder">
+                    <button type="submit">Make an order</button>
+                </form>
+            </div>
+        </div>
 
-             window.onload = function() {
+        <script>
+            window.onload = function() {
                 displayCartItems();
             };
-
-
-            async function getProducts() {
+        
+            async function fetchWithErrorHandling(url) {
                 try {
-                    const response = await fetch('/product/all');
-                    if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const productData = await response.json();
-                    return productData; // Return the cart data
-                } catch (error) {
-                    console.error('Error fetching cart data:', error);
-                    // Handle errors gracefully (e.g., display an error message)
-                }
-            }
-
-            async function getProductNames() {
-                const products = await getProducts();
-                const cartItems = await getCartItems();
-                names = [];
-                cartItems.forEach(item => {
-                    for(i = 0; i < products.length; i++) {
-                        if(item.productId === products[i]._id) {
-                            names.push(products[i].name);
-                        }
-                    }
-                });
-                return names;
-            }
-
-            async function getPrices() {
-                const products = await getProducts();
-                const cartItems = await getCartItems();
-                prices = [];
-                cartItems.forEach(item => {
-                    for(i = 0; i < products.length; i++) {
-                        if(item.productId === products[i]._id) {
-                            prices.push(products[i].price);
-                        }
-                    }
-                });
-                return prices;
-            }
-
-            async function getCartItems() {
-                try {
-                    // Fetch the cart ID from the server
-                    const cartIdResponse = await fetch('/api/cart');
-                    if (!cartIdResponse.ok) {
-                        throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
-                    }
-                    const cartIdData = await cartIdResponse.json();
-                    const cartId = cartIdData.cartId;
-
-                    if (!cartId) {
-                        console.error('No cart ID found. Please log in first.');
-                        return [];
-                    }
-                    //console.log('Cart ID from server:', cartId);
-                    //console.log('Is loged-in from server:', cartIdData.isLogedIn);
-
-                    // Fetch the cart items using the cart ID
-                    const response = await fetch('/cart/all');
+                    const response = await fetch(url);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    const cartData = await response.json();
-
-                    for (let i = 0; i < cartData.length; i++) {
-                        if (cartId === cartData[i]._id) {
-                            return cartData[i].products || [];
-                        }
-                    }
+                    return response.json();
                 } catch (error) {
-                    console.error('Error fetching cart data:', error);
-                    // Handle errors gracefully (e.g., display an error message)
+                    console.error('Fetch error:', error);
+                    return null;
                 }
             }
-
+        
+            async function getProducts() {
+                return await fetchWithErrorHandling('/product/all');
+            }
+        
+            async function getCartItems() {
+                const cartResponse = await fetchWithErrorHandling('/api/cart');
+                if (!cartResponse) return [];
+        
+                const cartId = cartResponse.cartId;
+                if (!cartId) {
+                    console.error('No cart ID found. Please log in first.');
+                    return [];
+                }
+        
+                const cartData = await fetchWithErrorHandling(`/cart/${cartId}`);
+                console.log('Cart Data:', cartData);
+        
+                if (cartData && cartData.products) {
+                    return cartData.products;
+                } else {
+                    console.error('No products found in cart data.');
+                    return [];
+                }
+            }
         
             async function displayCartItems() {
                 const cartItems = await getCartItems();
                 const products = await getProducts();
-                const num_of_cart_products = cartItems.length;
-                const prices = await getPrices();
-                const productNames = await getProductNames();
-                console.log(productNames);
-                console.log(prices);
-                console.log(cartItems);
 
-                const listTitle = document.getElementById('list-title');
-                listTitle.innerHTML = '';
-                listTitle.textContent = "Shopping bag  (" + num_of_cart_products + ")";
+                console.log('Cart Items:', cartItems); // Log cart items to inspect structure
+                console.log('Products:', products); // Log products to inspect structure
 
-                const cartList = document.getElementById('cart-list');
-                const mainContent = document.getElementById('main-content');
-
-                if (!cartItems) {
-                    // Handle case where cartItems or cartItems.products is missing or empty
-                    cartList.innerHTML = '<li>Error: Cart data unavailable.</li>';
+                if (!cartItems || !products) {
+                    document.getElementById('cart-list').innerHTML = '<li>Error: Cart data unavailable.</li>';
                     return;
                 }
 
@@ -136,247 +201,63 @@
                     window.location.href = '/emptyCart';
                     return;
                 }
-                const cartListContainer = document.createElement('ul'); // Use an unordered list for cart items
-                cartListContainer.classList.add('cart-list'); // Apply the cart-list class
 
-                product_index = 0;
+                const cartList = document.getElementById('cart-list');
+                cartList.innerHTML = '';
+
+                const cartListContainer = document.createElement('ul');
+                cartListContainer.classList.add('cart-list');
+
+                let subtotal = 0;
+
                 cartItems.forEach(item => {
-                    const listItem = document.createElement('li');
-                    listItem.classList.add('cart-item', 'row'); // Apply cart-item and row classes
-
-
-                    let product;
-                    for(let i = 0; i < products.length; i++) {
-                        if(item.productId === products[i]._id) {
-                            product = products[i];
-                        }
+                    const product = products.find(p => p._id === item.productId._id); // Adjust this line
+                    if (!product) {
+                        console.error(`Product not found for item: ${item.productId._id}`); // Adjust this line
+                        return;
                     }
 
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('cart-item', 'row');
 
-                    // Assuming you have a product image URL property in item:
-                    const image = document.createElement('img');
-                    image.src = '/' + product.images[0];
-                    image.classList.add('image'); // Responsive image
-                    listItem.appendChild(image);
+                    const productImage = document.createElement('img');
+                    productImage.classList.add('image', 'col-sm-1');
+                    productImage.src = product.imageUrl;
+                    productImage.alt = product.name;
 
-                    //const detailsContainer = document.createElement('div');
-                    //detailsContainer.classList.add('col-md-9');
+                    const productName = document.createElement('div');
+                    productName.classList.add('product-name', 'col-sm-5');
+                    productName.textContent = product.name;
 
-                    const qty_change = false;
-                    const productNameSpan = document.createElement('span');
-                    productNameSpan.classList.add('product-name');
-                    productNameSpan.textContent = productNames[product_index];
-                    listItem.appendChild(productNameSpan);
+                    const quantityButton = document.createElement('div');
+                    quantityButton.classList.add('quantity-button', 'col-sm-2');
+                    quantityButton.textContent = item.quantity;
 
-                    const quantityButton = document.createElement('button');
-                    quantityButton.classList.add('quantity-button');
-                    quantityButton.textContent = `${item.quantity}`;
+                    const productPrice = document.createElement('div');
+                    productPrice.classList.add('price', 'col-sm-2');
+                    productPrice.textContent = `$${product.price.toFixed(2)}`;
 
-                    // Option 1: Add click event listener for manual quantity change
-                    quantityButton.addEventListener('click', () => {
-                        // Handle quantity update logic here (e.g., prompt, increment/decrement)
-                        const newQuantity = prompt("How many do you want to order?"); // Prompt for new quantity
-                        if (newQuantity && !isNaN(newQuantity)) { // Validate numeric input
-                            if(newQuantity > product.stock) {
-                                alert("We are not able to provide you with that amount of parfumes. There are only " + 
-                                + product.stock + " left.");
-                            }
-                            else {
-                                quantityButton.textContent = newQuantity; // Update button text with new quantity
-                                item.quantity = newQuantity;
-                                console.log("Changed Qty - " + item.quantity);
-                                const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
-                                totalSpan.textContent = "$" + new_total;
-                                getTotal();
-                            }
-                            // Update your cart data with the new quantity (implementation depends on your setup)
-                        } 
-                    });
+                    const total = document.createElement('div');
+                    total.classList.add('total', 'col-sm-2');
+                    const totalPrice = product.price * item.quantity;
+                    total.textContent = `$${totalPrice.toFixed(2)}`;
+
+                    subtotal += totalPrice;
+
+                    listItem.appendChild(productImage);
+                    listItem.appendChild(productName);
                     listItem.appendChild(quantityButton);
-
-                    const priceSpan = document.createElement('span');
-                    priceSpan.classList.add('price');
-                    priceSpan.textContent = "$" + parseFloat(prices[product_index]);
-                    listItem.appendChild(priceSpan);
-
-                    const totalSpan = document.createElement('span');
-                    totalSpan.classList.add('total');
-                    const total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
-                    totalSpan.textContent = "$" + total;
-                    listItem.appendChild(totalSpan);
-
-                    // Add more details as needed (e.g., product name, price)
-
-                    //listItem.appendChild(detailsContainer);
-
-                    product_index++;
-
+                    listItem.appendChild(productPrice);
+                    listItem.appendChild(total);
                     cartListContainer.appendChild(listItem);
                 });
 
                 cartList.appendChild(cartListContainer);
 
-                getTotal();
+                document.getElementById('list-title').textContent = `Shopping bag (${cartItems.length})`;
+                document.getElementById('subtotal').textContent = `Subtotal: $${subtotal.toFixed(2)}`;
+                document.getElementById('est-total').textContent = `Estimated Total: $${subtotal.toFixed(2)}`;
             }
-
-        
-            // Call the display function (e.g., on page load)
-            //displayCartItems();
-
-            function getTotal() {
-                const cartList = document.getElementById('cart-list');
-
-                final_price = 0;
-                const listItems = cartList.querySelectorAll('li');
-                listItems.forEach(listItem => {
-                    const totalSpan = listItem.querySelector('.total');
-                    const priceString = totalSpan.textContent.slice(1); // Extract price string
-                    const price = parseFloat(priceString); // Parse to number
-                    final_price += price;
-                });
-                const subtotal = document.getElementById('subtotal');
-                subtotal.textContent = "Subtotal ------ $" + final_price;
-
-                const estTotal = document.getElementById('est-total');
-                estTotal.textContent = "Estimated total $" + final_price;
-
-                console.log("Total amount - " + final_price); // Logs the text content of each item
-            }
-            
-
-            $(document).ready(function() {
-                $('#checkoutForm').submit(function(event) {
-                    event.preventDefault(); // Prevent form from submitting normally
-                    
-                    // Show the toast
-                    $('#checkoutToast').toast('show');
-                    
-                });
-            }); 
-
-
-            function buildToast() {
-                const toastBody = document.getElementById('toast-body');
-
-                const total = document.querySelector('#est-total');
-                const overall = document.getElementById('overall-payment');
-                const textContent = total.textContent;
-                const dollarIndex = textContent.indexOf('$');
-                const slicedText = textContent.slice(dollarIndex); // Slice from dollar sign index
-                overall.textContent = "Overall payment is " + slicedText; // Set the toast body text
-
-
-                const itemList = document.getElementById('item-list');
-                const cartList = document.getElementById('cart-list');
-                const listItems = cartList.querySelectorAll('li');
-    
-                // Clear the previous list items
-                itemList.innerHTML = '';
-
-                // Iterate through list items to collect product names and quantities
-                listItems.forEach(item => {
-                    const productName = item.querySelector('.product-name').textContent.trim();
-                    const quantity = item.querySelector('.quantity-button').textContent.trim();
-                    
-                    if (productName && quantity) {
-                        const newItem = document.createElement('li');
-                        newItem.textContent = `${productName} (Qty: ${quantity})`; // Combine name and qty with formatting
-                        itemList.appendChild(newItem);
-                    }
-
-                })
-            }
-
         </script>
-
-
-        <!-- navbar -->
-        <nav id="navbar-placeholder">
-            <ul class="navbar-nav"></ul>
-        </nav>
-        
-        <div class="container-fluid" id="main-content">
-            <!-- <button onclick="displayCartItems()">Get items</button> -->
-        
-            <!-- <form action="/cart/create" method="post">
-                <input type="hidden" name="productId" value="12345">
-                <button type="submit">Create a cart</button>
-            </form> -->
-
-
-            <h2 class="cart-title">Your Shopping Cart</h2>
-
-            
-            <div class="cart-info">
-                <div class="left-part">
-                    <p>Explore our latest arrivals</p>
-                    <a href="/">Continue Shopping</a>
-                  </div>                  
-
-                <div class="right-part">
-                    <p>Discover what makes us unique! <a href="/about">Learn About Us</a>.</p>
-                    <p>ALL TRANSACTIONS ARE SAFE AND SECURE.</p>
-                </div>
-            </div>
-            
-            
-            <div class="list-title" id="list-title"></div>
-            
-            <div class="params">
-                <p class="perfume">Perfume</p>
-                <p>Quantity</p>
-                <p>Price</p>
-                <p>Total</p>
-            </div>
-
-
-            <div id="cart-list"></div>
-            
-            
-            <div class="cart-footer" style="margin-top: 20px;">
-                <div class="footer-left">
-                    <p>No promo codes available yet.</p>
-                    <p>Sign up for our newsletter to be notified of future promotions!</p>
-                </div>
-                <div class="footer-right">
-                <!-- <button type="submit" onclick="getTotal()">Get total</button> -->
-                <h3 id="subtotal"></h3>
-                <h3 id="est-total"></h3>
-
-                <form id="checkoutForm">
-                    <button type="submit" class="btn btn-primary" onclick="buildToast()">Proceed to checkout</button>
-                </form>
-                </div>
-            </div>
-
-            
-
-            <div class="toast-container">
-                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="checkoutToast">
-                    <div class="toast-header">
-                      <img src="https://i.pinimg.com/564x/4b/67/b2/4b67b221dad53e271950e25cc92736e0.jpg" class="rounded me-2" alt="...">
-                      <strong class="me-auto" style="font-weight: bold;">Your order</strong>
-                      <small class="text-body-secondary">Seamless Checkout, Speedy Delivery!</small>
-                      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div id="toast-body" class="toast-body">
-                        <div id="overall-payment" class="overall"></div>
-                        <div id="item-list" class="pop-up-items"></div>
-                    </div>
-                    <form action="order/create" method="post">
-                        <button type="submit">Make an order</button>
-                    </form>
-                  </div>
-            </div>
-
-
-            <br>
-        </div>
-
-        <footer id="footer-placeholder">
-            <ul class="footer-foot"></ul>
-        </footer>
     </body>
-    
 </html>
-

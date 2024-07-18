@@ -1,9 +1,27 @@
 $(document).ready(function() {
     let orders = [];
-    const userId = "668bfa4fa02553a02291e0c1"; 
-
    
-    function fetchOrders() {
+
+    
+   
+
+    function getid(){
+        $.ajax({
+            url: `/api/useId`, // Pass userId to fetch orders specific to the user
+            method: 'GET',
+
+            success: function(data) {
+               
+                userid = data.userId;
+                fetchOrders(userid);
+            },
+            error: function(error) {
+                console.log('Error fetching ids:', error);
+            }
+        });
+    }
+   
+    function fetchOrders(userId) {
         $.ajax({
             url: '/orders/byid/' + userId, 
             method: 'GET',
@@ -86,5 +104,5 @@ $(document).ready(function() {
     };
 
     // Fetch orders when the page loads
-    fetchOrders();
+    getid();
 });

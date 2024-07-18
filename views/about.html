@@ -1,14 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - COLstore</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
-    <script type="text/javascript" src="/public/js/read_more.js"></script>
     <link rel="stylesheet" href="/css/auth.css">
-    
     <style>
         #leadpage {
             color: rgb(85, 85, 85);
@@ -26,11 +25,10 @@
     </style>
 </head>
 <body>
-
+<!-- test conmment -->
     <div id="navbar-placeholder"></div>
 
     <div class="container mt-5 auth">
-        
         <div class="row">
             <div class="col-12 text-center">
                 <h1>About COLstore</h1>
@@ -80,12 +78,38 @@
             </div>
         </div>
         
-        <!-- Footer placeholder within the main content container -->
-        <div id="footer-placeholder"></div>
+      
+       
     </div>
-
     <script>
-        
+         $(document).ready(function(){
+            $('#readMoreBtn1').click(function(){
+                $('#moreContent1').toggle('slow');
+            });
+            $('#readMoreBtn2').click(function(){
+                $('#moreContent2').toggle('slow');
+            });
+            $('#readMoreBtn3').click(function(){
+                $('#moreContent3').toggle('slow');
+            });
+
+            // JavaScript to reorder Meet Our Team section on smaller screens
+            function reorderMeetOurTeam() {
+                var screenWidth = $(window).width();
+                if (screenWidth <= 767.98) { // Small devices (phones)
+                    $('#appendlabel2').prependTo('.appendlabel1'); 
+                } else {
+                    $('#appendlabel2').appendTo('#workvision'); 
+                }
+            }
+
+            reorderMeetOurTeam();
+
+            $(window).resize(function() {
+                reorderMeetOurTeam();
+            });
+        });
     </script>
 </body>
+
 </html>

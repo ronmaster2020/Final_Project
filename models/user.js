@@ -1,62 +1,66 @@
-// user.js
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const validator = require('validator');
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     firstName: {
         type: String,
-        required: false,
-        trim: true, // Remove leading and trailing whitespace
+        required: true,
+        trim: true,
         minlength: [3, 'First name must be at least 3 characters long'],
         maxlength: [30, 'First name must be less than 30 characters']
     },
     lastName: {
         type: String,
-        required: false,
-        trim: true, // Remove leading and trailing whitespace
+        required: true,
+        trim: true,
         minlength: [3, 'Last name must be at least 3 characters long'],
         maxlength: [30, 'Last name must be less than 30 characters']
     },
     bio: {
         type: String,
-        required: false,
-        trim: true, // Remove leading and trailing whitespace
+        trim: true,
         maxlength: [100, 'Bio must be less than 100 characters']
     },
     address: {
         type: String,
         required: true,
-        minlength: [3, 'Address must be at least 3 characters long'],
+        trim: true,
+        minlength: [5, 'Address must be at least 5 characters long'],
         maxlength: [100, 'Address must be less than 100 characters']
     },
     access: {
         type: String,
-        enum: ['user', 'staff', 'admin'],
-        required: true
+        required: true,
+        trim: true
     },
     phoneNumber: {
         type: String,
-        required: false,
+        required: true,
+        validate: {
+            validator: function (v) {
+                return /\d{10}/.test(v); // Simple regex for 10 digit phone number
+            },
+            message: props => `${props.value} is not a valid phone number!`
+        }
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        validate: {
-          validator: validator.isEmail, // Use validator for email format
-          message: 'Invalid email format'
-        }
+        trim: true,
+        lowercase: true,
+        validate: [validator.isEmail, 'Invalid email']
+    },
+    cartId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Cart'
     },
     password: {
         type: String,
         required: true
-    },
-    cartId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'cart',
     }
 });
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+module.exports = User;

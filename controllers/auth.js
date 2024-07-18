@@ -1,80 +1,113 @@
-const mongoose = require('mongoose');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const bcrypt = require('bcryptjs');
-const { ObjectId } = require('mongodb');
 const Cart = require('../models/cart');
-const globalState = require('../globalState'); // Import global state
+const mongoose = require('mongoose');
 
-exports.register = async (req, res) => {
-    const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
-    
-    try {
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
-        const newCartId = new ObjectId();
-        
-        // Create a new user instance with hashed password
-        const user = new User({ 
-            firstName, 
-            lastName, 
-            bio, 
-            address, 
-            access, 
-            phoneNumber, 
-            email, 
-            password: hashedPassword, // Store hashed password
-            cartId: newCartId,
-        });
-
-        
-        
-        // Save the user to the database
-        await user.save();
-
-        // New empty cart
-        const newCart = new Cart();
-        newCart._id = newCartId;
-        console.log(newCart._id);
-        await newCart.save();
-
-        globalState.cartId = newCartId; // Set global cartId
-        globalState.isLogedIn = true;
-        
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
-
-
-exports.login = async (req, res) => {
-    const { email, password } = req.body;
-    console.log('Received login request for email:', email); // Add logging
+passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            console.error('User not found:', email);
-            return res.status(404).json({ message: 'User not found' });
+            return done(null, false, { message: 'Incorrect email.' });
         }
-
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            console.error('Invalid credentials for user:', email);
-            return res.status(401).json({ message: 'Invalid credentials' });
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (isMatch) {
+            return done(null, user);
+        } else {
+            return done(null, false, { message: 'Incorrect password.' });
         }
-
-        const cart = await Cart.findById(user.cartId);
-        globalState.cartId = user.cartId; // Set global cartId
-        globalState.isLogedIn = true;
-        res.json({ message: 'Login successful!', user, cart, isLogedIn: globalState.isLogedIn });
     } catch (err) {
-        console.error('Error during login:', err);
-        res.status(500).json({ error: err.message });
+        return done(err);
+    }
+}));
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err);
+    }
+});
+
+const login = (req, res, next) => {
+    passport.authenticate('local', async (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            req.flash('error', info.message);
+            return res.redirect('/login');
+        }
+        req.logIn(user, async (err) => {
+            if (err) {
+                return next(err);
+            }
+            try {
+                let cart = await Cart.findOne({ userId: user._id }).populate('products.productId');
+                if (!cart) {
+                    cart = new Cart({ userId: user._id, products: [] });
+                    await cart.save();
+                    user.cartId = cart._id;
+                    await user.save();
+                }
+                req.session.cart = cart;
+                req.flash('success', 'You are now logged in!');
+                return res.redirect('/');
+            } catch (err) {
+                console.error('Error fetching cart items:', err);
+                req.flash('error', 'Error fetching cart items');
+                return res.redirect('/');
+            }
+        });
+    })(req, res, next);
+};
+
+
+const register = async (req, res) => {
+    const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            req.flash('error', 'Email already in use');
+            return res.redirect('/register');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ firstName, lastName, bio, address, access, phoneNumber, email, password: hashedPassword });
+        
+        const newCart = new Cart({ userId: newUser._id, products: [] });
+        await newCart.save();
+        
+        newUser.cartId = newCart._id;
+        await newUser.save();
+
+        req.flash('success', 'You are now registered and can log in!');
+        res.redirect('/login');
+    } catch (err) {
+        console.error('Error creating user:', err);
+        req.flash('error', 'Error creating user');
+        res.redirect('/register');
     }
 };
 
-exports.getUsers = async(req, res) => {
-    // Check if the database is connected
+const logout = (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+        req.flash('success', 'You are logged out');
+        res.redirect('/login');
+    });
+};
+
+
+const getUsers = async (req, res) => {
     if (mongoose.connection.readyState !== 1) {
         return res.status(503).send('Service unavailable. Please try again later.');
     }
@@ -82,56 +115,45 @@ exports.getUsers = async(req, res) => {
     try {
         const users = await User.find();
         res.json(users);
-        //console.log(carts);
-        //return carts;
     } catch (err) {
-        console.error('Error getting carts:', err);
+        console.error('Error getting users:', err);
         res.status(500).send('Server error');
     }
 };
 
-// Search for users by query parameters
-exports.searchUsers = async (req, res) => {
+const searchUsers = async (req, res) => {
     const query = req.query || {};
 
     if (req.query.firstName) {
-        const firstName = req.query.firstName.substring(0, 100); // Limit to 100 characters
-        query.firstName = { $regex: new RegExp(`^${firstName}`), $options: 'i' }; // Case-insensitive
+        query.firstName = { $regex: new RegExp(`^${req.query.firstName.substring(0, 100)}`), $options: 'i' };
     }
 
     if (req.query.lastName) {
-        const lastName = req.query.lastName.substring(0, 100); // Limit to 100 characters
-        query.lastName = { $regex: new RegExp(`^${lastName}`), $options: 'i' }; // Case-insensitive
+        query.lastName = { $regex: new RegExp(`^${req.query.lastName.substring(0, 100)}`), $options: 'i' };
     }
 
     if (req.query.bio) {
-        const bio = req.query.bio.substring(0, 100); // Limit to 100 characters
-        query.bio = { $regex: new RegExp(`^${bio}`), $options: 'i' }; // Case-insensitive
+        query.bio = { $regex: new RegExp(`^${req.query.bio.substring(0, 100)}`), $options: 'i' };
     }
 
     if (req.query.address) {
-        const address = req.query.address.substring(0, 100); // Limit to 100 characters
-        query.address = { $regex: new RegExp(`^${address}`), $options: 'i' }; // Case-insensitive
+        query.address = { $regex: new RegExp(`^${req.query.address.substring(0, 100)}`), $options: 'i' };
     }
 
     if (req.query.access) {
-        const access = req.query.access.substring(0, 100); // Limit to 100 characters
-        query.access = { $regex: new RegExp(`^${access}`), $options: 'i' }; // Case-insensitive
+        query.access = { $regex: new RegExp(`^${req.query.access.substring(0, 100)}`), $options: 'i' };
     }
 
     if (req.query.phoneNumber) {
-        const phoneNumber = req.query.phoneNumber.substring(0, 100); // Limit to 100 characters
-        query.phoneNumber = { $regex: new RegExp(`^${phoneNumber}`), $options: 'i' }; // Case-insensitive
+        query.phoneNumber = { $regex: new RegExp(`^${req.query.phoneNumber.substring(0, 100)}`), $options: 'i' };
     }
 
     if (req.query.email) {
-        const email = req.query.email.substring(0, 100); // Limit to 100 characters
-        query.email = { $regex: new RegExp(`^${email}`), $options: 'i' }; // Case-insensitive
+        query.email = { $regex: new RegExp(`^${req.query.email.substring(0, 100)}`), $options: 'i' };
     }
 
     if (req.query.cartId) {
-        const cartId = req.query.cartId.substring(0, 100); // Limit to 100 characters
-        query.cartId = { $regex: new RegExp(`^${cartId}`), $options: 'i' }; // Case-insensitive
+        query.cartId = { $regex: new RegExp(`^${req.query.cartId.substring(0, 100)}`), $options: 'i' };
     }
 
     try {
@@ -142,3 +164,5 @@ exports.searchUsers = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+module.exports = { login, register, logout, getUsers, searchUsers };
