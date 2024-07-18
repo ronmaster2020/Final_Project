@@ -7,8 +7,17 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const app = express();
 const PORT = process.env.PORT || 8080;
+
 const Cart = require('./models/cart');
 const User = require('./models/user');
+
+// Middleware to check DB connection
+const checkDBConnection = (req, res, next) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+    next();
+};
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -69,10 +78,9 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-app.get('/prodcuts', (req, res) => {
+app.get('/products', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'viewproducts.html'));
 });
-
 
 app.get('/about', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'about.html'));
@@ -146,6 +154,7 @@ app.get('/userpage', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'userpage.html'));
 });
 
+// Authentication Routes
 const authController = require('./controllers/auth');
 app.post('/register', authController.register);
 app.post('/login', authController.login);
@@ -153,6 +162,7 @@ app.get('/logout', authController.logout);
 app.get('/user/all', authController.getUsers);
 app.get('/user/search', authController.searchUsers);
 
+// Product Routes
 const productController = require('./controllers/product');
 app.post('/product/create', ensureAuthenticated, product_file_upload.array('productImage', 10), productController.createProduct);
 app.get('/product/all', productController.getProducts);
@@ -161,6 +171,7 @@ app.post('/product/update/:id', ensureAuthenticated, productController.updatePro
 app.post('/product/delete/:id', ensureAuthenticated, productController.deleteProduct);
 app.get('/product/:id', productController.getProductById);
 
+// Order Routes
 const orderController = require('./controllers/order');
 app.post('/order/create', ensureAuthenticated, orderController.createOrder);
 app.get('/order/all', ensureAuthenticated, orderController.getOrders);
@@ -169,6 +180,7 @@ app.get('/order/grouped/date', ensureAuthenticated, orderController.getOrdersGro
 app.post('/order/delete/:id', ensureAuthenticated, orderController.deleteOrder);
 app.get('/orders/byid/:userId', ensureAuthenticated, orderController.getOrdersByUserId);
 
+// Cart Routes
 const cartController = require('./controllers/cart');
 app.post('/cart/create', ensureAuthenticated, cartController.createCart);
 app.post('/cart/add/:productId', ensureAuthenticated, cartController.addToCart);
@@ -192,12 +204,35 @@ app.get('/api/cart', ensureAuthenticated, async (req, res) => {
     }
 });
 
+// Settings Routes
+const settingsController = require('./controllers/SettingsController');
+app.get('/getUserDetails/:id', settingsController.getUserDetails);
+app.post('/settings', settingsController.updateUserSettings);
+app.post('/updateUser/:id', settingsController.updateUser);
+app.get('/username/:id', settingsController.getUserName);
+app.get('/getAccessLevel/:id', settingsController.getAccessLevel);
+app.post('/updateAccessLevel/:id', settingsController.updateAccessLevel);
+
+// Catch-all route for any other requests
+app.use('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', '404.html'));
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+// Admin validation middleware
+function validateAdmin(req, res, next) {
+    if (req.user && req.user.isAdmin) {
+        next();
+    } else {
+        res.status(403).send('Access denied');
+    }
+}
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
 });

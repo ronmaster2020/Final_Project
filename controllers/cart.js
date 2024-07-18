@@ -1,6 +1,16 @@
+const mongoose = require('mongoose');
 const Cart = require('../models/cart');
 const Product = require('../models/product');
 
+// Middleware to check DB connection
+const checkDBConnection = (req, res, next) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+    next();
+};
+
+// Create a new cart
 const createCart = async (req, res) => {
     const { userId } = req.body;
     const cart = new Cart({ userId, products: [] });
@@ -13,6 +23,7 @@ const createCart = async (req, res) => {
     }
 };
 
+// Add a product to the cart
 const addToCart = async (req, res) => {
     const { productId } = req.params;
     const { quantity } = req.body;
@@ -46,10 +57,10 @@ const addToCart = async (req, res) => {
     }
 };
 
-
+// Get the cart for the current user
 const getCart = async (req, res) => {
     try {
-        const userId = req.user._id; // Assuming req.user._id is correctly set after authentication
+        const userId = req.user._id;
         const cart = await Cart.findOne({ userId }).populate('products.productId');
 
         if (!cart) {
@@ -63,6 +74,7 @@ const getCart = async (req, res) => {
     }
 };
 
+// Get cart by ID
 const getCartById = async (req, res) => {
     try {
         const cart = await Cart.findById(req.params.cartId).populate('products.productId');
@@ -78,6 +90,7 @@ const getCartById = async (req, res) => {
     }
 };
 
+// Update the cart
 const updateCart = async (req, res) => {
     const { id } = req.params;
     const { products } = req.body;
@@ -96,6 +109,7 @@ const updateCart = async (req, res) => {
     }
 };
 
+// Delete the cart
 const deleteCart = async (req, res) => {
     try {
         const cart = await Cart.findByIdAndDelete(req.params.id);
@@ -111,6 +125,7 @@ const deleteCart = async (req, res) => {
     }
 };
 
+// Get all carts
 const getAllCarts = async (req, res) => {
     try {
         const carts = await Cart.find().populate('products.productId');

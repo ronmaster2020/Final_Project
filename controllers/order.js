@@ -4,12 +4,16 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 const User = require('../models/user');
 
-// Create order
-exports.createOrder = async (req, res) => {
+// Middleware to check DB connection
+const checkDBConnection = (req, res, next) => {
     if (mongoose.connection.readyState !== 1) {
         return res.status(503).send('Service unavailable. Please try again later.');
     }
+    next();
+};
 
+// Create order
+exports.createOrder = [checkDBConnection, async (req, res) => {
     try {
         const cartId = req.body.cartId;
         const cart = await Cart.findById(cartId);
@@ -66,14 +70,10 @@ exports.createOrder = async (req, res) => {
 
         res.status(500).send('Server error');
     }
-};
+}];
 
 // Get all orders
-exports.getOrders = async (req, res) => {
-    if (mongoose.connection.readyState !== 1) {
-        return res.status(503).send('Service unavailable. Please try again later.');
-    }
-
+exports.getOrders = [checkDBConnection, async (req, res) => {
     try {
         const orders = await Order.find();
         res.json(orders);
@@ -81,14 +81,10 @@ exports.getOrders = async (req, res) => {
         console.error('Error getting orders:', err);
         res.status(500).send('Server error');
     }
-};
+}];
 
 // Get order by ID
-exports.getOrderById = async (req, res) => {
-    if (mongoose.connection.readyState !== 1) {
-        return res.status(503).send('Service unavailable. Please try again later.');
-    }
-
+exports.getOrderById = [checkDBConnection, async (req, res) => {
     try {
         const order = await Order.findById(req.params.id);
         if (!order) {
@@ -99,14 +95,10 @@ exports.getOrderById = async (req, res) => {
         console.error('Error getting order by ID:', err);
         res.status(500).send('Server error');
     }
-};
+}];
 
 // Get orders grouped by date
-exports.getOrdersGroupByDate = async (req, res) => {
-    if (mongoose.connection.readyState !== 1) {
-        return res.status(503).send('Service unavailable. Please try again later.');
-    }
-
+exports.getOrdersGroupByDate = [checkDBConnection, async (req, res) => {
     try {
         const byDateUnit = req.query.dateUnit || 'day';
         let orders;
@@ -164,14 +156,10 @@ exports.getOrdersGroupByDate = async (req, res) => {
         console.error('Error getting orders grouped by date:', err);
         res.status(500).send('Server error');
     }
-};
+}];
 
 // Delete order by ID
-exports.deleteOrder = async (req, res) => {
-    if (mongoose.connection.readyState !== 1) {
-        return res.status(503).send('Service unavailable. Please try again later.');
-    }
-
+exports.deleteOrder = [checkDBConnection, async (req, res) => {
     try {
         const orderId = req.params.id;
         
@@ -185,14 +173,10 @@ exports.deleteOrder = async (req, res) => {
         console.error('Error deleting order by ID:', err);
         res.status(500).send('Server error');
     }
-};
+}];
 
 // Get orders by user ID
-exports.getOrdersByUserId = async (req, res) => {
-    if (mongoose.connection.readyState !== 1) {
-        return res.status(503).send('Service unavailable. Please try again later.');
-    }
-
+exports.getOrdersByUserId = [checkDBConnection, async (req, res) => {
     try {
         const userId = req.params.userId;
         const deliveredOrders = await Order.find({ userId: userId }).populate('order_items.productId');
@@ -201,4 +185,4 @@ exports.getOrdersByUserId = async (req, res) => {
         console.error('Error getting orders by user ID:', err);
         res.status(500).send('Server error');
     }
-};
+}];
