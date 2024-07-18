@@ -72,9 +72,9 @@ const product_file_storage = multer.diskStorage({
 
 const product_file_upload = multer({ storage: product_file_storage, limits: { fileSize: 10 * 1024 * 1024 } });
 
-app.use(isLoggedIn);
+const isloggedin = require('./controllers/isloggedin');
 
-app.get('/api/useId', ensureAuthenticated, getUserAndCartId);
+app.get('/api/useId', ensureAuthenticated, isloggedin.getUserAndCartId);
 
 
 app.get('/', (req, res) => {
