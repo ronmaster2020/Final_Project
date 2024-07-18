@@ -156,6 +156,10 @@ app.get('/orders/byid/:userId', orderController.getOrdersByUserId);
 
 const cartController = require('./controllers/cart');
 
+app.get('/emptyCart', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'emptyCart.html'));
+  });
+
 app.post('/cart/create', cartController.createCart);
 
 app.post('/cart/add/:productId', cartController.AddToCart);
