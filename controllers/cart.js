@@ -23,37 +23,37 @@ const createCart = async (req, res) => {
     }
 };
 
-// Add a product to the cart
 const addToCart = async (req, res) => {
-    const { productId } = req.params;
-    const { quantity } = req.body;
+    const userId = req.session.userId;
+    const { productId, quantity } = req.body;
+
+    if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    if (!productId) {
+        return res.status(400).json({ error: 'Product ID is required' });
+    }
 
     try {
-        const cart = await Cart.findOne({ userId: req.user._id });
+        let cart = await Cart.findOne({ userId });
 
         if (!cart) {
-            return res.status(404).json({ error: 'Cart not found' });
+            cart = new Cart({ userId, products: [] });
         }
 
-        const product = await Product.findById(productId);
-
-        if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
-        }
-
-        const cartItem = cart.products.find(item => item.productId.toString() === productId);
-
-        if (cartItem) {
-            cartItem.quantity += quantity;
+        const existingProduct = cart.products.find(item => item.productId.equals(productId));
+        if (existingProduct) {
+            existingProduct.quantity += quantity;
         } else {
             cart.products.push({ productId, quantity });
         }
 
-        const updatedCart = await cart.save();
-        res.json(updatedCart);
+        await cart.save();
+        res.json({ success: true, cart });
     } catch (err) {
         console.error('Error adding to cart:', err);
-        res.status(500).json({ error: 'Error adding to cart' });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 

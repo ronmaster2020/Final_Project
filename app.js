@@ -11,6 +11,8 @@ const PORT = process.env.PORT || 8080;
 const Cart = require('./models/cart');
 const User = require('./models/user');
 
+const { ensureAuthenticated, isLoggedIn, getUserAndCartId } = require('./controllers/isloggedin');
+
 // Middleware to check DB connection
 const checkDBConnection = (req, res, next) => {
     if (mongoose.connection.readyState !== 1) {
@@ -51,8 +53,6 @@ app.use((req, res, next) => {
     next();
 });
 
-const { ensureAuthenticated, isLoggedIn } = require('./controllers/isloggedin');
-
 mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => {
         console.log('MongoDB connected');
@@ -74,8 +74,7 @@ const product_file_upload = multer({ storage: product_file_storage, limits: { fi
 
 app.use(isLoggedIn);
 
-app.get('/api/useId', ensureAuthenticated, getUserAndCartId);
-
+app.get('/api/userId', ensureAuthenticated, getUserAndCartId); // Place this route before the catch-all
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
@@ -132,7 +131,6 @@ app.get('/admin/settings', ensureAuthenticated, (req, res) => {
 app.get('/orderhistory', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
 });
-
 
 app.get('/product/new-form', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
@@ -201,7 +199,7 @@ app.get('/api/cart', ensureAuthenticated, async (req, res) => {
         if (!cart) {
             return res.status(404).json({ error: 'No cart found' });
         }
-        res.json({ cartId: cart._id, isLoggedIn: req.session.isLoggedIn, cart }); // Ensure these properties are returned
+        res.json({ cartId: cart._id, isLoggedIn: req.session.isLoggedIn, cart });
     } catch (err) {
         console.error('Error fetching cart:', err);
         res.status(500).json({ error: 'Error fetching cart' });

@@ -11,7 +11,6 @@ const ensureAuthenticated = (req, res, next) => {
     res.redirect('/login');
 };
 
-
 const isLoggedIn = async (req, res, next) => {
     if (req.isAuthenticated()) {
         req.session.userId = req.user._id;
