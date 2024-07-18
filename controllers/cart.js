@@ -1,139 +1,200 @@
 const mongoose = require('mongoose');
 const Cart = require('../models/cart');
-const Product = require('../models/product');
+const globalState = require('../globalState'); // Import global state
 
-// Middleware to check DB connection
-const checkDBConnection = (req, res, next) => {
+// !!!!!!!!!!! sprint 2 - because we need users !!!!!
+// this one is just an intuition
+
+exports.createCart = async(req, res) => {
+    // Check if the database is connected
     if (mongoose.connection.readyState !== 1) {
         return res.status(503).send('Service unavailable. Please try again later.');
     }
-    next();
-};
 
-// Create a new cart
-const createCart = async (req, res) => {
-    const { userId } = req.body;
-    const cart = new Cart({ userId, products: [] });
     try {
-        const savedCart = await cart.save();
-        res.status(201).json(savedCart);
+        const newCart = new Cart();
+
+        //const newProduct1 = {
+            //productId: '66754afa008577e463e3062b',
+            //quantity: 3 // Adjust quantity as needed
+        //};
+        //const newProduct2 = {
+            //productId: '667567b72642681c6b5397ac',
+            //quantity: 2 // Adjust quantity as needed
+        //};
+          
+        //newCart.products.push(newProduct1);
+        //newCart.products.push(newProduct2);
+          
+        newCart.save()
+            .then(() => {
+              console.log('Products added to cart successfully!');
+        })
+          
+        res.status(201).send('Cart created successfully!');
     } catch (err) {
         console.error('Error creating cart:', err);
-        res.status(500).json({ error: 'Error creating cart' });
+        res.status(500).send('Server error');
     }
 };
 
-const addToCart = async (req, res) => {
-    const userId = req.session.userId;
-    const { productId, quantity } = req.body;
-
-    if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
-    }
-
-    if (!productId) {
-        return res.status(400).json({ error: 'Product ID is required' });
+exports.AddToCart = async(req, res) => {
+    // Check if the database is connected
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
     }
 
     try {
-        let cart = await Cart.findOne({ userId });
-
-        if (!cart) {
-            cart = new Cart({ userId, products: [] });
-        }
-
-        const existingProduct = cart.products.find(item => item.productId.equals(productId));
-        if (existingProduct) {
-            existingProduct.quantity += quantity;
+        // !!!!!!!!!!! sprint 2 - because we need users first !!!!!
+        // at sprint 2 we need to get the user id from the session and not from the request body
+        const cart = await Cart.findOne(req.body.id);
+        const existingProductIndex = cart.products.findIndex(p => p.productId.toString() === req.params.productId);
+        if (existingProductIndex >= 0) {
+            cart.products[existingProductIndex].quantity += 1; // Increment quantity if product exists
         } else {
-            cart.products.push({ productId, quantity });
+            cart.products.push({ productId: req.params.productId, quantity: 1 }); // Add new product with quantity 1
         }
-
         await cart.save();
-        res.json({ success: true, cart });
+        res.status(201).send('Product added to cart successfully!');
     } catch (err) {
-        console.error('Error adding to cart:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error adding product to cart:', err);
+        res.status(500).send('Server error');
+    }
+}
+
+exports.getAllCarts = async(req, res) => {
+    // Check if the database is connected
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
+    try {
+        const carts = await Cart.find();
+        res.json(carts);
+        //console.log(carts);
+        //return carts;
+    } catch (err) {
+        console.error('Error getting carts:', err);
+        res.status(500).send('Server error');
     }
 };
 
-// Get the cart for the current user
-const getCart = async (req, res) => {
-    try {
-        const userId = req.user._id;
-        const cart = await Cart.findOne({ userId }).populate('products.productId');
 
-        if (!cart) {
-            return res.status(404).json({ error: 'Cart not found' });
-        }
-
-        res.json(cart);
-    } catch (err) {
-        console.error('Error fetching cart:', err);
-        res.status(500).json({ error: 'Error fetching cart' });
+exports.deleteCart = async (req, res) => {
+    //check if the database is connected
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
     }
-};
-
-// Get cart by ID
-const getCartById = async (req, res) => {
-    try {
-        const cart = await Cart.findById(req.params.cartId).populate('products.productId');
-
-        if (!cart) {
-            return res.status(404).json({ error: 'Cart not found' });
-        }
-
-        res.json(cart);
-    } catch (err) {
-        console.error('Error fetching cart:', err);
-        res.status(500).json({ error: 'Error fetching cart' });
-    }
-};
-
-// Update the cart
-const updateCart = async (req, res) => {
-    const { id } = req.params;
-    const { products } = req.body;
 
     try {
-        const cart = await Cart.findByIdAndUpdate(id, { products }, { new: true });
+        //find cart id from req body
+        const cartId = req.body.cartId;
+        const cart = await Cart.findByIdAndDelete(cartId);
 
+        //check if the cart is found
         if (!cart) {
-            return res.status(404).json({ error: 'Cart not found' });
+            return res.status(404).send('Cart not found');
         }
 
-        res.json(cart);
-    } catch (err) {
-        console.error('Error updating cart:', err);
-        res.status(500).json({ error: 'Error updating cart' });
-    }
-};
-
-// Delete the cart
-const deleteCart = async (req, res) => {
-    try {
-        const cart = await Cart.findByIdAndDelete(req.params.id);
-
-        if (!cart) {
-            return res.status(404).json({ error: 'Cart not found' });
-        }
-
-        res.json({ message: 'Cart deleted' });
+        res.status(200).send('Cart deleted successfully!');
     } catch (err) {
         console.error('Error deleting cart:', err);
-        res.status(500).json({ error: 'Error deleting cart' });
+        res.status(500).send('Server error');
     }
 };
 
-// Get all carts
-const getAllCarts = async (req, res) => {
+  
+
+exports.deleteProductFromCart = async (req, res) => {
+    // Check if the database is connected
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
     try {
-        const carts = await Cart.find().populate('products.productId');
-        res.json(carts);
+        const cartId = req.body.cartId;
+        const productId = req.body.productId;
+
+        // Check if cartId and productId are provided
+        if (!cartId || !productId) {
+            return res.status(400).send('Missing cartId or productId');
+        }
+
+        // Use $pull operator to remove product from cart.products
+        const cart = await Cart.findOneAndUpdate(
+            { _id: cartId },
+            { $pull: { products: { productId } } },
+            { new: true } // To return the updated cart
+        );
+
+        // Check if cart is found and product exists
+        if (!cart) {
+            return res.status(404).send('Cart or product not found');
+        }
+
+        res.status(200).send('Product deleted from cart successfully!');
     } catch (err) {
-        console.error('Error fetching carts:', err);
-        res.status(500).json({ error: 'Error fetching carts' });
+        console.error('Error deleting product from cart:', err);
+        res.status(500).send('Server error');
+    }
+};
+  
+  
+
+
+exports.deleteAllProductsFromCart = async (req, res) => {
+    
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+
+    try {
+        const cartId = req.body.cartId;
+
+        
+        if (!cartId) {
+            return res.status(400).send('Missing cartId');
+        }
+
+        //Use $set operator to empty the products array (cool af)
+        const cart = await Cart.findOneAndUpdate(
+            { _id: cartId },
+            { $set: { products: [] } },
+            { new: true } // To return the updated cart
+        );
+
+        //Check if cart is found
+        if (!cart) {
+            return res.status(404).send('Cart not found');
+        }
+
+        res.status(200).send('All products deleted from cart successfully!');
+    } catch (err) {
+        console.error('Error deleting all products from cart:', err);
+        res.status(500).send('Server error');
     }
 };
 
-module.exports = { createCart, addToCart, getCart, getCartById, updateCart, deleteCart, getAllCarts };
+// !!!!!!!!!!! sprint 2 - because we need users first !!!!!
+
+
+exports.getCartById = async (req, res) => {
+    try {
+        const cartId = globalState.cartId;
+
+        if (!cartId) {
+            return res.status(404).send('Cart not found');
+        }
+
+        const cart = await Cart.findById(cartId);
+
+        if (!cart) {
+            return res.status(404).send('Cart not found');
+        }
+
+        res.status(200).json(cart);
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        res.status(500).send('Server error');
+    }
+};

@@ -1,64 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Shop</title>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <head>
+        <title>shop</title>
+        <!-- Bootstrap -->
+        <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/common.js"></script>
-    <script type="text/javascript" src="/js/login.js"></script>
+        <!-- JQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/common.js"></script>
+        <script type="text/javascript" src="/js/login.js"></script>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/emptyCart.css">
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/emptyCart.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
-</head>
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 
-<body>
-    <script>
-        // Check authentication status
-        function checkLogin() {
-            console.log("logged in");
-            const isAuthenticated = '{{isAuthenticated}}'; // Replace with your actual authentication logic
-            if (isAuthenticated === 'false') {
-                document.getElementById('login-container').style.display = 'block';
-                document.getElementById('cart-actions').style.display = 'none';
-            } else {
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('cart-actions').style.display = 'block';
+
+    </head>
+
+    <body onload="CheckLogin()">
+        <script>
+            async function CheckLogin() {
+                const cartIdResponse = await fetch('/api/cart');
+                if (!cartIdResponse.ok) {
+                    throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
+                }
+                const cartIdData = await cartIdResponse.json();
+                
+                console.log('Cart ID from server:', cartIdData.cartId);
+                console.log('Is loged-in from server:', cartIdData.isLogedIn);
+
+                const login_container = document.getElementById('login-container');
+                const message = document.getElementById('message');
+                const cart_actions = document.getElementById('cart-actions');
+
+                if(cartIdData.isLogedIn === true) {
+                    login_container.style.display = 'none';
+                }
+                else {
+                    message.style.display = 'none';
+                    cart_actions.style.display = 'none';
+                }
             }
-        }
+        </script>
 
-        // Run checkLogin function on page load
-        document.addEventListener('DOMContentLoaded', checkLogin);
-    </script>
 
-    <!-- navbar -->
-    <nav id="navbar-placeholder">
-        <ul class="navbar-nav"></ul>
-    </nav>
 
-    <div class="empty-cart-container">
-        <h1 class="empty-cart-title">Your Shopping Bag is Empty</h1>
-        
-        <div class="empty-cart-message">
-            <p id="message">It looks like you haven't added anything to your cart yet. Start shopping to fill it up!</p>
-            <a href="/" class="continue-shopping-link">Continue Shopping</a>
+        <!-- navbar -->
+        <nav id="navbar-placeholder">
+            <ul class="navbar-nav"></ul>
+        </nav>
+
+        <div class="empty-cart-container">
+            <h1 class="empty-cart-title">Your Shopping Bag is Empty</h1>
+            
+            <div class="empty-cart-message">
+                <p id="message">It looks like you haven't added anything to your cart yet. Start shopping to fill it up!</p>
+                <a href="/" class="continue-shopping-link">Continue Shopping</a>
+            </div>
+            <div class="empty-cart-actions" id="cart-actions">
+                <a href="/">Browse Products</a>
+                <a href="/about">Learn About Us</a>
+            </div>
+
+            <div class="login-container" id="login-container">
+                <h2 class="login-title">Log in to view the items in your cart</h2>
+                <a href="/login" class="login-link">Login</a>
+            </div>
         </div>
-        <div class="empty-cart-actions" id="cart-actions">
-            <a href="/">Browse Products</a>
-            <a href="/about">Learn About Us</a>
-        </div>
 
-        <div class="login-container" id="login-container">
-            <h2 class="login-title">Log in to view the items in your cart</h2>
-            <a href="/login" class="login-link">Login</a>
-        </div>
-    </div>
-</body>
+        <footer id="footer-placeholder">
+            <ul class="footer-foot"></ul>
+        </footer>
+
+    </body>
+
 </html>
