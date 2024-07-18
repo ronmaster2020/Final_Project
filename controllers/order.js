@@ -21,11 +21,20 @@ exports.createOrder = async (req, res) => {
             return res.status(404).send('User not found');
         }
 
+        let message = '';
+        let orderOk = true;
+
         // Fetch product details for each product in the cart
         const orderItems = await Promise.all(cart.products.map(async (cartItem) => {
             const product = await Product.findById(cartItem.productId);
             if (!product) {
                 throw new Error(`Product with id ${cartItem.productId} not found`);
+            }
+            if(cartItem.quantity > product.stock) {
+                orderOk = false;
+                message += `Unfortunately, some of the ${product.name} items have already been ordered by others. 
+                You can only order up to ${product.stock} of this item.`;
+                message += '<br>';
             }
 
             return {
@@ -38,6 +47,9 @@ exports.createOrder = async (req, res) => {
         let total_price = orderItems.reduce((total, item) => total + (item.price * item.quantity), 0);
 
         // Save the order
+        if (!orderOk) {
+            return res.status(400).send(message);
+        }
         const order = new Order({
             order_items: orderItems,
             userId: currentUser._id,
@@ -49,7 +61,7 @@ exports.createOrder = async (req, res) => {
 
         await order.save();
 
-        res.redirect('/viewCart');
+        res.status(200).json({ message: 'Order created successfully', order });
     } catch (err) {
         console.error('Error creating order:', err);
 

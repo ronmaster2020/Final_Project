@@ -160,6 +160,8 @@ app.post('/cart/create', cartController.createCart);
 
 app.post('/cart/add/:productId', cartController.AddToCart);
 
++app.post('/cart/update', cartController.updateCart);
+
 app.get('/cart/all'/*, validateAdmin()*/, cartController.getAllCarts);
 
 app.post('/cart/delete', cartController.deleteCart);
