@@ -33,4 +33,14 @@ const isLoggedIn = async (req, res, next) => {
     }
 };
 
-module.exports = { ensureAuthenticated, isLoggedIn };
+const getUserAndCartId = (req, res) => {
+    if (req.isAuthenticated()) {
+        const userId = req.user._id;
+        const cartId = req.session.cart ? req.session.cart._id : null;
+        res.json({ userId, cartId });
+    } else {
+        res.status(401).json({ error: 'User is not authenticated' });
+    }
+};
+
+module.exports = { ensureAuthenticated, isLoggedIn, getUserAndCartId };

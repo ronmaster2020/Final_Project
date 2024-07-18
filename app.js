@@ -74,6 +74,9 @@ const product_file_upload = multer({ storage: product_file_storage, limits: { fi
 
 app.use(isLoggedIn);
 
+app.get('/api/useId', ensureAuthenticated, getUserAndCartId);
+
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
@@ -129,6 +132,7 @@ app.get('/admin/settings', ensureAuthenticated, (req, res) => {
 app.get('/orderhistory', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
 });
+
 
 app.get('/product/new-form', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
