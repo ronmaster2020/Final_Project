@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CartSchema = new Schema({
-    userId: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'User' 
-    },
+const CartScheme = new Schema({
+    // customer_id: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     required: [true, 'customer id is required']
+    //     // ref: 'customer'
+    // },
     products: [{
         productId: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'Product' 
+            ref: 'Product'
         },
         quantity: {
             type: Number,
@@ -19,9 +19,7 @@ const CartSchema = new Schema({
             min: 1
         }
     }]
-}, {
-    timestamps: true // Adds createdAt and updatedAt fields automatically
 });
 
-const Cart = mongoose.model('Cart', CartSchema);
+const Cart = mongoose.model('cart', CartScheme);
 module.exports = Cart;

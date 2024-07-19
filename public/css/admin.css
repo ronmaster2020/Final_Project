@@ -2,9 +2,7 @@
 /* 1. global         */
 /* 2. navbar         */
 /* 3. products       */
-/* 4. form           */
-/* 5. d3 graph       */
-/* 6. progress bar   */
+
 
 /*********************/
 /* 1.    global      */
@@ -12,8 +10,6 @@
 body {
     padding: 0;
     background-color: rgb(235, 235, 235);
-    font-family: Arial, sans-serif;
-    color: #333;
 }
 
 #main-content {
@@ -30,7 +26,6 @@ body {
     background-color: white;
     border-radius: 10px;
     padding: 1rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .translateX-100 {
@@ -115,10 +110,9 @@ nav a,
 }
 
 #navbar-placeholder button:hover,
-#navbar-placeholder a:hover {
+#navbar-placeholder a:hover{
     background-color: gray;
 }
-
 #navbar-placeholder button:hover > .material-symbols-sharp,
 #navbar-placeholder a:hover > .material-symbols-sharp {
     color: rgb(39, 39, 39);
@@ -139,29 +133,24 @@ nav a,
         padding: 1rem;
         width: 100%;
     }
-
     #main-content > h1 {
         margin-top: 3.5rem;
     }
-
     #menu-toggle {
         display: block;
     }
-
     #navbar-placeholder {
         width: 4rem;
     }
-
     nav {
         height: calc(100vh - 3.5rem);
     }
-
     #navbar-placeholder button,
     #navbar-placeholder a {
-        height: 4.5rem;
+        /* padding 1rem + 1rem + icon 2.5rem */
+        height: 4.5rem; 
         padding: 1rem 0.5rem;
     }
-
     #navbar-placeholder .material-symbols-sharp {
         font-size: 2.5rem;
     }
@@ -170,6 +159,7 @@ nav a,
 /*********************/
 /* 3.  products      */
 /*********************/
+
 #loadingIndicator {
     display: flex;
     justify-content: center;
@@ -198,12 +188,9 @@ form {
     flex-direction: row;
     flex-wrap: wrap;
 }
-
 .input-group {
     max-width: 15rem;
-    margin-bottom: 1rem;
 }
-
 .input-group label {
     display: block;
     width: 100%;
@@ -232,6 +219,7 @@ form {
         r: 4;
         stroke-width: 3;
     }
+
 }
 
 /**********************/
@@ -245,7 +233,6 @@ form {
     border-radius: 4px;
     box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
 }
-
 .progress-bar {
     float: left;
     width: 0;
