@@ -97,60 +97,103 @@ exports.getOrderById = [checkDBConnection, async (req, res) => {
     }
 }];
 
-// Get orders grouped by date
 exports.getOrdersGroupByDate = [checkDBConnection, async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).send('Service unavailable. Please try again later.');
+    }
+    let orders;
+    const startDate = req.query.startDate;
+    const endDate = req.query.endDate;
     try {
         const byDateUnit = req.query.dateUnit || 'day';
-        let orders;
-
-        switch (byDateUnit) {
-            case 'year':
-                orders = await Order.aggregate([
-                    { $group: { _id: { $year: '$order_date' }, totalIncome: { $sum: '$total_price' } } }
-                ]);
-                break;
-            case 'month':
-                orders = await Order.aggregate([
-                    { $group: { _id: { $month: '$order_date' }, totalIncome: { $sum: '$total_price' } } }
-                ]);
-                break;
-            case 'yearMonth':
-                orders = await Order.aggregate([
-                    { $group: { _id: { $dateToString: { format: "%Y-%m", date: "$order_date" } }, totalIncome: { $sum: '$total_price' } } }
-                ]);
-                break;
-            case 'yearWeek':
-                if (!req.query.startDate || !req.query.endDate) {
-                    return res.status(400).send('Missing start date or end date');
+        if (!['month', 'year', 'yearMonth', 'yearWeek', 'yearMonthDay'].includes(byDateUnit)) {
+            console.error('Invalid date unit:', byDateUnit);
+            return res.status(400).send('Invalid date unit');
+        }
+        if (byDateUnit === 'year') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $year: '$order_date' },
+                        totalIncome: { $sum: '$total_price' }
+                    }
                 }
+            ]);
+        }
+        else if (byDateUnit === 'month') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { $month: '$order_date' },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else if (byDateUnit === 'yearMonth') {
+            orders = await Order.aggregate([
+                {
+                    $group: {
+                        _id: { 
+                            year: { $year: "$order_date" },
+                            month: { $month: "$order_date" }
+                        },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
+        }
+        else if (byDateUnit === 'yearWeek') {
+            if (!startDate || !endDate) {
+                return res.status(400).send('Missing start date or end date');
+            }
 
-                const startDate = new Date(req.query.startDate);
-                const endDate = new Date(req.query.endDate);
-
-                orders = await Order.aggregate([
-                    {
-                        $match: {
-                            order_date: { $gte: startDate, $lte: endDate }
-                        }
-                    },
-                    {
-                        $group: {
-                            _id: {
-                                year: { $year: "$order_date" },
-                                week: { $week: "$order_date" }
-                            },
-                            totalIncome: { $sum: '$total_price' }
+            orders = await Order.aggregate([
+                {
+                    $match: {
+                        order_date: {
+                            $gte: new Date(startDate),
+                            $lte: new Date(endDate)
                         }
                     }
-                ]);
-                break;
-            default:
-                orders = await Order.aggregate([
-                    { $group: { _id: { $dayOfMonth: '$order_date' }, totalIncome: { $sum: '$total_price' } } }
-                ]);
-                break;
+                },
+                {
+                    $group: {
+                        _id: {
+                            year: { $year: "$order_date" },
+                            week: { $week: "$order_date" }
+                        },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
         }
+        else if (byDateUnit === 'yearMonthDay') {
+            if (!startDate || !endDate) {
+                return res.status(400).send('Missing start date or end date');
+            }
 
+            orders = await Order.aggregate([
+                {
+                    $match: {
+                        order_date: {
+                            $gte: new Date(startDate),
+                            $lte: new Date(endDate)
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: { 
+                            year: { $year: "$order_date" },
+                            month: { $month: "$order_date" },
+                            day: { $dayOfMonth: "$order_date" }
+                        },
+                        totalIncome: { $sum: '$total_price' }
+                    }
+                }
+            ]);
+        }
         res.json(orders);
     } catch (err) {
         console.error('Error getting orders grouped by date:', err);
@@ -186,4 +229,3 @@ exports.getOrdersByUserId = [checkDBConnection, async (req, res) => {
         res.status(500).send('Server error');
     }
 }];
-
