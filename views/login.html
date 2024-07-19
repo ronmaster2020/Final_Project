@@ -1,11 +1,14 @@
+<!-- login.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Shop</title>
+    <title>shop</title>
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
     <link rel="stylesheet" href="/css/auth.css">
+    <script type="text/javascript" src="/js/login.js"></script>
 </head>
 <body>
     <!-- navbar -->
@@ -27,20 +30,20 @@
             <button class="brandBtn mb-4">
                 <img 
                     src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-1024.png" 
-                    alt="facebook">
+                    alt="google">
                 <span>CONTINUE WITH FACEBOOK</span>
             </button>
             <!-- apple -->
             <button class="brandBtn">
                 <img 
                     src="https://cdn2.iconfinder.com/data/icons/black-white-social-media/32/online_social_media_apple-1024.png" 
-                    alt="apple">
+                    alt="google">
                 <span>CONTINUE WITH APPLE</span>
             </button>
             <h5 class="my-4">OR</h5>
             <h2 class="mb-4">CONTINUE WITH YOUR EMAIL ADDRESS</h2>
 
-            <form id="login-form" action="/login" method="POST">
+            <form onsubmit="handleLogin(event)">
                 <div class="error-message"></div>
 
                 <!-- email -->
@@ -51,10 +54,12 @@
 
                 <!-- password -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="password" id="password" name="password" required minlength="2">
+                    <input placeholder=" " type="password" id="password" name="password" required minlength="8">
                     <label for="password">PASSWORD*</label>
                     <button id="show-password" type="button" onclick="showPassword()">
-                        <span class="material-symbols-sharp">visibility</span>
+                        <span class="material-symbols-sharp">
+                            visibility
+                        </span>
                     </button>
                 </div>
 
@@ -67,26 +72,6 @@
             </form>
         </div>
     </div>
-
     <div id="footer-placeholder"></div>
-
-    <script>
-        $(function() {
-            $('#navbar-placeholder').load('/partials/navbar.html');
-            $('#footer-placeholder').load('/partials/footer.html');
-        });
-
-        function showPassword() {
-            var passwordField = document.getElementById('password');
-            var showPasswordButton = document.getElementById('show-password');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                showPasswordButton.innerHTML = 'visibility_off';
-            } else {
-                passwordField.type = 'password';
-                showPasswordButton.innerHTML = 'visibility';
-            }
-        }
-    </script>
 </body>
 </html>
