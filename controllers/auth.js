@@ -49,9 +49,9 @@ const login = (req, res, next) => {
                 return next(err);
             }
             try {
-                let cart = await Cart.findOne({ userId: user._id }).populate('products.productId');
+                let cart = await Cart.findOne({ _id: user.cartId }).populate('products.productId');
                 if (!cart) {
-                    cart = new Cart({ userId: user._id, products: [] });
+                    cart = new Cart({ products: [] });
                     await cart.save();
                     user.cartId = cart._id;
                     await user.save();
@@ -79,12 +79,11 @@ const register = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ firstName, lastName, bio, address, access, phoneNumber, email, password: hashedPassword });
-        
-        const newCart = new Cart({ userId: newUser._id, products: [] });
+        const newCart = new Cart({ products: [] });
         await newCart.save();
+
+        const newUser = new User({ firstName, lastName, bio, address, access, phoneNumber, email, password: hashedPassword, cartId: newCart._id });
         
-        newUser.cartId = newCart._id;
         await newUser.save();
 
         req.flash('success', 'You are now registered and can log in!');

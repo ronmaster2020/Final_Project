@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const CartScheme = new Schema({
-    // customer_id: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     required: [true, 'customer id is required']
-    //     // ref: 'customer'
-    // },
     products: [{
         productId: {
             type: mongoose.Schema.Types.ObjectId,

@@ -196,7 +196,10 @@ app.get('/cartById/:cartId', ensureAuthenticated, cartController.getCartById);
 app.get('/api/cart', ensureAuthenticated, async (req, res) => {
     console.log('Request received at /cart');
     try {
-        const cart = await Cart.findOne({ userId: req.user._id }).populate('products.productId');
+        console.log('Fetching cart for user', req.user._id);
+        const user = await User.findOne({ _id: req.user._id });
+        console.log('User:', user);
+        const cart = await Cart.findOne({ _id: user.cartId }).populate('products.productId');
         if (!cart) {
             return res.status(404).json({ error: 'No cart found' });
         }
