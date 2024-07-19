@@ -203,7 +203,7 @@ app.get('/api/cart', ensureAuthenticated, async (req, res) => {
         if (!cart) {
             return res.status(404).json({ error: 'No cart found' });
         }
-        res.json({ cartId: cart._id, isLoggedIn: req.session.isLoggedIn, cart });
+        res.json({ cartId: cart._id, isLoggedIn: req.session.isLoggedIn, cart: cart });
     } catch (err) {
         console.error('Error fetching cart:', err);
         res.status(500).json({ error: 'Error fetching cart' });

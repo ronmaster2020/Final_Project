@@ -176,42 +176,32 @@
                return prices;
            }
 
-           async function getCartItems() {
-               try {
-                   // Fetch the cart ID from the server
-                   const cartIdResponse = await fetch('/api/cart');
-                   if (!cartIdResponse.ok) {
-                       throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
-                   }
-                   const cartIdData = await cartIdResponse.json();
-                   const cartId = cartIdData.cartId;
+            async function getCartItems() {
+                try {
+                    const cartResponse = await fetchWithErrorHandling('/api/cart');
+                    if (!cartResponse) return [];
+            
+                    const cartId = cartResponse.cartId;
+                    if (!cartId) {
+                        console.error('No cart ID found. Please log in first.');
+                        return [];
+                    }
+            
+                    const cartData = await fetchWithErrorHandling(`/cart/${cartId}`);
+                    console.log('Cart Data:', cartData);
+            
+                    if (cartData && cartData.products) {
+                        return cartData.products;
+                    } else {
+                        console.error('No products found in cart data.');
+                        return [];
+                    }
+                } catch (error) {
+                    console.error('Error fetching cart data:', error);
+                    return [];
+                }
+            }
 
-                   if (!cartId) {
-                       console.error('No cart ID found. Please log in first.');
-                       return [];
-                   }
-                   //console.log('Cart ID from server:', cartId);
-                   //console.log('Is loged-in from server:', cartIdData.isLogedIn);
-
-                   // Fetch the cart items using the cart ID
-                   const response = await fetch('/cart/all');
-                   if (!response.ok) {
-                       throw new Error(`HTTP error! status: ${response.status}`);
-                   }
-                   const cartData = await response.json();
-
-                   for (let i = 0; i < cartData.length; i++) {
-                       if (cartId === cartData[i]._id) {
-                           return cartData[i].products || [];
-                       }
-                   }
-               } catch (error) {
-                   console.error('Error fetching cart data:', error);
-                   // Handle errors gracefully (e.g., display an error message)
-               }
-           }
-
-       
            async function displayCartItems() {
                const cartItems = await getCartItems();
                const products = await getProducts();
