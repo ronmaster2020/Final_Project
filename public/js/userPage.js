@@ -12,30 +12,10 @@ function showPopup(message, isError = false) {
     }, 3000);
 }
 
-function getid() {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: `/api/useId`,
-            method: 'GET',
-            success: function(data) {
-                resolve(data.userId);
-            },
-            error: function(error) {
-                console.log('Error fetching ids:', error);
-                reject(error);
-            }
-        });
-    });
-}
-
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-
-       
-        const userId = await getid();
+        const userId = '668bbc1c17ea2b15eb5c4844'; // replace with actual user ID from session or token
         
-     
         // Fetch and populate form with user details
         const userDetailsResponse = await fetch(`/getUserDetails/${userId}`);
         const userDetails = await userDetailsResponse.json();

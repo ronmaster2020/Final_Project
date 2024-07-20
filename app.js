@@ -11,6 +11,8 @@ const PORT = process.env.PORT || 8080;
 const Cart = require('./models/cart');
 const User = require('./models/user');
 
+const { ensureAuthenticated, isLoggedIn, getUserAndCartId } = require('./controllers/isloggedin');
+
 // Middleware to check DB connection
 const checkDBConnection = (req, res, next) => {
     if (mongoose.connection.readyState !== 1) {
@@ -51,8 +53,6 @@ app.use((req, res, next) => {
     next();
 });
 
-const { ensureAuthenticated, isLoggedIn } = require('./controllers/isloggedin');
-
 mongoose.connect('mongodb+srv://mike:cIBBf4X6JasSW8oK@cluster0.emzh3yv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => {
         console.log('MongoDB connected');
@@ -74,7 +74,7 @@ const product_file_upload = multer({ storage: product_file_storage, limits: { fi
 
 const isloggedin = require('./controllers/isloggedin');
 
-app.get('/api/useId', ensureAuthenticated, isloggedin.getUserAndCartId);
+app.get('/api/userId', ensureAuthenticated, getUserAndCartId); // Place this route before the catch-all
 
 
 app.get('/', (req, res) => {
@@ -132,7 +132,6 @@ app.get('/admin/settings', ensureAuthenticated, (req, res) => {
 app.get('/orderhistory', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
 });
-
 
 app.get('/product/new-form', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
@@ -197,11 +196,14 @@ app.get('/cartById/:cartId', ensureAuthenticated, cartController.getCartById);
 app.get('/api/cart', ensureAuthenticated, async (req, res) => {
     console.log('Request received at /cart');
     try {
-        const cart = await Cart.findOne({ userId: req.user._id }).populate('products.productId');
+        console.log('Fetching cart for user', req.user._id);
+        const user = await User.findOne({ _id: req.user._id });
+        console.log('User:', user);
+        const cart = await Cart.findOne({ _id: user.cartId }).populate('products.productId');
         if (!cart) {
             return res.status(404).json({ error: 'No cart found' });
         }
-        res.json({ cartId: cart._id, isLoggedIn: req.session.isLoggedIn, cart }); // Ensure these properties are returned
+        res.json({ cartId: cart._id, isLoggedIn: req.session.isLoggedIn, cart: cart });
     } catch (err) {
         console.error('Error fetching cart:', err);
         res.status(500).json({ error: 'Error fetching cart' });
