@@ -1,32 +1,34 @@
-// async function handleLogin(event) {
-//     event.preventDefault(); // Prevent default form submission
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('login-form');
 
-//     const emailInput = document.getElementById('email');
-//     const passwordInput = document.getElementById('password');
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-//     const email = emailInput.value;
-//     const password = passwordInput.value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-//     try {
-//         const response = await fetch('/login', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ email, password })
-//         });
-//         console.log(response);
-//         if (!response.ok) {
-//             const errorData = await response.json();
-//             throw new Error(errorData.message || 'Login failed');
-//         } else {
-//             const data = await response.json();
-//             alert(data.message + " Your cart Id is " + data.user.cartId);
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
 
-//             window.location.href = '/'; // Redirect to the home page after alert
-//         }
-//     } catch (error) {
-//         console.error('Error during login:', error);
-//         alert('An error occurred during login. Please try again.');
-//     }
-// }
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+
+                // Redirect to the user page or any other page
+                window.location.href = '/userPage.html';
+            } else {
+                console.error('Login failed:', await response.text());
+                alert('Login failed. Please check your credentials.');
+            }
+        } catch (error) {
+            console.error('Error during login:', error.message);
+            alert('Error during login.');
+        }
+    });
+});
