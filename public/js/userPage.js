@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const userId = '668bbc1c17ea2b15eb5c4844'; // replace with actual user ID from session or token
+        const response = await fetch('/api/userId');
+        if (!response.ok) {
+            throw new Error('Failed to fetch user ID');
+        }
+        const userId = (await response.json()).userId;
 
         // Fetch and populate form with user details
         const userDetailsResponse = await fetch(`/getUserDetails/${userId}`);

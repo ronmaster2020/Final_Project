@@ -48,22 +48,12 @@ function displayProducts(products) {
 async function addToCart(productId) {
     console.log(`Adding product to cart with ID: ${productId}`); // Debug log
     try {
-        const response = await fetch('/api/userId');
-        if (!response.ok) {
-            throw new Error('Failed to fetch user ID and cart ID');
-        }
-
-        const data = await response.json();
-        const { userId, cartId } = data;
-
         const addToCartResponse = await fetch(`/cart/add/${productId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                userId,
-                cartId,
                 quantity: 1,
                 productId // Ensure productId is sent in the body
             })

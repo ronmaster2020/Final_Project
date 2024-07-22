@@ -7,11 +7,9 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const app = express();
 const PORT = process.env.PORT || 8080;
-
-const Cart = require('./models/cart');
 const User = require('./models/user');
 
-const { ensureAuthenticated, isLoggedIn, getUserAndCartId } = require('./controllers/isloggedin');
+const { ensureAuthenticated, getUserId } = require('./controllers/isloggedin');
 
 // Middleware to check DB connection
 const checkDBConnection = (req, res, next) => {
@@ -40,10 +38,8 @@ app.use(passport.session());
 app.use((req, res, next) => {
     if (req.user) {
         req.session.userId = req.user._id;
-        req.session.isLoggedIn = true;
     } else {
         req.session.userId = null;
-        req.session.isLoggedIn = false;
     }
 
     res.locals.success_msg = req.flash('success_msg');
@@ -74,7 +70,7 @@ const product_file_upload = multer({ storage: product_file_storage, limits: { fi
 
 const isloggedin = require('./controllers/isloggedin');
 
-app.get('/api/userId', ensureAuthenticated, getUserAndCartId); // Place this route before the catch-all
+app.get('/api/userId', ensureAuthenticated, isloggedin.getUserId); // Place this route before the catch-all
 
 
 app.get('/', (req, res) => {
@@ -187,28 +183,10 @@ app.get('/orders/byid/:userId', ensureAuthenticated, orderController.getOrdersBy
 const cartController = require('./controllers/cart');
 app.post('/cart/create', ensureAuthenticated, cartController.createCart);
 app.post('/cart/add/:productId', ensureAuthenticated, cartController.addToCart);
-app.get('/cart/:userId', ensureAuthenticated, cartController.getCart);
-app.post('/cart/update/:id', ensureAuthenticated, cartController.updateCart);
-app.post('/cart/delete/:id', ensureAuthenticated, cartController.deleteCart);
+app.get('/getCart', ensureAuthenticated, cartController.getCart);
+app.post('/cart/update', ensureAuthenticated, cartController.updateCart);
+app.post('/cart/delete', ensureAuthenticated, cartController.deleteCart);
 app.get('/cart/all', ensureAuthenticated, cartController.getAllCarts);
-app.get('/cartById/:cartId', ensureAuthenticated, cartController.getCartById);
-
-app.get('/api/cart', ensureAuthenticated, async (req, res) => {
-    console.log('Request received at /cart');
-    try {
-        console.log('Fetching cart for user', req.user._id);
-        const user = await User.findOne({ _id: req.user._id });
-        console.log('User:', user);
-        const cart = await Cart.findOne({ _id: user.cartId }).populate('products.productId');
-        if (!cart) {
-            return res.status(404).json({ error: 'No cart found' });
-        }
-        res.json({ cartId: cart._id, isLoggedIn: req.session.isLoggedIn, cart: cart });
-    } catch (err) {
-        console.error('Error fetching cart:', err);
-        res.status(500).json({ error: 'Error fetching cart' });
-    }
-});
 
 // Settings Routes
 const settingsController = require('./controllers/SettingsController');
@@ -228,15 +206,6 @@ app.use('*', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
-// Admin validation middleware
-function validateAdmin(req, res, next) {
-    if (req.user && req.user.isAdmin) {
-        next();
-    } else {
-        res.status(403).send('Access denied');
-    }
-}
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

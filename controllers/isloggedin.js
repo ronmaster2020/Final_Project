@@ -1,42 +1,18 @@
-const User = require('../models/user');
-const Cart = require('../models/cart');
-
 const ensureAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
         req.session.userId = req.user._id;
-        req.session.isLoggedIn = true;
+        req.userId = req.user._id;
         return next();
     }
+    
+    req.session.userId = null;
     req.flash('error', 'Please log in to view this resource');
     res.redirect('/login');
 };
 
-const isLoggedIn = async (req, res, next) => {
-    if (req.isAuthenticated()) {
-        req.session.userId = req.user._id;
-        req.session.isLoggedIn = true;
-
-        try {
-            const cart = await Cart.findOne({ userId: req.user._id }).populate('products.productId');
-            req.session.cart = cart;
-            next();
-        } catch (err) {
-            console.error('Error fetching cart items:', err);
-            req.flash('error', 'Error fetching cart items');
-            res.redirect('/');
-        }
-    } else {
-        req.session.userId = null;
-        req.session.isLoggedIn = false;
-        next();
-    }
-};
-
-const getUserAndCartId = (req, res) => {
+const getUserId = (req, res) => {
     if (req.isAuthenticated()) {
         const userId = req.user._id;
-        const cartId = req.session.cart ? req.session.cart._id : null;
-        console.log("Cart ID:", cartId);
         console.log("User ID:", userId);
         res.json({ userId, cartId });
     } else {
@@ -44,4 +20,14 @@ const getUserAndCartId = (req, res) => {
     }
 };
 
-module.exports = { ensureAuthenticated, isLoggedIn, getUserAndCartId };
+
+// Admin validation middleware
+// const validateAdmin = (req, res, next) => {
+//     if (req.user && req.user.isAdmin) {
+//         next();
+//     } else {
+//         res.status(403).send('Access denied');
+//     }
+// };
+
+module.exports = { ensureAuthenticated, getUserId/*, validateAdmin*/ };

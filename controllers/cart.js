@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
+const User = require('../models/user');
 const Cart = require('../models/cart');
-const Product = require('../models/product');
 
 // Middleware to check DB connection
 const checkDBConnection = (req, res, next) => {
@@ -36,7 +36,13 @@ const addToCart = async (req, res) => {
     }
 
     try {
-        let cart = await Cart.findOne({ userId });
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const cartId = user.cartId;
+        let cart = await Cart.findOne({ _id: cartId });
 
         if (!cart) {
             cart = new Cart({ userId, products: [] });
@@ -60,8 +66,18 @@ const addToCart = async (req, res) => {
 // Get the cart for the current user
 const getCart = async (req, res) => {
     try {
-        const userId = req.user._id;
-        const cart = await Cart.findOne({ userId }).populate('products.productId');
+        const userId = req.session.userId;
+        if (!userId) {
+            return res.status(401).json({ error: 'User not authenticated' });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const cartId = user.cartId;
+        const cart = await Cart.findOne({ _id: cartId }).populate('products.productId');
 
         if (!cart) {
             return res.status(404).json({ error: 'Cart not found' });
@@ -70,7 +86,7 @@ const getCart = async (req, res) => {
         res.json(cart);
     } catch (err) {
         console.error('Error fetching cart:', err);
-        res.status(500).json({ error: 'Error fetching cart' });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
@@ -85,18 +101,28 @@ const getCartById = async (req, res) => {
 
         res.json(cart);
     } catch (err) {
-        console.error('Error fetching cart:', err);
+        console.error('Error fetching cart by ID:', err);
         res.status(500).json({ error: 'Error fetching cart' });
     }
 };
 
 // Update the cart
 const updateCart = async (req, res) => {
-    const { id } = req.params;
+    const userId = req.session.userId;
     const { products } = req.body;
 
+    if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
     try {
-        const cart = await Cart.findByIdAndUpdate(id, { products }, { new: true });
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const cartId = user.cartId;
+        const cart = await Cart.findByIdAndUpdate(cartId, { products }, { new: true });
 
         if (!cart) {
             return res.status(404).json({ error: 'Cart not found' });
@@ -111,8 +137,20 @@ const updateCart = async (req, res) => {
 
 // Delete the cart
 const deleteCart = async (req, res) => {
+    const userId = req.session.userId;
+
+    if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
     try {
-        const cart = await Cart.findByIdAndDelete(req.params.id);
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const cartId = user.cartId;
+        const cart = await Cart.findByIdAndDelete(cartId);
 
         if (!cart) {
             return res.status(404).json({ error: 'Cart not found' });
