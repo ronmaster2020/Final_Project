@@ -1,0 +1,73 @@
+ /* Reset margin and padding */
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif; /* Use Google Font */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0; /* Reset body margin */
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px; /* Padding adjusted */
+    background-color: #fff; /* White background */
+    width: 100%;
+    flex: 1; /* Take remaining vertical space */
+}
+
+.footer-col {
+    flex: 1;
+    text-align: center; /* Center align content */
+}
+
+.footer-col h4 {
+    margin-bottom: 10px;
+    color: #333; /* Dark color for headings */
+}
+
+.footer-col ul {
+    list-style-type: none; /* Remove list bullets */
+    padding-left: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 8px;
+}
+
+.map {
+    flex: 1; /* Take remaining space */
+    text-align: center;
+}
+
+.map iframe {
+    width: 100%;
+    height: 200px; /* Fixed height for map */
+    border: 0;
+}
+
+.bottun-bar {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #fff; /* White background */
+    width: 100%;
+    margin-top: auto; /* Push to bottom */
+}
+
+.socials {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.socials a {
+    margin: 0 10px;
+    font-size: 1.5rem;
+    color: #333; /* Adjust color to match your design */
+}
