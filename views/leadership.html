@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="/public/js/read_more.js"></script>
 </head>
 <body>
 
@@ -85,5 +84,24 @@
 
     <div id="footer-placeholder"></div>
 
+    <script>
+        $(document).ready(function(){
+    $('#readMore1').click(function(){
+        $('#moreText1').toggle('slow');
+    });
+    $('#readMore2').click(function(){
+        $('#moreText2').toggle('slow');
+    });
+    $('#readMore3').click(function(){
+        $('#moreText3').toggle('slow');
+    });
+    $('#readMore4').click(function(){
+        $('#moreText4').toggle('slow');
+    });
+    $('#readMore5').click(function(){
+        $('#moreText5').toggle('slow');
+    });
+});
+    </script>
 </body>
 </html>
