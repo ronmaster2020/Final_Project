@@ -1,13 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch('/api/userId');
-        if (!response.ok) {
-            throw new Error('Failed to fetch user ID');
-        }
-        const userId = (await response.json()).userId;
-
         // Fetch and populate form with user details
-        const userDetailsResponse = await fetch(`/getUserDetails/${userId}`);
+        const userDetailsResponse = await fetch(`/getUserDetails`);
         const userDetails = await userDetailsResponse.json();
 
         if (userDetails) {
@@ -40,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             try {
                 // Send updated data to server using POST
-                const updateResponse = await fetch(`/updateUser/${userId}`, {
+                const updateResponse = await fetch(`/updateUser`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

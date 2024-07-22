@@ -7,7 +7,6 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const app = express();
 const PORT = process.env.PORT || 8080;
-const User = require('./models/user');
 
 const { ensureAuthenticated, getUserId } = require('./controllers/isloggedin');
 
@@ -190,12 +189,12 @@ app.get('/cart/all', ensureAuthenticated, cartController.getAllCarts);
 
 // Settings Routes
 const settingsController = require('./controllers/SettingsController');
-app.get('/getUserDetails/:id', settingsController.getUserDetails);
-app.post('/settings', settingsController.updateUserSettings);
-app.post('/updateUser/:id', settingsController.updateUser);
-app.get('/username/:id', settingsController.getUserName);
-app.get('/getAccessLevel/:id', settingsController.getAccessLevel);
-app.post('/updateAccessLevel/:id', settingsController.updateAccessLevel);
+app.get('/getUserDetails', ensureAuthenticated, settingsController.getUserDetails);
+app.post('/settings', ensureAuthenticated, settingsController.updateUserSettings);
+app.post('/updateUser', ensureAuthenticated, settingsController.updateUser);
+app.get('/username', ensureAuthenticated, settingsController.getUserName);
+app.get('/getAccessLevel', ensureAuthenticated, settingsController.getAccessLevel);
+app.post('/updateAccessLevel/:id', ensureAuthenticated, settingsController.updateAccessLevel);
 
 // Catch-all route for any other requests
 app.use('*', (req, res) => {
