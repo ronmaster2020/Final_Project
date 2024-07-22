@@ -25,7 +25,7 @@ const createCart = async (req, res) => {
 
 const addToCart = async (req, res) => {
     const userId = req.session.userId;
-    const { productId, quantity } = req.body;
+    const { productId, quantity } = req.params;
 
     if (!userId) {
         return res.status(401).json({ error: 'User not authenticated' });
@@ -33,6 +33,11 @@ const addToCart = async (req, res) => {
 
     if (!productId) {
         return res.status(400).json({ error: 'Product ID is required' });
+    }
+
+    const parsedQuantity = parseInt(quantity, 10);
+    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+        return res.status(400).json({ error: 'Quantity must be a positive number' });
     }
 
     try {
@@ -50,9 +55,9 @@ const addToCart = async (req, res) => {
 
         const existingProduct = cart.products.find(item => item.productId.equals(productId));
         if (existingProduct) {
-            existingProduct.quantity += quantity;
+            existingProduct.quantity += parsedQuantity;
         } else {
-            cart.products.push({ productId, quantity });
+            cart.products.push({ productId, quantity: parsedQuantity });
         }
 
         await cart.save();

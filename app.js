@@ -182,7 +182,7 @@ app.get('/orders/byid/:userId', ensureAuthenticated, orderController.getOrdersBy
 // Cart Routes
 const cartController = require('./controllers/cart');
 app.post('/cart/create', ensureAuthenticated, cartController.createCart);
-app.post('/cart/add/:productId', ensureAuthenticated, cartController.addToCart);
+app.post('/cart/add/:productId/:quantity', ensureAuthenticated, cartController.addToCart);
 app.get('/getCart', ensureAuthenticated, cartController.getCart);
 app.post('/cart/update', ensureAuthenticated, cartController.updateCart);
 app.post('/cart/delete', ensureAuthenticated, cartController.deleteCart);

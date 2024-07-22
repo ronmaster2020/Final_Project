@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('click', async (event) => {
         if (event.target.classList.contains('add-to-cart-btn')) {
             const productId = event.target.getAttribute('data-product-id');
-            await addToCart(productId);
+            const quantity = event.target.getAttribute('data-product-quantity');
+            await addToCart(productId, quantity);
         }
     });
 });
@@ -38,25 +39,21 @@ function displayProducts(products) {
                 <p>${product.description}</p>
                 <p class="price">$${product.price}</p>
             </div>
-            <button class="add-to-cart-btn" data-product-id="${product._id}">Add to Cart</button>
+            <button class="add-to-cart-btn" data-product-id="${product._id}" data-product-quantity="1">Add to Cart</button>
         `;
 
         container.appendChild(productDiv);
     });
 }
 
-async function addToCart(productId) {
+async function addToCart(productId, quantity) {
     console.log(`Adding product to cart with ID: ${productId}`); // Debug log
     try {
-        const addToCartResponse = await fetch(`/cart/add/${productId}`, {
+        const addToCartResponse = await fetch(`/cart/add/${productId}/${quantity}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                quantity: 1,
-                productId // Ensure productId is sent in the body
-            })
+            }
         });
 
         if (!addToCartResponse.ok) {

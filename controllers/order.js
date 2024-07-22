@@ -14,23 +14,30 @@ const checkDBConnection = (req, res, next) => {
 
 // Create order
 exports.createOrder = [checkDBConnection, async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-        const cartId = req.body.cartId;
-        const cart = await Cart.findById(cartId);
-        if (!cart) {
-            return res.status(404).send('Cart not found');
+        const userId = req.session.userId;
+        if (!userId) {
+            return res.status(401).json({ error: 'User not authenticated' });
         }
 
-        const currentUser = await User.findById(cart.userId);
-        if (!currentUser) {
-            return res.status(404).send('User not found');
+        const user = await User.findById(userId).session(session);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const cart = await Cart.findById(user.cartId).session(session);
+        if (!cart) {
+            return res.status(404).send('Cart not found');
         }
 
         let message = '';
         let orderOk = true;
 
         const orderItems = await Promise.all(cart.products.map(async (cartItem) => {
-            const product = await Product.findById(cartItem.productId);
+            const product = await Product.findById(cartItem.productId).session(session);
             if (!product) {
                 throw new Error(`Product with id ${cartItem.productId} not found`);
             }
@@ -38,8 +45,13 @@ exports.createOrder = [checkDBConnection, async (req, res) => {
                 orderOk = false;
                 message += `Unfortunately, some of the ${product.name} items have already been ordered by others. 
                 You can only order up to ${product.stock} of this item.<br>`;
+            } else if (product.stock === 0) {
+                orderOk = false;
+                message += `Unfortunately, the ${product.name} is out of stock.<br>`;
+            } else {
+                product.stock -= cartItem.quantity;
+                await product.save({ session });
             }
-
             return {
                 productId: product._id,
                 quantity: cartItem.quantity,
@@ -52,16 +64,22 @@ exports.createOrder = [checkDBConnection, async (req, res) => {
         if (orderOk) {
             const order = new Order({
                 order_items: orderItems,
-                userId: currentUser._id,
+                userId: user._id,
                 status: 2,
                 total_price: total_price
             });
 
-            await order.save();
+            await order.save({ session });
         }
+
+        await session.commitTransaction();
+        session.endSession();
 
         res.status(200).json({ message: message });
     } catch (err) {
+        await session.abortTransaction();
+        session.endSession();
+
         console.error('Error creating order:', err);
 
         if (err.name === 'ValidationError') {

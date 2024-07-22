@@ -56,7 +56,7 @@ const login = (req, res, next) => {
                     user.cartId = cart._id;
                     await user.save();
                 }
-                req.session.cart = cart;
+                req.session.userId = user._id;
                 req.flash('success', 'You are now logged in!');
                 return res.redirect('/');
             } catch (err) {
@@ -86,8 +86,14 @@ const register = async (req, res) => {
         
         await newUser.save();
 
+        if (!newUser) {
+            req.flash('error', 'Error creating user');
+            return res.redirect('/register');
+        }
+
+        req.session.userId = newUser._id;
         req.flash('success', 'You are now registered and can log in!');
-        res.redirect('/login');
+        res.redirect('/');
     } catch (err) {
         console.error('Error creating user:', err);
         req.flash('error', 'Error creating user');

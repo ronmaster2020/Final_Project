@@ -84,9 +84,9 @@ $(function() {
 
 
 // add to cart
-function addToCart(productId) {
+function addToCart(productId, quantity) {
     $.ajax({
-        url: `/cart/add/${productId}`,
+        url: `/cart/add/${productId}/${quantity}`,
         body: JSON.stringify({ id: '6671c47201450ff3e03b16e3' }),
         method: 'POST',
         contentType: 'application/json',
