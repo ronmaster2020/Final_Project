@@ -3,17 +3,26 @@ body {
 }
 
 .descriptions {
-    width: 80%;
+    width: 60%;
     margin: 0 auto;
     padding: 20px;
+}
+
+.people {
+    width: 80%;
+    margin: 0 auto;
 }
 
 h1, h2 {
     text-align: center;
 }
 
-hr {
+.descriptions hr:first-of-type {
     margin: 20px 0;
+}
+
+.people hr {
+    width: 120px;
 }
 
 .official {
@@ -23,7 +32,8 @@ hr {
 }
 
 .official-image {
-    width: 200px;
+    width: 270px;
+    height: 380px;
     border-radius: 50%;
     margin-right: 20px;
 }
