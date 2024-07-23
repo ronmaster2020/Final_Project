@@ -114,7 +114,7 @@ const getCartById = async (req, res) => {
 // Update the cart
 const updateCart = async (req, res) => {
     const userId = req.session.userId;
-    const { products } = req.body;
+    const { qty_array } = req.body;
 
     if (!userId) {
         return res.status(401).json({ error: 'User not authenticated' });
@@ -127,7 +127,14 @@ const updateCart = async (req, res) => {
         }
 
         const cartId = user.cartId;
-        const cart = await Cart.findByIdAndUpdate(cartId, { products }, { new: true });
+        const cart = await Cart.findById(cartId);
+        let index = 0;
+        cart.products.forEach(product => {
+            product.quantity = qty_array[index];
+            index++;
+        });
+        console.log('Cart updated:', cart);
+        await cart.save();
 
         if (!cart) {
             return res.status(404).json({ error: 'Cart not found' });
