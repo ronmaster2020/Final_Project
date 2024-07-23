@@ -58,7 +58,11 @@ const login = (req, res, next) => {
                 }
                 req.session.userId = user._id;
                 req.flash('success', 'You are now logged in!');
-                return res.redirect('/');
+                if (user.access === 'admin' || user.access === 'staff') {
+                    return res.redirect('/admin/dashboard');
+                } else {
+                    return res.redirect('/');
+                }
             } catch (err) {
                 console.error('Error fetching cart items:', err);
                 req.flash('error', 'Error fetching cart items');
