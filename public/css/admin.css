@@ -173,10 +173,38 @@ nav a,
 }
 
 #productsTable {
+    position: relative;
     width: 100%;
     height: auto;
     overflow-x: auto;
     box-sizing: border-box;
+    margin: 0;
+    padding-bottom: 3rem;
+    overflow-y: hidden;
+}
+
+#productsTable [aria-label="Page navigation"] {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    height: auto;
+    max-height: 3rem;
+    background-color: transparent;
+}
+
+#paginationControls {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#paginationControls ul a {
+    display: inline-block;
+    font-size: 1.2rem;
 }
 
 /*********************/

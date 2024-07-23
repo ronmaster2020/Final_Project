@@ -68,7 +68,8 @@
                     </select>
                 </div>
             </form>
-            <div class="pb-2 mb-3 w-100 border-bottom">
+            <div class="pb-2 m-3 w-100 border-bottom">
+                <button class="btn btn-outline-secondary" id="searchBtn">search</button>
                 <button class="btn btn-outline-danger mx-3" id="resetBtn">Reset</button>
             </div>
             <div id="productsTable">
@@ -91,6 +92,11 @@
                     <tbody>
                     </tbody>
                 </table>
+                <!-- Pagination -->
+                <div aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" id="paginationControls">
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

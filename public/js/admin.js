@@ -27,7 +27,7 @@ function openSideNavbar() {
 
 async function fetchData(query, url, method, data_container) {
     $('#loadingBar .progress-bar').css('width', '0%');
-    data_container.addClass('d-none');
+    if (data_container) {data_container.addClass('d-none');}
     $('#loadingBar').removeClass('d-none');
     $('#loadingBar .progress-bar').animate({ width: '100%' }, 1000);
     // fetch data
@@ -48,7 +48,7 @@ async function fetchData(query, url, method, data_container) {
 
     $('#loadingBar').addClass('d-none');
     $('#loadingBar .progress-bar').css('width', '0%');
-    data_container.removeClass('d-none');
+    if (data_container) {data_container.removeClass('d-none');}
 
 
 

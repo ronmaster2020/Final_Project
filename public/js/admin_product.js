@@ -1,40 +1,13 @@
-async function loadProducts(products, query = {}) {
-    // Filter products based on the query
-    const filteredProducts = products.filter(product => {
-        let matches = true;
+let limit = 10;
+let page = 1;
 
-        if (query.name && !product.name.toLowerCase().startsWith(query.name.toLowerCase())) {
-            matches = false;
-        }
-        if (query.gender && product.gender !== query.gender) {
-            matches = false;
-        }
-        if (query.priceMin && product.price < query.priceMin) {
-            matches = false;
-        }
-        if (query.priceMax && product.price > query.priceMax) {
-            matches = false;
-        }
-        if (query.sizeMin && product.size < query.sizeMin) {
-            matches = false;
-        }
-        if (query.sizeMax && product.size > query.sizeMax) {
-            matches = false;
-        }
-        if (query.stockMin && product.stock < query.stockMin) {
-            matches = false;
-        }
-        if (query.stockMax && product.stock > query.stockMax) {
-            matches = false;
-        }
-
-        return matches;
-    });
+async function loadProducts(products, totalProducts) {
     // display the products data in the products table
     $('#productsTable table tbody').empty();
-    $('#productsTable h2').text(filteredProducts.length + ' items')
-    for (let i = 0; i < filteredProducts.length; i++) {
-        let product = filteredProducts[i];
+    $('#productsTable h2').text(totalProducts + ' items')
+
+    for (let i = 0; i < products.length; i++) {
+        let product = products[i];
 
         let outOfStock = "";
         if (product.stock === 0) {
@@ -84,34 +57,9 @@ async function loadProducts(products, query = {}) {
 $(document).ready(async function() {
     $('#productsTable h2').text('fetching data...')
 
-    let products = await fetchData({}, '/products/search', 'GET', $('#productsTable table tbody'));
+    filterProducts();
 
-    loadProducts(products); // Load all products when the page loads
-
-    $("#resetBtn").click(function() {
-        $("form").trigger('reset');
-        loadProducts(products);
-    });
-
-    // Event listener for the name input field
-    $('input[name="name"]').on('input', function() {
-        filterProducts();
-    });
-
-    // Prevent form submission on Enter key press in the name input field
-    $('input[name="name"]').on('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-        }
-    });
-
-    // Event listener for other form inputs
-    $("form").on('change', function(event) {
-        event.preventDefault(); // Prevent the form from submitting traditionally
-        filterProducts();
-    });
-
-    function filterProducts() {
+    async function filterProducts() {
         // Construct the query from form inputs
         const name = $('input[name="name"]').val();
         const gender = $("#genderCategory").val();
@@ -136,10 +84,72 @@ $(document).ready(async function() {
             sizeMin,
             sizeMax,
             stockMin,
-            stockMax
+            stockMax,
+            limit: limit,
+            page: page
         };
 
-        loadProducts(products, query);
+        $('#paginationControls').addClass('d-none');
+
+        const {products, totalProducts} = await fetchData(query, '/products/search', 'GET', $('#productsTable table tbody'));
+
+        loadProducts(products, totalProducts);
+        generatePagination(totalProducts);
+
+        $('#paginationControls').removeClass('d-none');
+    }
+    
+    $("#resetBtn").click(function() {
+        $("form").trigger('reset');
+        filterProducts();
+    });
+
+    // Prevent form submission on Enter key press in the name input field
+    $('input[name="name"]').on('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            page = 1;
+            filterProducts();
+        }
+    });
+
+    // Event listener for other form inputs
+    $("form").on('change', function(event) {
+        if (event.target.name === 'name') {
+            return;
+        }
+        event.preventDefault(); // Prevent the form from submitting traditionally
+        page = 1;
+        filterProducts();
+    });
+
+    $("#searchBtn").click(function(event) {
+        event.preventDefault();
+        page = 1;
+        filterProducts();
+    });
+
+    function generatePagination(totalProducts) {
+        const totalPages = Math.ceil(totalProducts / limit);
+        $('#paginationControls').empty();
+        for (let i = 1; i <= totalPages; i++) {
+            $('#paginationControls').append(`
+                <li class="page-item ${i === page ? 'active' : ''}">
+                    <a class="page-link" href="#">${i}</a>
+                </li>
+            `);
+        }
+    }
+
+    $('#paginationControls').on('click', 'a', function(event) {
+        event.preventDefault();
+        const newPage = parseInt($(this).text(), 10);
+        changePage(newPage);
+    });
+    
+    function changePage(newPage) {
+        page = newPage;
+        filterProducts();
     }
 });
 
