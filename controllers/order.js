@@ -239,7 +239,7 @@ exports.deleteOrder = [checkDBConnection, async (req, res) => {
 // Get orders by user ID
 exports.getOrdersByUserId = [checkDBConnection, async (req, res) => {
     try {
-        const userId = req.params.userId;
+        const userId = req.session.userId;
         const deliveredOrders = await Order.find({ userId: userId }).populate('order_items.productId');
         res.json(deliveredOrders);
     } catch (err) {

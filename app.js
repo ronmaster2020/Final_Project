@@ -173,10 +173,10 @@ app.get('/product/:id', productController.getProductById);
 const orderController = require('./controllers/order');
 app.post('/order/create', ensureAuthenticated, orderController.createOrder);
 app.get('/order/all', ensureAuthenticated, orderController.getOrders);
-app.get('/order/:id', ensureAuthenticated, orderController.getOrderById);
 app.get('/order/grouped/date', ensureAuthenticated, orderController.getOrdersGroupByDate);
 app.post('/order/delete/:id', ensureAuthenticated, orderController.deleteOrder);
-app.get('/orders/byid/:userId', ensureAuthenticated, orderController.getOrdersByUserId);
+app.get('/orders/history', ensureAuthenticated, orderController.getOrdersByUserId);
+app.get('/order/:id', ensureAuthenticated, orderController.getOrderById);
 
 // Cart Routes
 const cartController = require('./controllers/cart');
