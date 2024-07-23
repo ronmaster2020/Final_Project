@@ -36,7 +36,7 @@ function displayProducts(products) {
             <img src="${product.images[0]}" alt="${product.name}">
             <div class="product-info">
                 <h2>${product.name}</h2>
-                <p>${product.description}</p>
+                <p>${product.DESC}</p>
                 <p class="price">$${product.price}</p>
             </div>
             <button class="add-to-cart-btn" data-product-id="${product._id}" data-product-quantity="1">Add to Cart</button>
@@ -72,6 +72,6 @@ function sortProducts() {
 
     fetch(`/products/search?sort=${sortBy}`)
         .then(response => response.json())
-        .then(products => displayProducts(products))
+        .then(products => displayProducts(products.products))
         .catch(error => console.error('Error sorting products:', error));
 }
