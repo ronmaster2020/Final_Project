@@ -8,14 +8,12 @@ const userSchema = new Schema({
         type: String,
         required: false,
         trim: true, // Remove leading and trailing whitespace
-        minlength: [3, 'First name must be at least 3 characters long'],
         maxlength: [30, 'First name must be less than 30 characters']
     },
     lastName: {
         type: String,
         required: false,
         trim: true, // Remove leading and trailing whitespace
-        minlength: [3, 'Last name must be at least 3 characters long'],
         maxlength: [30, 'Last name must be less than 30 characters']
     },
     bio: {
