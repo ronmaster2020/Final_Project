@@ -131,6 +131,9 @@ const updateCart = async (req, res) => {
         let index = 0;
         cart.products.forEach(product => {
             product.quantity = qty_array[index];
+            if (product.quantity <= 0) {
+                cart.products.splice(index, 1);
+            }
             index++;
         });
         console.log('Cart updated:', cart);
