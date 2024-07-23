@@ -41,7 +41,7 @@ exports.createOrder = [checkDBConnection, async (req, res) => {
             if (!product) {
                 throw new Error(`Product with id ${cartItem.productId} not found`);
             }
-            if (cartItem.quantity > product.stock) {
+            if (cartItem.quantity > product.stock && product.stock > 0) {
                 orderOk = false;
                 message += `Unfortunately, some of the ${product.name} items have already been ordered by others. 
                 You can only order up to ${product.stock} of this item.<br>`;
