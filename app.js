@@ -116,10 +116,6 @@ app.get('/admin/staff', ensureAuthenticated, ensureAccess, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin_staff.html'));
 });
 
-app.get('/admin/settings', ensureAuthenticated, ensureAccess, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'admin_settings.html'));
-});
-
 app.get('/orderhistory', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
 });
