@@ -8,7 +8,7 @@ const passport = require('passport');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-const { ensureAuthenticated, getUserId } = require('./controllers/isloggedin');
+const { ensureAuthenticated, ensureAccess, getUserId } = require('./controllers/isloggedin');
 
 // Middleware to check DB connection
 const checkDBConnection = (req, res, next) => {
@@ -100,27 +100,23 @@ app.get('/terms', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'terms.html'));
 });
 
-app.get('/admin', ensureAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'admin.html'));
-});
-
-app.get('/admin/dashboard', ensureAuthenticated, (req, res) => {
+app.get('/admin/dashboard', ensureAuthenticated, ensureAccess, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin_dashboard.html'));
 });
 
-app.get('/admin/products', ensureAuthenticated, (req, res) => {
+app.get('/admin/products', ensureAuthenticated, ensureAccess, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin_products.html'));
 });
 
-app.get('/admin/orders', ensureAuthenticated, (req, res) => {
+app.get('/admin/orders', ensureAuthenticated, ensureAccess, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin_orders.html'));
 });
 
-app.get('/admin/staff', ensureAuthenticated, (req, res) => {
+app.get('/admin/staff', ensureAuthenticated, ensureAccess, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin_staff.html'));
 });
 
-app.get('/admin/settings', ensureAuthenticated, (req, res) => {
+app.get('/admin/settings', ensureAuthenticated, ensureAccess, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin_settings.html'));
 });
 
@@ -128,7 +124,7 @@ app.get('/orderhistory', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
 });
 
-app.get('/product/new-form', ensureAuthenticated, (req, res) => {
+app.get('/product/new-form', ensureAuthenticated, ensureAccess, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
 });
 
@@ -162,19 +158,19 @@ app.get('/user/search', authController.searchUsers);
 
 // Product Routes
 const productController = require('./controllers/product');
-app.post('/product/create', ensureAuthenticated, product_file_upload.array('productImage', 10), productController.createProduct);
+app.post('/product/create', ensureAuthenticated, ensureAccess, product_file_upload.array('productImage', 10), productController.createProduct);
 app.get('/product/all', productController.getProducts);
 app.get('/products/search', productController.searchProducts);
-app.post('/product/update/:id', ensureAuthenticated, productController.updateProduct);
-app.post('/product/delete/:id', ensureAuthenticated, productController.deleteProduct);
+app.post('/product/update/:id', ensureAuthenticated, ensureAccess, productController.updateProduct);
+app.post('/product/delete/:id', ensureAuthenticated, ensureAccess, productController.deleteProduct);
 app.get('/product/:id', productController.getProductById);
 
 // Order Routes
 const orderController = require('./controllers/order');
 app.post('/order/create', ensureAuthenticated, orderController.createOrder);
-app.get('/order/all', ensureAuthenticated, orderController.getOrders);
-app.get('/order/grouped/date', ensureAuthenticated, orderController.getOrdersGroupByDate);
-app.post('/order/delete/:id', ensureAuthenticated, orderController.deleteOrder);
+app.get('/order/all', ensureAuthenticated, ensureAccess, orderController.getOrders);
+app.get('/order/grouped/date', ensureAuthenticated, ensureAccess, orderController.getOrdersGroupByDate);
+app.post('/order/delete/:id', ensureAuthenticated, ensureAccess, orderController.deleteOrder);
 app.get('/orders/history', ensureAuthenticated, orderController.getOrdersByUserId);
 app.get('/order/:id', ensureAuthenticated, orderController.getOrderById);
 
@@ -185,7 +181,7 @@ app.post('/cart/add/:productId/:quantity', ensureAuthenticated, cartController.a
 app.get('/getCart', ensureAuthenticated, cartController.getCart);
 app.post('/cart/update', ensureAuthenticated, cartController.updateCart);
 app.post('/cart/delete', ensureAuthenticated, cartController.deleteCart);
-app.get('/cart/all', ensureAuthenticated, cartController.getAllCarts);
+app.get('/cart/all', ensureAuthenticated, ensureAccess, cartController.getAllCarts);
 
 // Settings Routes
 const settingsController = require('./controllers/SettingsController');
@@ -194,7 +190,7 @@ app.post('/settings', ensureAuthenticated, settingsController.updateUserSettings
 app.post('/updateUser', ensureAuthenticated, settingsController.updateUser);
 app.get('/username', ensureAuthenticated, settingsController.getUserName);
 app.get('/getAccessLevel', ensureAuthenticated, settingsController.getAccessLevel);
-app.post('/updateAccessLevel/:id', ensureAuthenticated, settingsController.updateAccessLevel);
+app.post('/updateAccessLevel', ensureAuthenticated, settingsController.updateAccessLevel);
 
 // Catch-all route for any other requests
 app.use('*', (req, res) => {

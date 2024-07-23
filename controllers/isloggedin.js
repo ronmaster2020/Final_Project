@@ -10,6 +10,21 @@ const ensureAuthenticated = (req, res, next) => {
     res.redirect('/login');
 };
 
+const ensureAccess = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        if (req.user.access === 'admin' || req.user.access === 'staff') {
+            return next();
+        } else {
+            req.flash('error', 'Access denied');
+            return res.redirect('/');
+        }
+    }
+    
+    req.session.userId = null;
+    req.flash('error', 'Please log in to view this resource');
+    res.redirect('/login');
+};
+
 const getUserId = (req, res) => {
     if (req.isAuthenticated()) {
         const userId = req.user._id;
@@ -30,4 +45,4 @@ const getUserId = (req, res) => {
 //     }
 // };
 
-module.exports = { ensureAuthenticated, getUserId/*, validateAdmin*/ };
+module.exports = { ensureAuthenticated, ensureAccess, getUserId/*, validateAdmin*/ };
