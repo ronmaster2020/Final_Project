@@ -69,6 +69,10 @@ exports.createOrder = [checkDBConnection, async (req, res) => {
                 total_price: total_price
             });
 
+            cart.products = [];
+            await cart.save({ session });
+
+
             await order.save({ session });
         }
 
