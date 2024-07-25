@@ -1,0 +1,90 @@
+body {
+    font-family: Arial, sans-serif;
+    color: rgb(85, 85, 85);
+    overflow: auto; 
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-5 {
+    margin-top: 3rem;
+}
+
+.mt-4 {
+    margin-top: 2rem;
+}
+
+.lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+img.img-fluid {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.brandBtn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.brandBtn:hover {
+    background-color: #0056b3;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+@media (max-width: 767.98px) {
+    .row {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .col-md-6 {
+        width: 100%;
+    }
+
+    .mt-5 {
+        margin-top: 2rem;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+}
+
+button {
+    margin-bottom: 20px;
+}
+
+h2 {
+    text-align: center;
+}
