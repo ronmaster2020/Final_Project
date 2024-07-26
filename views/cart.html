@@ -274,7 +274,15 @@
                     deleteButton.textContent = "Delete";
                     deleteButton.addEventListener('click', async () => {
                         // Handle product deletion
-                        cartItems.splice(item, 1); // Remove item from cartItems array
+                        const response = await fetch('/deleteProduct', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                productId: product._id
+                            })
+                        });
                         window.location.href = '/viewCart';
                     });
                     listItem.appendChild(deleteButton);

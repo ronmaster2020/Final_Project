@@ -150,6 +150,38 @@ const updateCart = async (req, res) => {
     }
 };
 
+const deleteProductFromCart = async (req, res) => {
+    const userId = req.session.userId;
+
+    const { productId } = req.body;
+
+    if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const cartId = user.cartId;
+        const cart = await Cart.findById(cartId);
+        if (!cart) {
+            return res.status(404).json({ error: 'Cart not found' });
+        }
+
+        const productIndex = cart.products.findIndex(product => product.productId.equals(productId));
+        if (productIndex !== -1) {
+            cart.products.splice(productIndex, 1);
+            await cart.save();
+        }
+    } catch (err) {
+        console.error('Error deleting product from cart:', err);
+        res.status(500).json({ error: 'Error deleting product from cart' });
+    }
+}
+
 // Delete the cart
 const deleteCart = async (req, res) => {
     const userId = req.session.userId;
