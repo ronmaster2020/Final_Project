@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    initializeFiltersFromURL();
     loadProducts();
 
     document.addEventListener('click', async (event) => {
@@ -8,19 +9,45 @@ document.addEventListener("DOMContentLoaded", () => {
             await addToCart(productId, quantity);
         }
     });
+
+    document.getElementById('sort').addEventListener('change', updateFilters);
+
+    document.querySelectorAll('input[name="gender"]').forEach(radio => {
+        radio.addEventListener('change', updateFilters);
+    });
+
+    document.getElementById('min-price').addEventListener('change', updateFilters);
+    document.getElementById('max-price').addEventListener('change', updateFilters);
 });
 
-async function loadProducts() {
-    try {
-        const response = await fetch('/products/search?sort=price');
-        if (!response.ok) {
-            throw new Error('Failed to fetch products');
-        }
+function initializeFiltersFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const genderFilter = urlParams.get('gender') || 'all';
+    const sortBy = urlParams.get('sort') || 'price_asc';
+    const minPrice = urlParams.get('minPrice');
+    const maxPrice = urlParams.get('maxPrice');
 
-        const products = await response.json();
-        displayProducts(products);
-    } catch (error) {
-        console.error('Error fetching products:', error);
+    document.querySelector(`input[name="gender"][value="${genderFilter}"]`).checked = true;
+    document.getElementById('sort').value = sortBy;
+    if (minPrice) {
+        document.getElementById('min-price').value = minPrice;
+    }
+    if (maxPrice) {
+        document.getElementById('max-price').value = maxPrice;
+    }
+}
+
+
+function getGenderLabel(genderValue) {
+    switch (genderValue) {
+        case '1':
+            return 'Male';
+        case '2':
+            return 'Female';
+        case '3':
+            return 'Unisex';
+        default:
+            return 'Unknown';
     }
 }
 
@@ -32,12 +59,17 @@ function displayProducts(products) {
         const productDiv = document.createElement('div');
         productDiv.className = 'product-card';
 
+        const genderLabel = getGenderLabel(product.gender);
+
         productDiv.innerHTML = `
             <img src="${product.images[0]}" alt="${product.name}">
             <div class="product-info">
                 <h2>${product.name}</h2>
-                <p>${product.description}</p>
-                <p class="price">$${product.price}</p>
+                <p>${product.DESC}</p>
+                <div class="product-details">
+                    <span class="gender">${genderLabel}</span>
+                    <span class="price">$${product.price}</span>
+                </div>
             </div>
             <button class="add-to-cart-btn" data-product-id="${product._id}" data-product-quantity="1">Add to Cart</button>
         `;
@@ -67,11 +99,54 @@ async function addToCart(productId, quantity) {
     }
 }
 
-function sortProducts() {
+function updateFilters() {
     const sortBy = document.getElementById('sort').value;
+    const gender = document.querySelector('input[name="gender"]:checked').value;
+    const minPrice = document.getElementById('min-price').value;
+    const maxPrice = document.getElementById('max-price').value;
 
-    fetch(`/products/search?sort=${sortBy}`)
-        .then(response => response.json())
-        .then(products => displayProducts(products))
-        .catch(error => console.error('Error sorting products:', error));
+    let newUrl = `/products?sort=${sortBy}`;
+    if (gender && gender !== 'all') {
+        newUrl += `&gender=${gender}`;
+    }
+    if (minPrice) {
+        newUrl += `&priceMin=${minPrice}`;
+    }
+    if (maxPrice) {
+        newUrl += `&priceMax=${maxPrice}`;
+    }
+
+    window.location.href = newUrl;
+}
+
+
+async function loadProducts() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const genderFilter = urlParams.get('gender');
+        const sortBy = urlParams.get('sort') || 'price_asc';
+        const minPrice = urlParams.get('priceMin');
+        const maxPrice = urlParams.get('priceMax');
+
+        let apiUrl = `/products/search?sort=${sortBy}`;
+        if (genderFilter && genderFilter !== 'all') {
+            apiUrl += `&gender=${genderFilter}`;
+        }
+        if (minPrice) {
+            apiUrl += `&priceMin=${minPrice}`;
+        }
+        if (maxPrice) {
+            apiUrl += `&priceMax=${maxPrice}`;
+        }
+
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Failed to fetch products');
+        }
+
+        const products = await response.json();
+        displayProducts(products);
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
 }

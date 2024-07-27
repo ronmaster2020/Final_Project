@@ -139,9 +139,11 @@ exports.deleteProduct = async (req, res) => {
 };
 
 // Search for products by query parameters
+// Search for products by query parameters
 exports.searchProducts = async (req, res) => {
     const query = {};
 
+    // Construct query object based on provided parameters
     if (req.query.name) {
         const name = req.query.name.substring(0, 100); // Limit to 100 characters
         query.name = { $regex: new RegExp(`^${name}`), $options: 'i' }; // Case-insensitive
@@ -188,8 +190,30 @@ exports.searchProducts = async (req, res) => {
         query.stock = { $lte: maxStock };
     }
 
+    // Construct sort object based on provided parameters
+    let sortOptions = {};
+    if (req.query.sort) {
+        switch (req.query.sort) {
+            case 'name_asc':
+                sortOptions.name = 1; // ascending
+                break;
+            case 'name_desc':
+                sortOptions.name = -1; // descending
+                break;
+            case 'price_asc':
+                sortOptions.price = 1; // ascending
+                break;
+            case 'price_desc':
+                sortOptions.price = -1; // descending
+                break;
+            default:
+                sortOptions.price = 1; // default sorting by price ascending
+                break;
+        }
+    }
+
     try {
-        const products = await Product.find(query);
+        const products = await Product.find(query).sort(sortOptions);
         res.json(products);
     } catch (err) {
         console.error('Error searching products:', err);
