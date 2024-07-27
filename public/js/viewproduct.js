@@ -60,7 +60,7 @@ function getGenderLabel(genderValue) {
 function displayProducts(products) {
     const container = document.getElementById('productsContainer');
     container.innerHTML = '';
-
+    console.log(products);
     products.forEach(product => {
         const productDiv = document.createElement('div');
         productDiv.className = 'product-card';
@@ -151,7 +151,7 @@ async function loadProducts() {
         }
 
         const products = await response.json();
-        displayProducts(products);
+        displayProducts(products.products);
     } catch (error) {
         console.error('Error fetching products:', error);
     }

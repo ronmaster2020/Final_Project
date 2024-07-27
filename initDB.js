@@ -143,7 +143,7 @@ async function initializeOrdersData(users, numOfOrdersRange = { min: 0, max: 3})
         }
 
         const orders = users.map(user => {
-            // Create a random number of orders for each user (between 0 and 3)
+            // Create a random number of orders for each user (between 0 and 3), for the bot users create between 30 and 100 orders
             const numberOfOrders = Math.floor(Math.random() * (numOfOrdersRange.max - numOfOrdersRange.min + 1)) + numOfOrdersRange.min;
             return Array.from({ length: numberOfOrders }, () => {
                 // Get a random number of products between 1 and 5
@@ -178,18 +178,45 @@ async function initializeOrdersData(users, numOfOrdersRange = { min: 0, max: 3})
     }
 }
 
+const bcrypt = require('bcrypt');
 
 async function initializeData() {
-    await initializeProductsData();
-    await initializeCartsData();
-    await initializeUsersData();
-    const notBotUsers = await User.find({ email: { $not: /@example.com$/ }});
-    await initializeOrdersData(notBotUsers, { min: 0, max: 3 });
-    const bots = await User.find({ email: { $regex: /@example.com$/ }});
-    await initializeOrdersData(bots, { min: 30, max: 100 });
+    try {
+        await initializeProductsData();
+        await initializeCartsData();
+        await initializeUsersData();
+
+        // // Delete all bot users
+        // await User.deleteMany({ email: { $regex: /@example.com$/ } });
+
+        // // Create 40 new bot users
+        // const botUsers = [];
+        // const hashedPassword = await bcrypt.hash('123', 10); // Encrypt the password '123'
+
+        // for (let i = 0; i < 40; i++) {
+        //     botUsers.push({
+        //         firstName: `BotFirstName${i}`,
+        //         lastName: `BotLastName${i}`,
+        //         address: `123 Bot Street, Bot City, Bot Country`,
+        //         access: 'user',
+        //         email: `bot${i}@example.com`,
+        //         password: hashedPassword,
+        //     });
+        // }
+
+        // await User.insertMany(botUsers);
+        // console.log('40 bot users created.');
+
+        const notBotUsers = await User.find({ email: { $not: /@example.com$/ } });
+        await initializeOrdersData(notBotUsers, { min: 0, max: 3 });
+        const bots = await User.find({ email: { $regex: /@example.com$/ } });
+        await initializeOrdersData(bots, { min: 30, max: 100 });
+    } catch (error) {
+        console.error('Error initializing data:', error);
+    } finally {
+        mongoose.connection.close();
+        console.log('Database connection closed.');
+    }
 }
 
 initializeData()
-.finally (() => {
-    mongoose.connection.close();
-});

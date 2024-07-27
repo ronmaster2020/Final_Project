@@ -1,11 +1,9 @@
 $(document).ready(function() {
     let orders = [];
-    const userId = "668bfa4fa02553a02291e0c1"; 
-
    
     function fetchOrders() {
         $.ajax({
-            url: '/orders/byid/' + userId, 
+            url: '/orders/history', 
             method: 'GET',
             success: function(data) {
                 orders = data;
@@ -32,7 +30,7 @@ $(document).ready(function() {
             let totalPrice = order.order_items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
 
             const orderElement = `
-                <div class="order" data-order-id="${order._id}" data-status="${order.status} ">
+                <div class="order" data-order-id="${order._id}" data-status="${order.status}">
                     <div class="order-header hover-div" onclick="toggleOrderDetails('${order._id}')">
                         <span class="order-date">${new Date(order.order_date).toLocaleDateString()}</span>
                         <span class="order-id">Order ID: ${order._id}</span>

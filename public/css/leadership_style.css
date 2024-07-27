@@ -39,4 +39,7 @@ hr {
 .buttons {
     margin-top: 10px;
     font-size: 16px;
+    border-radius: 10px;
+    height: 35px;
+    width: 120px;
 }

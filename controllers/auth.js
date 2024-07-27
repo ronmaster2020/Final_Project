@@ -1,9 +1,15 @@
+require('dotenv').config();
+
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const Cart = require('../models/cart');
 const mongoose = require('mongoose');
+
+console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
 
 passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     try {
@@ -21,6 +27,52 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
         return done(err);
     }
 }));
+
+// Google Strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: '/auth/google/callback'
+}, async (token, tokenSecret, profile, done) => {
+    try {
+        let user = await User.findOne({ googleId: profile.id });
+        if (!user) {
+            const newCart = new Cart({ products: [] });
+            await newCart.save();
+
+            user = new User({
+                googleId: profile.id,
+                email: profile.emails[0].value,
+                firstName: profile.displayName,
+                access: 'user',
+                cartId: newCart._id
+            });
+            await user.save();
+        }
+        return done(null, user);
+    } catch (err) {
+        return done(err);
+    }
+}));
+
+// Google Authentication
+const googleAuth = (req, res, next) => {
+    passport.authenticate('google', { 
+        scope: ['profile', 'email'],
+        callbackURL: 'http://localhost:8080/auth/google/callback' })(req, res, next);
+};
+const googleAuthCallback = (req, res, next) => {
+    passport.authenticate('google', { 
+        failureRedirect: '/login',
+        callbackURL: 'http://localhost:8080/auth/google/callback' }, (err, user, info) => {
+        if (err) { return next(err); }
+        if (!user) { return res.redirect('/login'); }
+        req.logIn(user, (err) => {
+            if (err) { return next(err); }
+            return res.redirect('/');
+        });
+    })(req, res, next);
+};
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -58,7 +110,11 @@ const login = (req, res, next) => {
                 }
                 req.session.userId = user._id;
                 req.flash('success', 'You are now logged in!');
-                return res.redirect('/');
+                if (user.access === 'admin' || user.access === 'staff') {
+                    return res.redirect('/admin/dashboard');
+                } else {
+                    return res.redirect('/');
+                }
             } catch (err) {
                 console.error('Error fetching cart items:', err);
                 req.flash('error', 'Error fetching cart items');
@@ -107,7 +163,7 @@ const logout = (req, res) => {
             return next(err);
         }
         req.flash('success', 'You are logged out');
-        res.redirect('/login');
+        res.redirect('/');
     });
 };
 
@@ -170,4 +226,4 @@ const searchUsers = async (req, res) => {
     }
 };
 
-module.exports = { login, register, logout, getUsers, searchUsers };
+module.exports = { googleAuth, googleAuthCallback, login, register, logout, getUsers, searchUsers };
