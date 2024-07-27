@@ -54,6 +54,10 @@ const userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'cart',
+    },
+    googleId: {
+        type: String, 
+        unique: true 
     }
 });
 
