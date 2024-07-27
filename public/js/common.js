@@ -146,3 +146,7 @@ function logout() {
         }
     });
 }
+
+function googleAuth() {
+    window.location.href = '/auth/google';
+}

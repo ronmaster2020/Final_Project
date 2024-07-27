@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -6,6 +8,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const app = express();
+
 const PORT = process.env.PORT || 8080;
 
 const { ensureAuthenticated, ensureAccess, getUserId } = require('./controllers/isloggedin');
@@ -151,6 +154,10 @@ app.post('/login', authController.login);
 app.post('/logout', authController.logout);
 app.get('/user/all', authController.getUsers);
 app.get('/user/search', authController.searchUsers);
+
+// Google Authentication Routes
+app.get('/auth/google', authController.googleAuth);
+app.get('/auth/google/callback', authController.googleAuthCallback);
 
 // Product Routes
 const productController = require('./controllers/product');
