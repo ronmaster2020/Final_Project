@@ -111,7 +111,7 @@ const logout = (req, res) => {
             return next(err);
         }
         req.flash('success', 'You are logged out');
-        res.redirect('/login');
+        res.redirect('/');
     });
 };
 

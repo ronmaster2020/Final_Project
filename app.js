@@ -148,7 +148,7 @@ app.get('/userpage', ensureAuthenticated, (req, res) => {
 const authController = require('./controllers/auth');
 app.post('/register', authController.register);
 app.post('/login', authController.login);
-app.get('/logout', authController.logout);
+app.post('/logout', authController.logout);
 app.get('/user/all', authController.getUsers);
 app.get('/user/search', authController.searchUsers);
 

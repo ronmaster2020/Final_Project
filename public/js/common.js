@@ -132,3 +132,17 @@ function showPassword() {
         $('#show-password').html('<span class="material-symbols-sharp">visibility</span>');
     }
 }
+
+function logout() {
+    $.ajax({
+        url: '/logout',
+        method: 'POST',
+        success: function(response) {
+            console.log('Logged out successfully', response);
+            window.location.href = '/';
+        },
+        error: function(xhr, status, error) {
+            console.error('Error logging out', error);
+        }
+    });
+}
