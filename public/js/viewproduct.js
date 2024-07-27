@@ -16,16 +16,22 @@ document.addEventListener("DOMContentLoaded", () => {
         radio.addEventListener('change', updateFilters);
     });
 
-    document.getElementById('min-price').addEventListener('change', updateFilters);
-    document.getElementById('max-price').addEventListener('change', updateFilters);
+    document.getElementById('min-price').addEventListener('change', (event) => {
+        event.preventDefault();
+        updateFilters();
+    });
+    document.getElementById('min-price').addEventListener('change', (event) => {
+        event.preventDefault();
+        updateFilters();
+    });
 });
 
 function initializeFiltersFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const genderFilter = urlParams.get('gender') || 'all';
     const sortBy = urlParams.get('sort') || 'price_asc';
-    const minPrice = urlParams.get('minPrice');
-    const maxPrice = urlParams.get('maxPrice');
+    const minPrice = urlParams.get('priceMin');
+    const maxPrice = urlParams.get('priceMax');
 
     document.querySelector(`input[name="gender"][value="${genderFilter}"]`).checked = true;
     document.getElementById('sort').value = sortBy;
