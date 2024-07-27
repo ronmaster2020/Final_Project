@@ -125,23 +125,22 @@ exports.getAccessLevel = async (req, res) => {
 };
 
 exports.updateAccessLevel = async (req, res) => {
-    const userId = req.session.userId;
-    const { access } = req.body;
-
     try {
-        const user = await User.findById(userId);
+        const { email, access } = req.query;
+        console.log(email, access);
+        const user = await User.findOne({ email: email });
 
         if (!user) {
-            return res.status(404).send('User not found');
+            return res.status(404).json({ message: 'User not found' });
         }
 
         user.access = access || user.access;
         await user.save();
-        res.status(200).send('Access level updated successfully');
+        res.status(200).json({ message: 'Access level updated successfully' });
     } catch (error) {
-        res.status(500).send('Error updating access level');
+        res.status(500).json({ message: 'Error updating access level' });
     }
-}
+};
 /* old g code 
 // Get first name
 exports.getFirstName = async (req, res) => {

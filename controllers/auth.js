@@ -183,43 +183,53 @@ const getUsers = async (req, res) => {
 };
 
 const searchUsers = async (req, res) => {
-    const query = req.query || {};
+    const query = {};
 
-    if (req.query.firstName) {
+    if (req.query.firstName && req.query.firstName.length > 0) {
         query.firstName = { $regex: new RegExp(`^${req.query.firstName.substring(0, 100)}`), $options: 'i' };
     }
 
-    if (req.query.lastName) {
+    if (req.query.lastName && req.query.lastName.length > 0) {
         query.lastName = { $regex: new RegExp(`^${req.query.lastName.substring(0, 100)}`), $options: 'i' };
     }
 
-    if (req.query.bio) {
+    if (req.query.bio && req.query.bio.length > 0) {
         query.bio = { $regex: new RegExp(`^${req.query.bio.substring(0, 100)}`), $options: 'i' };
     }
 
-    if (req.query.address) {
+    if (req.query.address && req.query.address.length > 0) {
         query.address = { $regex: new RegExp(`^${req.query.address.substring(0, 100)}`), $options: 'i' };
     }
 
-    if (req.query.access) {
-        query.access = { $regex: new RegExp(`^${req.query.access.substring(0, 100)}`), $options: 'i' };
+    if (req.query.access && req.query.access === 'admin' || req.query.access === 'staff' || req.query.access === 'user') {
+        query.access = req.query.access;
     }
 
-    if (req.query.phoneNumber) {
+    if (req.query.phoneNumber && req.query.phoneNumber.length > 0) {
         query.phoneNumber = { $regex: new RegExp(`^${req.query.phoneNumber.substring(0, 100)}`), $options: 'i' };
     }
 
-    if (req.query.email) {
+    if (req.query.email && req.query.email.length > 0) {
         query.email = { $regex: new RegExp(`^${req.query.email.substring(0, 100)}`), $options: 'i' };
     }
 
-    if (req.query.cartId) {
+    if (req.query.cartId && req.query.cartId.length > 0) {
         query.cartId = { $regex: new RegExp(`^${req.query.cartId.substring(0, 100)}`), $options: 'i' };
     }
 
+    if (req.query.googleId && req.query.googleId.length > 0) {
+        query.googleId = { $regex: new RegExp(`^${req.query.googleId.substring(0, 100)}`), $options: 'i' };
+    }
+
     try {
-        const users = await User.find(query);
-        res.json(users);
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || Number.MAX_SAFE_INTEGER;
+        const skip = (page - 1) * limit;
+
+        const totalUsers = await User.countDocuments(query);
+        
+        const users = await User.find(query).skip(skip).limit(limit);
+        res.status(200).json({users, totalUsers});
     } catch (err) {
         console.error('Error searching users:', err);
         res.status(500).send('Server error');
