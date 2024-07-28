@@ -153,7 +153,7 @@ const updateCart = async (req, res) => {
 const deleteProductFromCart = async (req, res) => {
     const userId = req.session.userId;
 
-    const { product } = req.body;
+    const { productId } = req.body;
 
     if (!userId) {
         return res.status(401).json({ error: 'User not authenticated' });
@@ -172,9 +172,8 @@ const deleteProductFromCart = async (req, res) => {
         }
 
         cart.products.forEach((product, index) => {
-            if (product.productId.equals(product._id)) {
+            if (product.productId.equals(productId)) {
                 cart.products.splice(index, 1);
-                console.log('Product deleted:', product);
             }
         });
         await cart.save();

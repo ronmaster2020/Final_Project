@@ -31,7 +31,7 @@
         <!-- navbar -->
         <nav id="navbar-placeholder"></nav>
         
-        <div class="container-fluid" id="main-content">
+        <div class="container-fluid" id="main-content" style="display: none;">
             <!-- <button onclick="displayCartItems()">Get items</button> -->
         
             <!-- <form action="/cart/create" method="post">
@@ -128,9 +128,7 @@
         $('document').ready(async function() {
             const cartItems = await getCartItems();
             displayCartItems(cartItems);
-            
-
-
+        
 
 
            async function getProducts() {
@@ -207,6 +205,9 @@
                    window.location.href = '/emptyCart';
                    return;
                }
+               else {
+                   mainContent.style.display = 'block';
+               }
                const cartListContainer = document.createElement('ul'); // Use an unordered list for cart items
                cartListContainer.classList.add('cart-list'); // Apply the cart-list class
 
@@ -280,7 +281,7 @@
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                productId: item,
+                                productId: item.product._id,
                             })
                         });
 
@@ -290,9 +291,8 @@
                         }
 
                         const data = await response.json();
-                        console.log(data);
 
-                        //window.location.href = '/viewCart';
+                        window.location.href = '/viewCart';
                     });
                     listItem.appendChild(deleteButton);
 
