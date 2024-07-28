@@ -15,9 +15,9 @@
 <body>
     <div id="navbar-placeholder"></div>
     <div id="main-content">
-        <h1>Products</h1>
+        <h1 class="d-flex justify-content-between"><span>Products</span><button class="btn btn-outline-success" onclick="$('#productModal').modal('show')">New Product</button></h1>
         <div class="my-4">
-            <form class="mb-3">
+            <form class="mb-3" id="filterForm">
                 <div class="input-group m-3">
                     <label class="form-label" for="name">Search by first letters</label>
                     <input type="text" class="form-control" name="name" id="name">
@@ -107,5 +107,54 @@
     </style>
     <div class="toast-container" style="position: fixed; bottom: 20px; right: 20px;"></div>
     <div id="footer-placeholder"></div>
+
+    <!-- Modal Structure -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm" action="/product/create" method="POST" enctype="multipart/form-data" class="flex-column">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="name" placeholder="Enter product name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="DESC" placeholder="Enter product description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price (in dollars)</label>
+                            <input type="text" class="form-control" id="price" name="price" placeholder="Enter price">
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" name="gender">
+                                <option value="1">Men</option>
+                                <option value="2">Women</option>
+                                <option value="3" selected>Unisex</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="size" class="form-label">Size (in ml)</label>
+                            <input type="text" class="form-control" id="size" name="size" placeholder="Enter size">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stock" class="form-label">Stock</label>
+                            <input type="text" class="form-control" id="stock" name="stock" placeholder="Enter stock">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Product Image</label>
+                            <input type="file" class="form-control" name="productImage" multiple>
+                        </div>
+                        <button type="submit" class="btn btn-success" onclick="addProducts(event)">ADD</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

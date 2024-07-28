@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Product = require('../models/product');
 const fs = require('fs');
+const path = require('path');
 
 // Check if the database is connected
 const isDbConnected = () => mongoose.connection.readyState === 1;
@@ -119,9 +120,17 @@ exports.deleteProduct = async (req, res) => {
         }
 
         for (const imagePath of product.images) {
-            fs.unlink(imagePath, (err) => {
+            const fullPath = path.resolve('file_uploads', imagePath);
+            console.log('Deleting product image:', fullPath);
+            fs.access(fullPath, fs.constants.F_OK, (err) => {
                 if (err) {
-                    console.error('Error deleting product image:', err);
+                    console.error('File does not exist:', fullPath);
+                } else {
+                    fs.unlink(fullPath, (err) => {
+                        if (err) {
+                            console.error('Error deleting product image:', err);
+                        }
+                    });
                 }
             });
         }
