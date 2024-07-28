@@ -24,18 +24,13 @@ const userSchema = new Schema({
     },
     address: {
         type: String,
-        required: true,
-        minlength: [3, 'Address must be at least 3 characters long'],
+        required: false,
         maxlength: [100, 'Address must be less than 100 characters']
     },
     access: {
         type: String,
         enum: ['user', 'staff', 'admin'],
         required: true
-    },
-    phoneNumber: {
-        type: String,
-        required: false,
     },
     email: {
         type: String,
@@ -48,12 +43,16 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        required: false
     },
     cartId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'cart',
+    },
+    googleId: {
+        type: String, 
+        unique: true 
     }
 });
 

@@ -26,31 +26,43 @@ function openSideNavbar() {
 }
 
 async function fetchData(query, url, method, data_container) {
-    $('#loadingBar .progress-bar').css('width', '0%');
-    if (data_container) {data_container.addClass('d-none');}
-    $('#loadingBar').removeClass('d-none');
-    $('#loadingBar .progress-bar').animate({ width: '100%' }, 1000);
-    // fetch data
+    if (data_container) { 
+        $('#loadingBar .progress-bar').css('width', '0%');
+        data_container.addClass('d-none'); 
+        $('#loadingBar').removeClass('d-none');
+        $('#loadingBar .progress-bar').animate({ width: '100%' }, 1000);
+    }
+
     const queryParams = new URLSearchParams(query).toString();
     const response = await fetch(`${url}?${queryParams}`, {
-        method: method, // GET request
+        method: method,
         headers: {
-            'Content-Type': 'application/json', // Assuming the server expects JSON
+            'Content-Type': 'application/json',
         },
     });
 
     if (!response.ok) {
         console.error('Error fetching data:', response.statusText);
         $('#loadingBar').addClass('d-none');
-        return;
+        return Promise.reject(response.statusText);
     }
-    let data = await response.json();
 
-    $('#loadingBar').addClass('d-none');
-    $('#loadingBar .progress-bar').css('width', '0%');
-    if (data_container) {data_container.removeClass('d-none');}
+    const contentType = response.headers.get('content-type');
+    let data;
+    if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+    } else {
+        const text = await response.text();
+        console.error('Unexpected response format:', text);
+        $('#loadingBar').addClass('d-none');
+        return Promise.reject('Unexpected response format');
+    }
 
-
+    if (data_container) { 
+        $('#loadingBar').addClass('d-none');
+        $('#loadingBar .progress-bar').css('width', '0%');
+        data_container.removeClass('d-none'); 
+    }
 
     return data;
 }

@@ -29,7 +29,7 @@ exports.updateUser = async (req, res) => {
     const userId = req.session.userId;
     
     //Destructure only the fields that may be updated
-    const { firstName, lastName, bio, address, phoneNumber, email, password } = req.body;
+    const { firstName, lastName, bio, address, password } = req.body;
     
     try {
         //Find user by ID
@@ -49,8 +49,6 @@ exports.updateUser = async (req, res) => {
         user.bio = bio;
         
         user.address = address;
-        
-        user.phoneNumber = phoneNumber;
         
         //user.email = email;
         
@@ -87,7 +85,6 @@ exports.getUserDetails = async (req, res) => {
             lastName: user.lastName,
             bio: user.bio,
             address: user.address,
-            phoneNumber: user.phoneNumber,
             email: user.email,
             profilePicture: user.profilePicture //ptionally add profile picture
         };
@@ -125,23 +122,22 @@ exports.getAccessLevel = async (req, res) => {
 };
 
 exports.updateAccessLevel = async (req, res) => {
-    const userId = req.session.userId;
-    const { access } = req.body;
-
     try {
-        const user = await User.findById(userId);
+        const { email, access } = req.query;
+        console.log(email, access);
+        const user = await User.findOne({ email: email });
 
         if (!user) {
-            return res.status(404).send('User not found');
+            return res.status(404).json({ message: 'User not found' });
         }
 
         user.access = access || user.access;
         await user.save();
-        res.status(200).send('Access level updated successfully');
+        res.status(200).json({ message: 'Access level updated successfully' });
     } catch (error) {
-        res.status(500).send('Error updating access level');
+        res.status(500).json({ message: 'Error updating access level' });
     }
-}
+};
 /* old g code 
 // Get first name
 exports.getFirstName = async (req, res) => {
@@ -194,20 +190,6 @@ exports.getAddress = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
         res.status(200).json({ address: user.address });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-// Get phone number
-exports.getPhoneNumber = async (req, res) => {
-    try {
-        const userId = req.params.id;
-        const user = await User.findById(userId, 'phoneNumber');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json({ phoneNumber: user.phoneNumber });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

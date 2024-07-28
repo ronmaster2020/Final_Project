@@ -5,6 +5,10 @@
 </button>
 <nav>
     <ul>
+        <!-- home -->
+        <li><a href="/"><span class="material-symbols-sharp">
+            home
+            </span></a></li>
         <!-- dashboard -->
         <li><a href="/admin/dashboard"><span class="material-symbols-sharp">
             bar_chart_4_bars
@@ -25,25 +29,22 @@
     </ul>
     <ul>
         <!-- logout -->
-        <li style="border-bottom: 0;"><button onclick="window.location.href='/'"><span class="material-symbols-sharp">
+        <li style="border-bottom: 0;"><button onclick="logout()"><span class="material-symbols-sharp">
             logout
             </span></button></li>
     </ul>
 </nav>
 <script>
 $(document).ready(function() {
-    // Get current page URL path
     var path = window.location.pathname;
     console.log(path);
 
-    // Iterate over each link in the nav
+    // activate the current page link in the navbar
     $('nav a').each(function() {
         var href = $(this).attr('href');
         console.log(href);
 
-        // Check if the href matches the current path
         if (path === href) {
-            // Add 'active-link' class to the parent li or the a tag itself
             $(this).addClass('nav-active-link');
         }
     });
