@@ -29,7 +29,7 @@ exports.updateUser = async (req, res) => {
     const userId = req.session.userId;
     
     //Destructure only the fields that may be updated
-    const { firstName, lastName, bio, address, email, password } = req.body;
+    const { firstName, lastName, bio, address, password } = req.body;
     
     try {
         //Find user by ID
