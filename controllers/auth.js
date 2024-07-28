@@ -64,12 +64,38 @@ const googleAuth = (req, res, next) => {
 const googleAuthCallback = (req, res, next) => {
     passport.authenticate('google', { 
         failureRedirect: '/login',
-        callbackURL: 'http://localhost:8080/auth/google/callback' }, (err, user, info) => {
-        if (err) { return next(err); }
-        if (!user) { return res.status(401).redirect('/login'); }
-        req.logIn(user, (err) => {
-            if (err) { return next(err); }
-            return res.status(200).redirect('/');
+        callbackURL: 'http://localhost:8080/auth/google/callback' }, async (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            req.flash('error', info.message);
+            return res.status(401).send('Incorrect email or password');
+        }
+        req.logIn(user, async (err) => {
+            if (err) {
+                return next(err);
+            }
+            try {
+                let cart = await Cart.findOne({ _id: user.cartId }).populate('products.productId');
+                if (!cart) {
+                    cart = new Cart({ products: [] });
+                    await cart.save();
+                    user.cartId = cart._id;
+                    await user.save();
+                }
+                req.session.userId = user._id;
+                req.flash('success', 'You are now logged in!');
+                if (user.access === 'admin' || user.access === 'staff') {
+                    return res.status(200).redirect('/admin/dashboard');
+                } else {
+                    return res.status(200).redirect('/');
+                }
+            } catch (err) {
+                console.error('Error fetching cart items:', err);
+                req.flash('error', 'Error fetching cart items');
+                return res.status(500).send('Server error');
+            }
         });
     })(req, res, next);
 };
