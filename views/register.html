@@ -122,21 +122,20 @@
                 });
 
                 console.log(response);
-                if (response.ok) {
-                    console.log('Registration successful');
-                    window.location.href = '/';
-                } else {
+                if (!response.ok) {
                     const contentType = response.headers.get('Content-Type');
                     if (contentType && contentType.includes('application/json')) {
                         const errorData = await response.json();
-                        showToast(errorData.message || 'Registration failed');
+                        showToast(errorData.message || 'Incorrect email or password');
                     } else {
-                        showToast('Registration failed with an unexpected response from the server.');
+                        showToast('Login failed with an unexpected response from the server.');
                     }
+                } else {
+                    window.location.href = response.url;
                 }
             } catch (error) {
-                console.error('Error during registration:', error.message);
-                showToast('Error during registration.');
+                console.error('Error during login:', error.message);
+                showToast('Error during login.');
             }
         });
 
