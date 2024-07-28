@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/admin.css">
     <!-- admin page js -->
     <script type="text/javascript" src="/js/admin.js"></script>
+    <script type="text/javascript" src="/js/admin_staff.js"></script>
     <style>
         .row {
             display: flex;
@@ -18,11 +19,13 @@
         .col-12.col-xl-6 {
             display: flex;
         }
-        .admin-card {
+        .user-card {
+            position: relative;
             background-color: #ffffff;
             border: 1px solid #ddd;
             border-radius: 5px;
             padding: 1rem;
+            padding-top: 3rem;
             margin: 1rem 0;
             display: flex;
             align-items: flex-start;
@@ -33,24 +36,24 @@
             max-height: 30rem;
             flex: 1;
         }
-        .admin-card img {
+        .user-card img {
             border-radius: 50%;
             margin-right: 20px;
             width: 100px;
             height: 100px;
         }
-        .admin-card .admin-info {
+        .user-card .admin-info {
             flex-grow: 1;
         }
-        .admin-card .admin-info h2 {
+        .user-card .admin-info h2 {
             margin: 0;
             margin-bottom: 1rem;
             font-size: 1.5em;
         }
-        .admin-card .admin-info p {
+        .user-card .admin-info p {
             margin: 0;
         }
-        .admin-card .admin-info div {
+        .user-card .admin-info div {
             margin-bottom: 10px;
             display: flex;
             align-items: flex-start;
@@ -58,49 +61,68 @@
             flex-wrap: nowrap;
             justify-content: start;
         }
-        .admin-card .admin-info div .label {
+        .user-card .admin-info div .label {
             margin-right: 1rem;
             font-weight: bold;
         }
         @media (max-width: 768px) {
-            .admin-card {
+            .user-card {
                 flex-direction: column;
             }
-            .admin-card img {
+            .user-card img {
                 margin-right: 0;
                 margin-bottom: 20px;
             }
-            .admin-card .admin-info div {
+            .user-card .admin-info div {
                 flex-direction: column;
             }
         }
     </style>
-    <script>
-        $(document).ready(async function() {
-            let staff = await fetchData({ access: 'staff' }, '/user/search', 'GET', $('#staff'));
-            staff.forEach((s) => {
-                let staffCard = $('<div class="col-12 col-xl-6"></div>');
-                let adminCard = $('<div class="admin-card"></div>');
-                let img = $('<img src="https://cdn-icons-png.freepik.com/512/3135/3135715.png" alt="Profile Image">');
-                let adminInfo = $('<div class="admin-info"></div>');
-                let h2 = $('<h2>' + s.firstName + ' ' + s.lastName + '</h2>');
-                let email = $('<div><p class="label">Email:</p><p id="email">' + s.email + '</p></div>');
-                let address = $('<div><p class="label">Address:</p><p id="address">' + s.address + '</p></div>');
-                let phoneNumber = $('<div><p class="label">Phone Number:</p><p id="phoneNumber">' + s.phoneNumber + '</p></div>');
-                let bio = $('<div><p class="label">Bio:</p><p id="bio">' + s.bio + '</p></div>');
-                adminInfo.append(h2, email, address, phoneNumber, bio);
-                adminCard.append(img, adminInfo);
-                staffCard.append(adminCard);
-                $('#staff').append(staffCard);
-            });
-        });
-    </script>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
     <div id="main-content">
         <h1>Staff</h1>
-        <div class="row" id="staff"></div>
+        <div class="my-4">
+            <form id="searchForm" class="mb-3">
+                <div class="input-group m-3">
+                    <label class="form-label" for="email">Search by Email Address</label>
+                    <input type="text" class="form-control" name="email" id="email">
+                </div>
+                <div class="input-group m-3">
+                    <label class="form-label" for="access">Access Level</label>
+                    <select class="form-select" id="access" name="access">
+                        <option value="all">all</option>
+                        <option value="user">User</option>
+                        <option value="staff" selected>Staff</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="input-group m-3">
+                    <label class="form-label" for="fname">Search by First Name</label>
+                    <input type="text" class="form-control" name="fname" id="fname">
+                </div>
+                <div class="input-group m-3">
+                    <label class="form-label" for="lname">Search by Last Name</label>
+                    <input type="text" class="form-control" name="lname" id="lname">
+                </div>
+                <div class="pb-2 m-3 w-100 border-bottom">
+                    <button class="btn btn-outline-secondary" id="searchBtn">search</button>
+                    <button class="btn btn-outline-danger mx-3" id="resetBtn">Reset</button>
+                </div>
+            </form>
+            <h2 class="mb-3" id="searchResult"></h2>
+            <!-- Progress Bar -->
+            <div class="progress" id="loadingBar">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Loading...</div>
+            </div>
+            <div class="row" id="users"></div>
+            <!-- Pagination -->
+            <div aria-label="Page navigation">
+                <ul class="pagination justify-content-center" id="paginationControls">
+                </ul>
+            </div>
+        </div>
     </div>
     <div id="footer-placeholder"></div>
 </body>

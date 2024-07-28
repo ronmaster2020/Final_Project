@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ProductScheme = new Schema({
+const ProductSchema = new Schema({
     name: {
         type: String,
         default: '',
@@ -24,8 +24,8 @@ const ProductScheme = new Schema({
         type: String,
         default: '3',
         enum: {
-            values: [1, 2, 3],
-            message: 'Gender must be 1 (male), 2 (female), or 3 (unisex)'
+            values: ['1', '2', '3'],
+            message: 'Gender must be "1" (male), "2" (female), or "3" (unisex)'
         }
     },
     size: {
@@ -51,6 +51,6 @@ const ProductScheme = new Schema({
     }
 }, { collection: 'products', timestamps: true });
 
-const Product = mongoose.models.Product || mongoose.model('Product', ProductScheme);
+const Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
 
 module.exports = Product;

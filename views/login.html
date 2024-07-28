@@ -13,14 +13,38 @@
 <body>
     <!-- navbar -->
     <div id="navbar-placeholder"></div>
+    <style>
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: white;
+            color: red;
+            text-align: center;
+            border-radius: 20px;
+            border: 3px solid red;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 40px;
+            font-size: 17px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            transform: translateX(-50%);
+        }
 
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
     <div id="main-content" class="container-fluid" style="padding-top: 3rem; font-family: 'Ralewa', sans-serif;">
         <!-- auth page -->
         <div class="auth px-3 px-md-5">
             <h1 class="py-3">MY ACCOUNT</h1>
             <h4 class="mb-5">Don't have an account? <a href="/register" style="text-decoration: none; text-wrap: nowrap;">Sign Up</a></h4>
             <!-- google -->
-            <button class="brandBtn mb-4">
+            <button onclick="googleAuth()" class="brandBtn mb-4">
                 <img 
                     src="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png" 
                     alt="google">
@@ -44,7 +68,7 @@
             <h2 class="mb-4">CONTINUE WITH YOUR EMAIL ADDRESS</h2>
 
             <!-- <form onsubmit="handleLogin(event)"> -->
-            <form method="POST" action="/login">
+            <form method="POST" action="/login" id="login-form">
                 <div class="error-message"></div>
 
                 <!-- email -->
@@ -55,7 +79,7 @@
 
                 <!-- password -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="password" id="password" name="password" required minlength="8">
+                    <input placeholder=" " type="password" id="password" name="password" required>
                     <label for="password">PASSWORD*</label>
                     <button id="show-password" type="button" onclick="showPassword()">
                         <span class="material-symbols-sharp">

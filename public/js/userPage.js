@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('lastName').value = userDetails.lastName || '';
             document.getElementById('bio').value = userDetails.bio || '';
             document.getElementById('address').value = userDetails.address || '';
-            document.getElementById('phoneNumber').value = userDetails.phoneNumber || '';
             document.getElementById('email').value = userDetails.email || '';
             document.getElementById('profilePicture').src = userDetails.profilePicture || 'https://vectorified.com/images/no-profile-picture-icon-24.jpg';
         }
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 lastName: document.getElementById('lastName').value,
                 bio: document.getElementById('bio').value,
                 address: document.getElementById('address').value,
-                phoneNumber: document.getElementById('phoneNumber').value,
                 email: document.getElementById('email').value,
                 password: document.getElementById('password').value
             };

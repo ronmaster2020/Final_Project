@@ -190,37 +190,43 @@ exports.searchProducts = async (req, res) => {
             query.stock = { $lte: maxStock };
         }
 
-        const sortBy = req.query.sort;
-        let sortCriteria = {};
-
-        switch (sortBy) {
-            case 'name':
-                sortCriteria = { name: 1 };
-                break;
-            case 'price':
-                sortCriteria = { price: 1 };
-                break;
-            case 'gender':
-                sortCriteria = { gender: 1 };
-                break;
-            case 'size':
-                sortCriteria = { size: 1 };
-                break;
-            default:
-                sortCriteria = { name: 1 }; // Default sort by name
-                break;
+        // Construct sort object based on provided parameters
+        let sortOptions = {};
+        if (req.query.sort) {
+            switch (req.query.sort) {
+                case 'name_asc':
+                    sortOptions.name = 1; // ascending
+                    break;
+                case 'name_desc':
+                    sortOptions.name = -1; // descending
+                    break;
+                case 'price_asc':
+                    sortOptions.price = 1; // ascending
+                    break;
+                case 'price_desc':
+                    sortOptions.price = -1; // descending
+                    break;
+                default:
+                    sortOptions.price = 1; // default sorting by price ascending
+                    break;
+            }
         }
 
-        // Pagination
-        const page = parseInt(req.query.page, 10) || 1;
-        const limit = parseInt(req.query.limit, 10) || Number.MAX_SAFE_INTEGER;
-        const skip = (page - 1) * limit;
+        try {
+            // Pagination
+            const page = parseInt(req.query.page, 10) || 1;
+            const limit = parseInt(req.query.limit, 10) || Number.MAX_SAFE_INTEGER;
+            const skip = (page - 1) * limit;
 
-        const totalProducts = await Product.find(query).countDocuments();
-        const products = await Product.find(query).limit(limit).skip(skip).sort(sortCriteria);
-        res.status(200).json({ products, totalProducts });
+            const totalProducts = await Product.find(query).countDocuments();
+            const products = await Product.find(query).limit(limit).skip(skip).sort(sortOptions);
+            res.status(200).json({ products, totalProducts });
+        } catch (err) {
+            console.error('Error searching products:', err);
+            res.status(500).send('Internal server error');
+        }
     } catch (err) {
         console.error('Error searching products:', err);
         res.status(500).send('Internal server error');
     }
-};
+}

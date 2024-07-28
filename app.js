@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -6,9 +8,10 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const app = express();
+
 const PORT = process.env.PORT || 8080;
 
-const { ensureAuthenticated, ensureAccess, getUserId } = require('./controllers/isloggedin');
+const { ensureAuthenticated, ensureAccess, ensureAdmin, getUserId } = require('./controllers/isloggedin');
 
 // Middleware to check DB connection
 const checkDBConnection = (req, res, next) => {
@@ -148,9 +151,13 @@ app.get('/userpage', ensureAuthenticated, (req, res) => {
 const authController = require('./controllers/auth');
 app.post('/register', authController.register);
 app.post('/login', authController.login);
-app.get('/logout', authController.logout);
-app.get('/user/all', authController.getUsers);
-app.get('/user/search', authController.searchUsers);
+app.post('/logout', authController.logout);
+app.get('/user/all', ensureAccess, authController.getUsers);
+app.get('/user/search', ensureAccess, authController.searchUsers);
+
+// Google Authentication Routes
+app.get('/auth/google', authController.googleAuth);
+app.get('/auth/google/callback', authController.googleAuthCallback);
 
 // Product Routes
 const productController = require('./controllers/product');
@@ -177,7 +184,7 @@ app.post('/cart/add/:productId/:quantity', ensureAuthenticated, cartController.a
 app.get('/getCart', ensureAuthenticated, cartController.getCart);
 app.post('/cart/update', ensureAuthenticated, cartController.updateCart);
 app.post('/cart/delete', ensureAuthenticated, cartController.deleteCart);
-app.get('/cart/all', ensureAuthenticated, ensureAccess, cartController.getAllCarts);
+app.get('/cart/all', ensureAccess, cartController.getAllCarts);
 
 // Settings Routes
 const settingsController = require('./controllers/SettingsController');
@@ -186,7 +193,7 @@ app.post('/settings', ensureAuthenticated, settingsController.updateUserSettings
 app.post('/updateUser', ensureAuthenticated, settingsController.updateUser);
 app.get('/username', ensureAuthenticated, settingsController.getUserName);
 app.get('/getAccessLevel', ensureAuthenticated, settingsController.getAccessLevel);
-app.post('/updateAccessLevel', ensureAuthenticated, settingsController.updateAccessLevel);
+app.post('/updateAccessLevel', ensureAdmin, settingsController.updateAccessLevel);
 
 // Catch-all route for any other requests
 app.use('*', (req, res) => {
