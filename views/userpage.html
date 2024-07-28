@@ -2,13 +2,8 @@
 <html lang="en">
 <head>
     <title>User Profile</title>
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/common.js"></script>
-    <script type="text/javascript" src="/js/userPage.js"></script>
     <link rel="stylesheet" href="/css/userpage.css">
     <link rel="stylesheet" href="/css/auth.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         #map {
             height: 500px;
@@ -16,9 +11,9 @@
             margin-top: 20px;
         }
     </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
 </head>
 <body>
-    <!-- navbar -->
     <div id="navbar-placeholder"></div>
     <div id="main-content" class="container-fluid" style="font-family: 'Ralewa', sans-serif;">
         <div class="auth py-5 px-3">
@@ -54,11 +49,17 @@
                 </div>
                 <button type="submit" class="btn btn-block">Update Profile</button>
             </form>
-            <div id="map"></div> <!-- Add map container here -->
+            <gmp-map id="map" center="40.749933,-73.98633" zoom="13" map-id="DEMO_MAP_ID">
+                <gmpx-place-picker id="place-picker" for-map="map"></gmpx-place-picker>
+                <gmp-advanced-marker id="marker"></gmp-advanced-marker>
+            </gmp-map>
         </div>
         <div id="popup" class="popup"></div>
+        <div id="infowindow-content">
+            <span id="place-name" class="title" style="font-weight: bold;"></span><br />
+            <span id="place-address"></span>
+        </div>
     </div>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/js/userPage.js"></script>
 </body>
 </html>
