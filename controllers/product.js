@@ -192,24 +192,16 @@ exports.searchProducts = async (req, res) => {
 
     // Construct sort object based on provided parameters
     let sortOptions = {};
-    if (req.query.sort) {
-        switch (req.query.sort) {
-            case 'name_asc':
-                sortOptions.name = 1; // ascending
-                break;
-            case 'name_desc':
-                sortOptions.name = -1; // descending
-                break;
-            case 'price_asc':
-                sortOptions.price = 1; // ascending
-                break;
-            case 'price_desc':
-                sortOptions.price = -1; // descending
-                break;
-            default:
-                sortOptions.price = 1; // default sorting by price ascending
-                break;
-        }
+    if (req.query.sort === 'name_asc') {
+        sortOptions.name = 1; // ascending
+    } else if (req.query.sort === 'name_desc') {
+        sortOptions.name = -1; // descending
+    } else if (req.query.sort === 'price_asc') {
+        sortOptions.price = 1; // ascending
+    } else if (req.query.sort === 'price_desc') {
+        sortOptions.price = -1; // descending
+    } else {
+        sortOptions.name = 1; // default sorting by name ascending
     }
 
     try {

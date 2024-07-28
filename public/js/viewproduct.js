@@ -5,8 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('click', async (event) => {
         if (event.target.classList.contains('add-to-cart-btn')) {
             const productId = event.target.getAttribute('data-product-id');
-            const quantity = event.target.getAttribute('data-product-quantity');
+            const quantity = event.target.getAttribute('data-product-quantity') || 1;
             await addToCart(productId, quantity);
+        } else if (event.target.closest('.product-card')) {
+            const productId = event.target.closest('.product-card').getAttribute('data-product-id');
+            showProductModal(productId);
         }
     });
 
@@ -37,7 +40,6 @@ function initializeFiltersFromURL() {
     }
 }
 
-
 function getGenderLabel(genderValue) {
     switch (genderValue) {
         case '1':
@@ -58,6 +60,7 @@ function displayProducts(products) {
     products.forEach(product => {
         const productDiv = document.createElement('div');
         productDiv.className = 'product-card';
+        productDiv.setAttribute('data-product-id', product._id);
 
         const genderLabel = getGenderLabel(product.gender);
 
@@ -119,7 +122,6 @@ function updateFilters() {
     window.location.href = newUrl;
 }
 
-
 async function loadProducts() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
@@ -148,5 +150,38 @@ async function loadProducts() {
         displayProducts(products);
     } catch (error) {
         console.error('Error fetching products:', error);
+    }
+}
+
+async function showProductModal(productId) {
+    try {
+        const response = await fetch(`/products/${productId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch product details');
+        }
+
+        const product = await response.json();
+        const modalContent = document.getElementById('modalProductContent');
+        const genderLabel = getGenderLabel(product.gender);
+
+        modalContent.innerHTML = `
+            <img src="${product.images[0]}" alt="${product.name}" style="width: 100%; height: auto; margin-bottom: 15px;">
+            <div>
+                <h2>${product.name}</h2>
+                <p>${product.DESC}</p>
+                <div class="product-details">
+                    <span class="gender">${genderLabel}</span>
+                    <span class="price">$${product.price}</span>
+                </div>
+            </div>
+        `;
+
+        const modalAddToCartBtn = document.getElementById('modalAddToCartBtn');
+        modalAddToCartBtn.setAttribute('data-product-id', product._id);
+
+        const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+        productModal.show();
+    } catch (error) {
+        console.error('Error fetching product details:', error);
     }
 }
