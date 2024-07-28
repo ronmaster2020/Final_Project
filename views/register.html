@@ -126,16 +126,16 @@
                     const contentType = response.headers.get('Content-Type');
                     if (contentType && contentType.includes('application/json')) {
                         const errorData = await response.json();
-                        showToast(errorData.message || 'Incorrect email or password');
+                        showToast(errorData.message);
                     } else {
-                        showToast('Login failed with an unexpected response from the server.');
+                        showToast('Registration failed with an unexpected response from the server.');
                     }
                 } else {
                     window.location.href = response.url;
                 }
             } catch (error) {
                 console.error('Error during login:', error.message);
-                showToast('Error during login.');
+                showToast('Error during registration.');
             }
         });
 

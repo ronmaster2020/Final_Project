@@ -178,10 +178,20 @@ const register = async (req, res) => {
             req.flash('error', 'Error creating user');
             return res.status(500).json({ message: 'Error creating user'});
         }
-
-        req.session.userId = newUser._id;
-        req.flash('success', 'You are now registered and can log in!');
-        res.status(201).redirect('/userPage');
+        req.logIn(newUser, async (err) => {
+            if (err) {
+                return next(err);
+            }
+            try {
+                req.session.userId = newUser._id;
+                req.flash('success', 'You are now logged in!');
+                return res.status(200).redirect('/userPage');
+            } catch (err) {
+                console.error('Error fetching cart items:', err);
+                req.flash('error', 'Error fetching cart items');
+                return res.status(500).json({ message: 'Server error'});
+            }
+        });
     } catch (err) {
         console.error('Error creating user:', err);
         req.flash('error', 'Error creating user');
