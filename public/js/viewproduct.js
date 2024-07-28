@@ -115,6 +115,7 @@ async function addToCart(productId, quantity) {
 }
 
 function updateFilters() {
+    page = 1;
     const sortBy = document.getElementById('sort').value;
     const gender = document.querySelector('input[name="gender"]:checked').value;
     const minPrice = document.getElementById('min-price').value;
