@@ -66,10 +66,10 @@ const googleAuthCallback = (req, res, next) => {
         failureRedirect: '/login',
         callbackURL: 'http://localhost:8080/auth/google/callback' }, (err, user, info) => {
         if (err) { return next(err); }
-        if (!user) { return res.redirect('/login'); }
+        if (!user) { return res.status(401).redirect('/login'); }
         req.logIn(user, (err) => {
             if (err) { return next(err); }
-            return res.redirect('/');
+            return res.status(200).redirect('/');
         });
     })(req, res, next);
 };
@@ -94,7 +94,7 @@ const login = (req, res, next) => {
         }
         if (!user) {
             req.flash('error', info.message);
-            return res.redirect('/login');
+            return res.status(401).send('Incorrect email or password');
         }
         req.logIn(user, async (err) => {
             if (err) {
@@ -111,14 +111,14 @@ const login = (req, res, next) => {
                 req.session.userId = user._id;
                 req.flash('success', 'You are now logged in!');
                 if (user.access === 'admin' || user.access === 'staff') {
-                    return res.redirect('/admin/dashboard');
+                    return res.status(200).redirect('/admin/dashboard');
                 } else {
-                    return res.redirect('/');
+                    return res.status(200).redirect('/');
                 }
             } catch (err) {
                 console.error('Error fetching cart items:', err);
                 req.flash('error', 'Error fetching cart items');
-                return res.redirect('/');
+                return res.status(500).send('Server error');
             }
         });
     })(req, res, next);
@@ -126,45 +126,51 @@ const login = (req, res, next) => {
 
 
 const register = async (req, res) => {
-    const { firstName, lastName, bio, address, access, phoneNumber, email, password } = req.body;
+    const { firstName, lastName, bio, address, access, email, password } = req.body;
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             req.flash('error', 'Email already in use');
-            return res.redirect('/register');
+            return res.status(400).send('Email already in use');
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const newCart = new Cart({ products: [] });
         await newCart.save();
 
-        const newUser = new User({ firstName, lastName, bio, address, access, phoneNumber, email, password: hashedPassword, cartId: newCart._id });
+        const newUser = new User({ firstName, lastName, bio, address, access: 'user', email, password: hashedPassword, cartId: newCart._id });
         
         await newUser.save();
 
         if (!newUser) {
             req.flash('error', 'Error creating user');
-            return res.redirect('/register');
+            return res.status(500).send('Error creating user');
         }
 
         req.session.userId = newUser._id;
         req.flash('success', 'You are now registered and can log in!');
-        res.redirect('/');
+        res.status(201).redirect('/');
     } catch (err) {
         console.error('Error creating user:', err);
         req.flash('error', 'Error creating user');
-        res.redirect('/register');
+        res.status(500).send('Server error');
     }
 };
 
 const logout = (req, res) => {
-    req.logout((err) => {
-        if (err) {
-            return next(err);
-        }
-        req.flash('success', 'You are logged out');
-        res.redirect('/');
-    });
+    try {
+        req.logout((err) => {
+            if (err) {
+                return next(err);
+            }
+            req.flash('success', 'You are logged out');
+            res.status(200).redirect('/');
+        });
+    } catch (err) {
+        console.error('Error logging out:', err);
+        req.flash('error', 'Error logging out');
+        res.status(500).send('Server error');
+    }
 };
 
 
@@ -175,7 +181,7 @@ const getUsers = async (req, res) => {
 
     try {
         const users = await User.find();
-        res.json(users);
+        res.status(200).json(users);
     } catch (err) {
         console.error('Error getting users:', err);
         res.status(500).send('Server error');
@@ -203,10 +209,6 @@ const searchUsers = async (req, res) => {
 
     if (req.query.access && req.query.access === 'admin' || req.query.access === 'staff' || req.query.access === 'user') {
         query.access = req.query.access;
-    }
-
-    if (req.query.phoneNumber && req.query.phoneNumber.length > 0) {
-        query.phoneNumber = { $regex: new RegExp(`^${req.query.phoneNumber.substring(0, 100)}`), $options: 'i' };
     }
 
     if (req.query.email && req.query.email.length > 0) {

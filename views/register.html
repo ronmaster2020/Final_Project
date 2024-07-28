@@ -58,7 +58,7 @@
 
                 <!-- password -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="password" id="password" name="password" required minlength="1">
+                    <input placeholder=" " type="password" id="password" name="password" required minlength="8">
                     <label for="password">PASSWORD*</label>
                     <button id="show-password" type="button" onclick="showPassword()">
                         <span class="material-symbols-sharp">
@@ -69,40 +69,26 @@
 
                 <!-- first name -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="text" id="firstName" name="firstName" required>
+                    <input placeholder=" " type="text" id="firstName" name="firstName">
                     <label for="firstName">FIRST NAME*</label>
                 </div>
                 
                 <!-- last name -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="text" id="lastName" name="lastName" required>
+                    <input placeholder=" " type="text" id="lastName" name="lastName">
                     <label for="lastName">LAST NAME*</label>
                 </div>
                 
                 <!-- bio -->
                 <div class="mb-3 form-input">
-                    <textarea placeholder=" " id="bio" name="bio" required></textarea>
+                    <textarea placeholder=" " id="bio" name="bio" ></textarea>
                     <label for="bio">BIO*</label>
                 </div>
                 
                 <!-- address -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="text" id="address" name="address" required>
+                    <input placeholder=" " type="text" id="address" name="address">
                     <label for="address">ADDRESS*</label>
-                </div>
-
-                <!-- access -->
-                <div class="mb-3 form-input">
-                    <select aria-placeholder="ACCESS*" id="access" name="access" required>
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                
-                <!-- phone number -->
-                <div class="mb-3 form-input">
-                    <input placeholder=" " type="tel" id="phoneNumber" name="phoneNumber" required>
-                    <label for="phoneNumber">PHONE NUMBER*</label>
                 </div>
 
                 <button type="submit" id="submit-btn">CREATE MY PROFILE</button>

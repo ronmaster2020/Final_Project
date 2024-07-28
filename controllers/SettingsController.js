@@ -29,7 +29,7 @@ exports.updateUser = async (req, res) => {
     const userId = req.session.userId;
     
     //Destructure only the fields that may be updated
-    const { firstName, lastName, bio, address, phoneNumber, email, password } = req.body;
+    const { firstName, lastName, bio, address, email, password } = req.body;
     
     try {
         //Find user by ID
@@ -49,8 +49,6 @@ exports.updateUser = async (req, res) => {
         user.bio = bio;
         
         user.address = address;
-        
-        user.phoneNumber = phoneNumber;
         
         //user.email = email;
         
@@ -87,7 +85,6 @@ exports.getUserDetails = async (req, res) => {
             lastName: user.lastName,
             bio: user.bio,
             address: user.address,
-            phoneNumber: user.phoneNumber,
             email: user.email,
             profilePicture: user.profilePicture //ptionally add profile picture
         };
@@ -193,20 +190,6 @@ exports.getAddress = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
         res.status(200).json({ address: user.address });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-// Get phone number
-exports.getPhoneNumber = async (req, res) => {
-    try {
-        const userId = req.params.id;
-        const user = await User.findById(userId, 'phoneNumber');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json({ phoneNumber: user.phoneNumber });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -32,10 +32,6 @@ const userSchema = new Schema({
         enum: ['user', 'staff', 'admin'],
         required: true
     },
-    phoneNumber: {
-        type: String,
-        required: false,
-    },
     email: {
         type: String,
         required: true,

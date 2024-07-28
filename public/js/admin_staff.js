@@ -14,7 +14,6 @@ async function loadUsers(users, totalUsers) {
         let h2 = $('<h2>' + s.firstName + ' ' + s.lastName + '</h2>');
         let email = $('<div><p class="label">Email:</p><p id="email">' + s.email + '</p></div>');
         let address = $('<div><p class="label">Address:</p><p id="address">' + s.address + '</p></div>');
-        let phoneNumber = $('<div><p class="label">Phone Number:</p><p id="phoneNumber">' + s.phoneNumber + '</p></div>');
         let bio = $('<div><p class="label">Bio:</p><p id="bio">' + s.bio + '</p></div>');
         let access = $('<div><p class="label">Access:</p><p id="access">' + s.access + '</p></div>');
         if (s.access === 'admin') {
@@ -23,7 +22,7 @@ async function loadUsers(users, totalUsers) {
             access.find('#access').css({ 'color': 'rgb(0, 102, 255)' });
         }
 
-        if (isAdmin) {
+        if (isAdmin === 'admin') {
             let cardBtn = $('<button class="cardBtn">Change Access</button>');
             cardBtn.click(() => {
                 let newAccess = '';
@@ -39,7 +38,7 @@ async function loadUsers(users, totalUsers) {
             adminCard.append(cardBtn);
         }
         
-        adminInfo.append(h2, email, access, address, phoneNumber, bio);
+        adminInfo.append(h2, email, access, address, bio);
         adminCard.append(img, adminInfo);
         staffCard.append(adminCard);
         $('#users').append(staffCard);
