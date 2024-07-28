@@ -74,6 +74,7 @@ $(document).ready(async function() {
 
     $('#searchForm').submit((e) => {
         e.preventDefault();
+        page = 1;
         filterUsers();
     });
 
@@ -83,6 +84,7 @@ $(document).ready(async function() {
     });
 
     $('#resetBtn').click(() => {
+        page = 1;
         $('input[name="fname"]').val('');
         $('input[name="lname"]').val('');
         $('input[name="email"]').val('');
