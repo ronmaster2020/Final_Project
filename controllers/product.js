@@ -60,15 +60,15 @@ exports.getProducts = async (req, res) => {
 // Get a single product by ID
 exports.getProductById = async (req, res) => {
     if (!isDbConnected()) {
-        return res.status(503).send('Service unavailable. Please try again later.');
+        return res.status(503).json({ error: 'Service unavailable. Please try again later.' });
     }
 
     try {
         const product = await Product.findById(req.params.id);
         if (!product) {
-            return res.status(404).send('Product not found');
+            res.status(404).json({ error: 'Product not found' });
         }
-        res.json(product);
+        res.json({product});
     } catch (err) {
         console.error('Error fetching product by ID:', err);
         res.status(500).send('Internal server error');
@@ -80,22 +80,36 @@ exports.updateProduct = async (req, res) => {
     if (!isDbConnected()) {
         return res.status(503).send('Service unavailable. Please try again later.');
     }
-
+    
     try {
-        const { name, DESC, price, gender, size } = req.body;
+        console.log('Request body:', req.body);
+        
+        const { name, DESC, price, gender, size, stock } = req.body;
         const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).send('Product not found');
         }
-
+    
         product.name = name;
         product.DESC = DESC;
         product.price = price;
         product.gender = gender;
         product.size = size;
+        product.stock = stock;
+    
+        const updatedFields = {
+            name: product.name,
+            DESC: product.DESC,
+            price: product.price,
+            gender: product.gender,
+            size: product.size,
+            stock: product.stock
+        };
+    
+        console.log('Updated product fields:', updatedFields);
         await product.save();
-
-        res.send('Product updated successfully');
+    
+        res.status(200).json({ product });
     } catch (err) {
         if (err.name === 'ValidationError') {
             const messages = Object.values(err.errors).map(val => val.message);
