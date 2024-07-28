@@ -24,14 +24,17 @@
     <body onload="CheckLogin()">
         <script>
             async function CheckLogin() {
-                const cartIdResponse = await fetch('/api/cart');
-                if (!cartIdResponse.ok) {
-                    throw new Error(`HTTP error! status: ${cartIdResponse.status}`);
-                }
-                const cartIdData = await cartIdResponse.json();
+                // Fetch the cart data from the server
+                const response = await fetch('/getCart');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch cart data');
+                    }
+
+                    const cartData = await response.json();
+                    console.log('Cart data:', cartData);
                 
-                console.log('Cart ID from server:', cartIdData.cartId);
-                console.log('Is loged-in from server:', cartIdData.isLogedIn);
+                //console.log('Cart ID from server:', cartIdData.cartId);
+                //console.log('Is loged-in from server:', cartIdData.isLogedIn);
 
                 const login_container = document.getElementById('login-container');
                 const message = document.getElementById('message');
@@ -59,17 +62,19 @@
             
             <div class="empty-cart-message">
                 <p id="message">It looks like you haven't added anything to your cart yet. Start shopping to fill it up!</p>
-                <a href="/" class="continue-shopping-link">Continue Shopping</a>
+                <a href="/products" class="continue-shopping-link">Continue Shopping</a>
             </div>
             <div class="empty-cart-actions" id="cart-actions">
-                <a href="/">Browse Products</a>
+                <a href="/products">Browse Products</a>
                 <a href="/about">Learn About Us</a>
             </div>
 
+            <!--
             <div class="login-container" id="login-container">
                 <h2 class="login-title">Log in to view the items in your cart</h2>
                 <a href="/login" class="login-link">Login</a>
             </div>
+            -->
         </div>
 
         <footer id="footer-placeholder">

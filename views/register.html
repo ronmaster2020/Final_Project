@@ -26,7 +26,7 @@
         <div class="auth px-3 px-md-5">
             <h1 class="py-3">CREATE YOUR ACCOUNT</h1>
             <h4 class="mb-5">Have an account? <a href="/login" style="text-decoration: none; text-wrap: nowrap;">Log in now</a></h4>
-            <button class="brandBtn mb-4">
+            <button class="brandBtn mb-4" onclick="googleAuth()">
                 <img 
                     src="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png" 
                     alt="google">
@@ -58,7 +58,7 @@
 
                 <!-- password -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="password" id="password" name="password" required minlength="1">
+                    <input placeholder=" " type="password" id="password" name="password" required minlength="8">
                     <label for="password">PASSWORD*</label>
                     <button id="show-password" type="button" onclick="showPassword()">
                         <span class="material-symbols-sharp">
@@ -69,40 +69,26 @@
 
                 <!-- first name -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="text" id="firstName" name="firstName" required>
+                    <input placeholder=" " type="text" id="firstName" name="firstName">
                     <label for="firstName">FIRST NAME*</label>
                 </div>
                 
                 <!-- last name -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="text" id="lastName" name="lastName" required>
+                    <input placeholder=" " type="text" id="lastName" name="lastName">
                     <label for="lastName">LAST NAME*</label>
                 </div>
                 
                 <!-- bio -->
                 <div class="mb-3 form-input">
-                    <textarea placeholder=" " id="bio" name="bio" required></textarea>
+                    <textarea placeholder=" " id="bio" name="bio" ></textarea>
                     <label for="bio">BIO*</label>
                 </div>
                 
                 <!-- address -->
                 <div class="mb-3 form-input">
-                    <input placeholder=" " type="text" id="address" name="address" required>
+                    <input placeholder=" " type="text" id="address" name="address">
                     <label for="address">ADDRESS*</label>
-                </div>
-
-                <!-- access -->
-                <div class="mb-3 form-input">
-                    <select aria-placeholder="ACCESS*" id="access" name="access" required>
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                
-                <!-- phone number -->
-                <div class="mb-3 form-input">
-                    <input placeholder=" " type="tel" id="phoneNumber" name="phoneNumber" required>
-                    <label for="phoneNumber">PHONE NUMBER*</label>
                 </div>
 
                 <button type="submit" id="submit-btn">CREATE MY PROFILE</button>
@@ -113,47 +99,90 @@
     <div id="footer-placeholder"></div> <!-- This line is from the incoming change -->
 
     <script>
-        let emailExists = false;
+        document.addEventListener('DOMContentLoaded', () => {
+        const registerForm = document.getElementById('register-form');
 
-        document.getElementById('email').addEventListener('input', async (event) => {
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const bio = document.getElementById('bio').value;
+            const address = document.getElementById('address').value;
+
             try {
-                const response = await fetch('/user/all');
-                const input_email = document.getElementById('email').value;
-                const email_check = document.getElementById('email-check');
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password, firstName, lastName, bio, address })
+                });
+
+                console.log(response);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const usersData = await response.json();
-                for(let i = 0; i < usersData.length; i++) {
-                    console.log(usersData[i].email);
-                    if(input_email === usersData[i].email) {
-                        email_check.textContent = "Oops! This email is already registered. Please use another one.";
-                        email_check.style.display = 'block';
-                        emailExists = true;
-                        break;
+                    const contentType = response.headers.get('Content-Type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const errorData = await response.json();
+                        showToast(errorData.message);
+                    } else {
+                        showToast('Registration failed with an unexpected response from the server.');
                     }
+                } else {
+                    window.location.href = response.url;
                 }
-
             } catch (error) {
-                console.error('Error fetching cart data:', error);
-                // Handle errors gracefully (e.g., display an error message)
+                console.error('Error during login:', error.message);
+                showToast('Error during registration.');
             }
         });
 
-        document.getElementById('register-form').addEventListener('submit', async(event) => {
-            event.preventDefault();
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+            document.body.appendChild(toast);
 
-            if (emailExists) {
-                    // Focus the email input and scroll to it if the email already exists
-                    document.getElementById('email').focus();
-                    document.getElementById('email').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                    // If email doesn't exist, submit the form
-                    event.target.submit();
-                }
-        });
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
 
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+    });
     </script>
+    <style>
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: white;
+            color: red;
+            text-align: center;
+            border-radius: 20px;
+            border: 2px solid red;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 40px;
+            font-size: 17px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
 </body>
 </html>

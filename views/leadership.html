@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="/public/js/read_more.js"></script>
 </head>
 <body>
 
@@ -20,7 +19,10 @@
         <h1>Welcome to GlobalScentsations</h1>
         <p>At GlobalScentsations, we believe in the power of scent to evoke memories, inspire emotions, and create unforgettable experiences...</p>
         <p>To lead a successful company, it is necessary to have great leadership. We are happy to introduce the people who make the dream come true:</p>
-        <hr>
+        <hr> 
+    </div>
+
+    <div class="people">
 
         <div class="official" id="ceo">
             <img src="/public/images/leadership/ceo.jpg" alt="CEO Picture" class="official-image">
@@ -34,6 +36,8 @@
             </div>
         </div>
 
+        <hr>
+
         <div class="official" id="cfo">
             <img src="/public/images/leadership/cfo.jpg" alt="CFO Picture" class="official-image">
             <div class="official-details">
@@ -45,6 +49,8 @@
                 </div>
             </div>
         </div>
+
+        <hr>
 
         <div class="official" id="coo">
             <img src="/public/images/leadership/coo.jpg" alt="COO Picture" class="official-image">
@@ -58,6 +64,8 @@
             </div>
         </div>
 
+        <hr>
+
         <div class="official" id="cto">
             <img src="/public/images/leadership/cto.jpg" alt="CTO Picture" class="official-image">
             <div class="official-details">
@@ -70,6 +78,8 @@
             </div>
         </div>
         
+        <hr>
+
         <div class="official" id="cco">
             <img src="/public/images/leadership/cco.jpg" alt="CCO Picture" class="official-image">
             <div class="official-details">
@@ -81,9 +91,29 @@
                 </div>
             </div>
         </div>
+        
     </div>
 
     <div id="footer-placeholder"></div>
 
+    <script>
+        $(document).ready(function(){
+    $('#readMore1').click(function(){
+        $('#moreText1').toggle('slow');
+    });
+    $('#readMore2').click(function(){
+        $('#moreText2').toggle('slow');
+    });
+    $('#readMore3').click(function(){
+        $('#moreText3').toggle('slow');
+    });
+    $('#readMore4').click(function(){
+        $('#moreText4').toggle('slow');
+    });
+    $('#readMore5').click(function(){
+        $('#moreText5').toggle('slow');
+    });
+});
+    </script>
 </body>
 </html>
