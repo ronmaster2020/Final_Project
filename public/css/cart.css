@@ -1,73 +1,61 @@
 body {
     margin-top: 72px;
-    padding-top: 0px;
+    padding-top: 0;
     height: 100%;
 }
 
 /* Cart title */
 .cart-title {
     height: 250px;
-    font-family: 'Pacifico', cursive; /* Use the chosen font */
-    font-size: 2rem; /* Adjust font size */
-    color: #333; /* Adjust color if needed */
-    display: flex;
-    justify-content: center;
-    margin-bottom: 50px;
-    padding: 1rem 2rem; /* Maintain padding for potential text spacing */
-    color: rgb(3, 3, 3); /* Adjust text color if needed */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Add a subtle shadow for depth (optional) */
-    /* background-image: url("https://i.pinimg.com/564x/d4/8b/14/d48b146b01dc83163eb832e76331ae3a.jpg");  */
-    background-image: url("https://i.pinimg.com/564x/b2/1e/7b/b21e7b5885acf57e06631675b7f3bc5f.jpg"); 
+    font-family: 'Pacifico', cursive;
+    font-size: 2rem;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     background-image: url("https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
-    background-repeat: no-repeat; /* Prevent image from repeating */
-    background-position: center; /* Center the image horizontally */
-    background-size: cover; /* Resize image to cover the entire element */
-    color: #fff; /* White text color (optional) */
-    text-align: center; /* Center the text within the element */
-    display: flex; /* Make the cart-title a flex container */
-    align-items: center; /* Align items vertically in the center */
-    justify-content: center; /* Align items horizontally in the center */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem 2rem;
+    margin-bottom: 50px;
 }
 
-/*Cart info */
+/* Cart info */
 .cart-info {
-    width: 100%;  /* Always occupy full width on mobile */
-    height: auto;  /* Allow height to adjust based on content */
-    display: flex; /* Make the container a flexbox */
-    background-color: #f5f5f5; /* Light gray background */
-    border-radius: 5px; /* Rounded corners */
-    padding: 1rem; /* Inner padding */
-    font-family: Arial, sans-serif; /* Base font family */
+    display: flex;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 1rem;
+    font-family: Arial, sans-serif;
+    width: 100%;
 }
 
 .left-part,
 .right-part {
-    flex: 1; /* Make both parts equally sized */
-    flex-wrap: wrap; /* Allow content to wrap on mobile */
+    flex: 1;
     padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .left-part {
-    background-color: #e0e0e0; /* Light gray background for left part */
-    text-align: center; /* Center text in left part */
-    display: flex; /* Make the left part a flex container */
-    flex-direction: column; /* Stack items vertically */
-    align-items: center; /* Align items at the center */
-    justify-content: space-around;
-    font-family: Open Sans, sans-serif;
-    text-transform: uppercase; /* Make text uppercase */
-    /* align-self: center; */
+    background-color: #e0e0e0;
+    text-align: center;
+    align-items: center;
+    text-transform: uppercase;
 }
 
 .left-part p {
-    font-weight: bold; /* Bold text for "Continue Shopping" */
-    color: #333; /* Darker text color */
-    margin-bottom: 0rem;
+    font-weight: bold;
+    color: #333;
 }
 
 .left-part a {
-    color: inherit; /* Inherit text color from parent */
-    /* text-decoration: none; /* Remove underline from link */
+    color: inherit;
 }
 
 .left-part a:hover {
@@ -76,295 +64,224 @@ body {
 }
 
 .right-part {
-    text-align: right; /* Right-align text in right part */
-    color: #666; /* Lighter text color */
-    display: flex; /* Make the right part a flex container */
-    flex-direction: column; /* Stack items vertically */
-    align-items: flex-end; /* Align items at the end (right) */
-    justify-content: space-around;
-}
-
-.right-part p {
-    margin-bottom: 0rem;
+    text-align: right;
+    color: #666;
+    align-items: flex-end;
 }
 
 .right-part a {
-    color: #666; /* Lighter text color */
+    color: #666;
 }
 
 .right-part a:hover {
     color: #374086;
 }
 
-.right-part p:first-child { /* Style the first paragraph in right part */
-    font-style: italic; /* Italicize "NEED ASSISTANCE?" */
-    /* margin-bottom: 5px; /* Add some margin below */
+.right-part p:first-child {
+    font-style: italic;
 }
-
-  
 
 /* List title */
-  
 .list-title {
     margin-top: 20px;
-    font-family: Arial, sans-serif; /* Base font family */
-    font-size: 25px; /* Adjust font size as desired */
-    color: #333; /* Darker text color */
-    padding: 10px 15px; /* Add some padding */
-    border-bottom: 1px solid #ddd; /* Add a subtle bottom border */
-    display: flex; /* Make it a flex container for potential icons */
-    justify-content: space-between; /* Space content horizontally */
-    text-transform: uppercase; /* Make text uppercase */
-}
-  
-.list-title #list-title { /* Target the element with id within .list-title */
-    font-weight: bold; /* Make the title part bold */
-    text-transform: uppercase; /* Make text uppercase */
+    font-family: Arial, sans-serif;
+    font-size: 25px;
+    color: #333;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
 }
 
 /* List Params */
 .params {
-    font-size: large;
-    display: flex; /* Use flexbox for horizontal layout */
-    align-items: center; /* Align items vertically in the center */
+    display: flex;
+    align-items: center;
     font-family: Arial, sans-serif;
-    font-weight: bold; /* Bold font for headings */
-    color: #333; /* Darker text color */
-    padding: 5px 10px; /* Add some padding */
-    border-bottom: 1px solid #ddd; /* Add a bottom border */
-    margin-bottom: 10px; /* Add some margin below */
-    text-transform: uppercase; /* Uppercase text */
+    font-weight: bold;
+    color: #333;
+    padding: 5px 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 }
 
 .params p {
-    margin: 0; /* Remove default margins for better spacing */
-    padding: 0 10px; /* Adjust padding for mobile readability */
-    /* No text-align needed as flexbox handles horizontal layout */
-    flex: 1; /* Make all "p" elements grow equally within the row */
+    flex: 1;
     text-align: center;
+    margin: 0;
+    padding: 0 10px;
 }
 
 .params .perfume {
-    flex: none; /* Allow the first element to shrink on mobile */
-    width: 40%; /* Maintain 40% width for larger screens */
+    flex: none;
+    width: 40%;
 }
 
-
-
-
-  
-/* Customize these styles as needed */
-
+/* Cart list */
 .cart-list {
-    list-style: none; /* Remove default list style */
-    padding: 0.5rem; /* Add some padding for better spacing */
+    list-style: none;
+    padding: 0.5rem;
     margin: 0;
-    border: 1px solid #ddd; /* Optional: Add a subtle border */
-    border-radius: 5px; /* Add a slight rounded corner for a more modern look */
-    background-color: #f5f5f5; /* Light background color */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f5f5f5;
 }
-  
+
 /* Individual Cart Item */
 .cart-item {
-    display: flex; /* Use flexbox for horizontal layout */
-    align-items: center; /* Align items vertically in the center */
-    border-bottom: 1px solid #ddd; /* Optional: Add a subtle border between items */
-    padding: 0.75rem 1rem; /* Adjust padding for better spacing within the item */
-    background-color: #ffffffe6; /* Background color for each item */
-    transition: all 0.2s ease-in-out; /* Add a smooth transition effect on hover */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 0.75rem 1rem;
+    background-color: #ffffffe6;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     margin-bottom: 1px;
 }
 
-/* Cart Item Parameters */
-.cart-item div {
-    flex: 1; /* Make all div elements grow equally within the row */
-    padding: 0 5px; /* Add some space between elements */
-    text-align: center; /* Center text */
-    color: #333; /* Darker text color */
-    font-weight: bold; /* Bold font for headings (optional) */
-    text-transform: uppercase; /* Uppercase text (optional) */
-}
-
-/* Hover Effect for Cart Item */
 .cart-item:hover {
-    background-color: #d6e1f8; /* Change background color slightly on hover */
-    cursor: pointer; /* Indicate hover interaction with a pointer cursor */
+    background-color: #d6e1f8;
+    cursor: pointer;
 }
 
-
-.cart-item span { /* Target all span elements within .cart-item */
-    flex: 1; /* Allow each span to grow and fill available space horizontally */
-    text-align: center; /* Align text within each span to the left */
-    /* Optional: Adjust other styling for individual spans (e.g., font-size) */
-}
-  
-.cart-item .image {
-    width: 10%; /* Adjust width as needed for your image size */
-    height: 10%; /* Maintain aspect ratio */
-    object-fit: cover; /* Crop image to fit container */
+.cart-item img {
+    width: 10%;
+    height: 10%;
+    object-fit: cover;
     margin-right: 8%;
     margin-left: 2%;
-    border-radius: 10px; /* Add a slight rounded corner for the image */
-    padding: 0px;
-}
-  
-.cart-item details {
-    flex: 1; /* Expand details to fill remaining space */
-    margin: 0; /* Remove default margin for better spacing */
-}
-  
-.product-id, .quantity, .price, .total {
-    /* Individual styles for each element (e.g., font-size, margin) */
-    text-align: center; /* Optional: Center text within each div */
+    border-radius: 10px;
+    padding: 0;
 }
 
-.total {
+.cart-item div {
+    flex: 1;
+    padding: 0 5px;
+    text-align: center;
+    color: #333;
     font-weight: bold;
+    text-transform: uppercase;
 }
 
 .quantity-button {
     width: 15%;
-    /* Styles for the quantity button */
     padding: 5px 10px;
     border: 1px solid #ccc;
-    border-radius: 8px; /* Add rounded corners */
-    font-size: 16px; /* Adjust font size */
-    cursor: pointer; /* Indicate interactivity on hover */
-    background-color: #f5f5f5; /* Light background color */
-    margin: 0% 2.5%;
-    color: #333; /* Text color */
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    margin: 0 2.5%;
+    color: #333;
 }
 
-/* Cart footer */ 
 /* Cart footer */
-
 .cart-footer {
     margin-top: 20px;
-    display: flex; /* Use flexbox for layout */
-    justify-content: space-around; /* Distribute content horizontally */
-    align-items: center; /* Align content vertically */
-    padding: 10px 20px; /* Adjust padding for better mobile spacing */
-    background-color: #f5f5f5; /* Light gray background */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .footer-left,
 .footer-right {
-    flex: 1; /* Make left and right sections equally sized */
+    flex: 1;
 }
 
 .footer-left p {
-    /* margin: 0 -0px 10px 0; /* Remove default margin for paragraph */
-    font-size: 16px; /* Adjust font size for mobile readability */
+    font-size: 16px;
     margin-bottom: 0.5rem;
 }
 
 .footer-right {
-    text-align: center; /* Align elements within the right section to the right */
-    /* margin-left: 300px;  -- Remove fixed margin for mobile responsiveness */
-    flex-wrap: wrap; /* Allow content to wrap on mobile devices */
-    justify-content: center; /* Center content horizontally on mobile */
-    align-items: flex-end; /* Align content at the bottom on mobile */
+    text-align: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-end;
 }
 
 .footer-right h3 {
-    margin: 5px 0; /* Add some space between headings */
+    margin: 5px 0;
+    color: #333;
 }
 
-/* Optional styles to further customize the look */
-
 .footer-left a {
-    color: #333; /* Darker text color for the link */
-    /* text-decoration: none; /* Remove underline from link */
+    color: #333;
 }
 
 .footer-left a:hover {
-    text-decoration: underline; /* Underline link on hover */
+    text-decoration: underline;
 }
-
-.footer-right h3 {
-    color: #333; /* Darker text color for headings */
-}
-
 
 /* Button */
 button[type="submit"] {
-    /* Base styles for the button */
-    width: 80%; /* Make the button full width on mobile */
+    width: 80%;
     padding: 0.75rem 1.5rem;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: rgb(0, 0, 128); /* Navy blue */
-    color: #fff; /* White text */
-    cursor: pointer; /* Indicate hover interaction */
-    /* transition: all 0.2s ease-in-out; /* Smooth hover transition */
-    font-family: 'Montserrat', sans-serif; /* Cool font */
-    text-transform: uppercase; /* Make all text uppercase */
+    background-color: rgb(0, 0, 128);
+    color: #fff;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
     margin-top: 20px;
-    /* margin-left: 0px;  -- Remove fixed margin for mobile responsiveness*/
-    /* font-weight: bold; /* Optional: Add boldness for emphasis */
 }
-
 
 button[type="submit"]:hover {
-    /* Hover styles for the button */
-    background-color: rgb(30, 30, 100); /* Slightly darker blue on hover */
+    background-color: rgb(30, 30, 100);
 }
-
-
-/* Order pop-up */
 
 /* Toast Styles */
 .toast {
-    position: fixed; /* Ensures toast stays visible on scroll */
-    top: 0; /* Reset top position for JavaScript calculation */
-    left: 50%; /* Move the container to the horizontal center */
-    transform: translate(-50%, 0); /* Center horizontally within viewport */
-    flex: 0 0 auto; /* Allow toasts to shrink to content */
-    width: 70%; /* Match container width */
-    margin-bottom: 10px; /* Add some spacing between toasts (optional) */
-    padding: 1rem; /* Add padding for content */
-    background-color: #fff; /* White background for main toast content */
-    border-radius: 10px; /* Adjust corner radius for a softer look */
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 70%;
+    margin-bottom: 10px;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
 
-
-/* Toast Body Styles */
 .toast-body {
-    display: flex; /* Allow horizontal layout for content and buttons */
+    display: flex;
     flex-direction: column;
-    align-items: first baseline; /* Vertically center content */
-    font-size: 0.9rem; /* Slightly larger font size */
-    color: #212529; /* Darker text color for better contrast */
+    align-items: flex-start;
+    font-size: 0.9rem;
+    color: #212529;
 }
 
-/* Toast Header Styles */
 .toast-header {
-    display: flex; /* Allow horizontal layout for header content (if used) */
-    align-items: center; /* Vertically center header content */
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Optional: Add a subtle border below the header */
-    padding-bottom: 0.75rem; /* Add some spacing below the header */
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.75rem;
 }
 
 .toast-header img {
-    width: 25px; /* Adjust image size slightly larger */
-    height: 25px; /* Adjust image size slightly larger */
-    margin-right: 10px; /* Add spacing between image and text */
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
 }
 
 .toast-header strong {
-    font-size: 16px; /* Larger title text size */
-    font-family: 'Roboto', sans-serif; /* Use a modern font for the title */
-    margin-right: auto; /* Push title to the left */
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    margin-right: auto;
 }
 
 .toast-header small {
-    color: #868e96; /* Lighter text color for subtitle */
-    font-size: 0.8rem; /* Slightly smaller font size for subtitle */
+    color: #868e96;
+    font-size: 0.8rem;
 }
 
 .overall {
@@ -373,18 +290,11 @@ button[type="submit"]:hover {
     font-size: large;
 }
 
-.toast form {
-    display: flex;
-    justify-content: center;
-  }
-  
-
 .blur-effect {
-    filter: blur(2px); /* Adjust blur amount as desired */
+    filter: blur(2px);
 }
 
 .disabled {
-    pointer-events: none; /* Prevent mouse clicks and other interactions */
-    opacity: 0.5; /* Optionally dim the element */
-  }
-  
+    pointer-events: none;
+    opacity: 0.5;
+}
