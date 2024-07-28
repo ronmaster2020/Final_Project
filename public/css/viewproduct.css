@@ -177,3 +177,22 @@ body {
     border-bottom: 1px solid #ccc;
     padding: 0;
 }
+
+[aria-label="Page navigation"] {
+    padding: 1rem 0;
+    margin: 0;
+    height: auto;
+    max-height: 3rem;
+    background-color: transparent;
+}
+
+#paginationControls {
+    margin: 0;
+    justify-content: center;
+    list-style-type: none;
+}
+
+#paginationControls ul a {
+    display: inline-block;
+    font-size: 1.2rem;
+}

@@ -1,3 +1,6 @@
+let limit = 12;
+let page = 1;
+
 document.addEventListener("DOMContentLoaded", () => {
     initializeFiltersFromURL();
     loadProducts();
@@ -23,6 +26,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('min-price').addEventListener('change', (event) => {
         event.preventDefault();
         updateFilters();
+    });
+
+    $('#paginationControls').on('click', 'a', function(event) {
+        event.preventDefault();
+        const newPage = parseInt($(this).text(), 10);
+        changePage(newPage);
     });
 });
 
@@ -144,6 +153,7 @@ async function loadProducts() {
         if (maxPrice) {
             apiUrl += `&priceMax=${maxPrice}`;
         }
+        apiUrl += `&limit=${limit}&page=${page}`;
 
         const response = await fetch(apiUrl);
         if (!response.ok) {
@@ -152,7 +162,25 @@ async function loadProducts() {
 
         const products = await response.json();
         displayProducts(products.products);
+        generatePagination(products.totalProducts);
     } catch (error) {
         console.error('Error fetching products:', error);
     }
+}
+
+function generatePagination(totalProducts) {
+    const totalPages = Math.ceil(totalProducts / limit);
+    $('#paginationControls').empty();
+    for (let i = 1; i <= totalPages; i++) {
+        $('#paginationControls').append(`
+            <li class="page-item ${i === page ? 'active' : ''}">
+                <a class="page-link" href="#">${i}</a>
+            </li>
+        `);
+    }
+}
+function changePage(newPage) {
+    page = newPage;
+    loadProducts();
+    $('#main-content').animate({ scrollTop: 0 }, 'smooth');
 }
