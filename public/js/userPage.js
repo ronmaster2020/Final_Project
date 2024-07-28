@@ -44,6 +44,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (updateResponse.ok) {
                     showPopup('Profile updated successfully!');
                     console.log('User updated successfully:', updateResult.message);
+                    if (updatedUserData.address) {
+                        validateAndShowAddress(updatedUserData.address);
+                    }
                 } else {
                     showPopup('Failed to update profile.', true);
                     console.error('Failed to update user:', updateResult.error);
