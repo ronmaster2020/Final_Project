@@ -89,7 +89,7 @@ const googleAuthCallback = (req, res, next) => {
                 if (user.access === 'admin' || user.access === 'staff') {
                     return res.status(200).redirect('/admin/dashboard');
                 } else {
-                    return res.status(200).redirect('/userpage.html');
+                    return res.status(200).redirect('/userPage');
                 }
             } catch (err) {
                 console.error('Error fetching cart items:', err);
@@ -139,7 +139,7 @@ const login = (req, res, next) => {
                 if (user.access === 'admin' || user.access === 'staff') {
                     return res.status(200).redirect('/admin/dashboard');
                 } else {
-                    return res.status(200).redirect('/userpage.html');
+                    return res.status(200).redirect('/userPage');
                 }
             } catch (err) {
                 console.error('Error fetching cart items:', err);
@@ -181,7 +181,7 @@ const register = async (req, res) => {
 
         req.session.userId = newUser._id;
         req.flash('success', 'You are now registered and can log in!');
-        res.status(201).redirect('/userpage.html');
+        res.status(201).redirect('/userPage');
     } catch (err) {
         console.error('Error creating user:', err);
         req.flash('error', 'Error creating user');
