@@ -174,9 +174,11 @@ const deleteProductFromCart = async (req, res) => {
         cart.products.forEach((product, index) => {
             if (product.productId.equals(product._id)) {
                 cart.products.splice(index, 1);
+                console.log('Product deleted:', product);
             }
         });
         await cart.save();
+        res.json(cart);
     } catch (err) {
         console.error('Error deleting product from cart:', err);
         res.status(500).json({ error: 'Error deleting product from cart' });
@@ -222,4 +224,4 @@ const getAllCarts = async (req, res) => {
     }
 };
 
-module.exports = { createCart, addToCart, getCart, getCartById, updateCart, deleteCart, getAllCarts };
+module.exports = { createCart, addToCart, getCart, getCartById, updateCart, deleteProductFromCart,deleteCart, getAllCarts };
