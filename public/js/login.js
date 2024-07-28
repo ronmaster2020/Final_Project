@@ -23,12 +23,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Redirect to the user page or any other page
                 window.location.href = '/userPage.html';
             } else {
-                console.error('Login failed:', await response.text());
-                alert('Login failed. Please check your credentials.');
+                const errorData = await response.json();
+                showToast(errorData.message || 'Incorrect email or password');
             }
         } catch (error) {
             console.error('Error during login:', error.message);
-            alert('Error during login.');
+            showToast('Error during login.');
         }
     });
+
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 3000);
+    }
 });

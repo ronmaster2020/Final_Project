@@ -70,7 +70,7 @@ const googleAuthCallback = (req, res, next) => {
         }
         if (!user) {
             req.flash('error', info.message);
-            return res.status(401).send('Incorrect email or password');
+            return res.status(401).json({ message: 'Incorrect email or password'});
         }
         req.logIn(user, async (err) => {
             if (err) {
@@ -94,7 +94,7 @@ const googleAuthCallback = (req, res, next) => {
             } catch (err) {
                 console.error('Error fetching cart items:', err);
                 req.flash('error', 'Error fetching cart items');
-                return res.status(500).send('Server error');
+                return res.status(500).json({ message: 'Server error'});
             }
         });
     })(req, res, next);
@@ -120,7 +120,7 @@ const login = (req, res, next) => {
         }
         if (!user) {
             req.flash('error', info.message);
-            return res.status(401).send('Incorrect email or password');
+            return res.status(401).json({ message: 'Incorrect email or password'});
         }
         req.logIn(user, async (err) => {
             if (err) {
@@ -144,20 +144,26 @@ const login = (req, res, next) => {
             } catch (err) {
                 console.error('Error fetching cart items:', err);
                 req.flash('error', 'Error fetching cart items');
-                return res.status(500).send('Server error');
+                return res.status(500).json({ message: 'Server error'});
             }
         });
     })(req, res, next);
 };
 
-
 const register = async (req, res) => {
-    const { firstName, lastName, bio, address, access, email, password } = req.body;
+    const { firstName, lastName, bio, address, email, password } = req.body;
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ email: email });
         if (existingUser) {
             req.flash('error', 'Email already in use');
-            return res.status(400).send('Email already in use');
+            return res.status(400).json({ message: 'Email already in use'});
+        } else if (password.length < 8) {
+            req.flash('error', 'Password must be at least 8 characters');
+            return res.status(400).json({ message: 'Password must be at least 8 characters'});
+        } else {
+            console.log('regisration:')
+            console.log('Password', password);
+            console.log('userEmail', email);
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -170,7 +176,7 @@ const register = async (req, res) => {
 
         if (!newUser) {
             req.flash('error', 'Error creating user');
-            return res.status(500).send('Error creating user');
+            return res.status(500).json({ message: 'Error creating user'});
         }
 
         req.session.userId = newUser._id;
@@ -179,7 +185,7 @@ const register = async (req, res) => {
     } catch (err) {
         console.error('Error creating user:', err);
         req.flash('error', 'Error creating user');
-        res.status(500).send('Server error');
+        res.status(500).json({ message: 'Server error'});
     }
 };
 
@@ -195,14 +201,14 @@ const logout = (req, res) => {
     } catch (err) {
         console.error('Error logging out:', err);
         req.flash('error', 'Error logging out');
-        res.status(500).send('Server error');
+        res.status(500).json({ message: 'Server error'});
     }
 };
 
 
 const getUsers = async (req, res) => {
     if (mongoose.connection.readyState !== 1) {
-        return res.status(503).send('Service unavailable. Please try again later.');
+        return res.status(503).json({ message: 'Service unavailable. Please try again later.'});
     }
 
     try {
@@ -210,7 +216,7 @@ const getUsers = async (req, res) => {
         res.status(200).json(users);
     } catch (err) {
         console.error('Error getting users:', err);
-        res.status(500).send('Server error');
+        res.status(500).json({ message: 'Server error'});
     }
 };
 
@@ -260,7 +266,7 @@ const searchUsers = async (req, res) => {
         res.status(200).json({users, totalUsers});
     } catch (err) {
         console.error('Error searching users:', err);
-        res.status(500).send('Server error');
+        res.status(500).json({ message: 'Server error'});
     }
 };
 

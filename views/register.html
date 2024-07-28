@@ -99,47 +99,91 @@
     <div id="footer-placeholder"></div> <!-- This line is from the incoming change -->
 
     <script>
-        let emailExists = false;
+        document.addEventListener('DOMContentLoaded', () => {
+        const registerForm = document.getElementById('register-form');
 
-        document.getElementById('email').addEventListener('input', async (event) => {
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const bio = document.getElementById('bio').value;
+            const address = document.getElementById('address').value;
+
             try {
-                const response = await fetch('/user/all');
-                const input_email = document.getElementById('email').value;
-                const email_check = document.getElementById('email-check');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password, firstName, lastName, bio, address })
+                });
 
-                const usersData = await response.json();
-                for(let i = 0; i < usersData.length; i++) {
-                    console.log(usersData[i].email);
-                    if(input_email === usersData[i].email) {
-                        email_check.textContent = "Oops! This email is already registered. Please use another one.";
-                        email_check.style.display = 'block';
-                        emailExists = true;
-                        break;
+                console.log(response);
+                if (response.ok) {
+                    console.log('Registration successful');
+                    window.location.href = '/';
+                } else {
+                    const contentType = response.headers.get('Content-Type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const errorData = await response.json();
+                        showToast(errorData.message || 'Registration failed');
+                    } else {
+                        showToast('Registration failed with an unexpected response from the server.');
                     }
                 }
-
             } catch (error) {
-                console.error('Error fetching cart data:', error);
-                // Handle errors gracefully (e.g., display an error message)
+                console.error('Error during registration:', error.message);
+                showToast('Error during registration.');
             }
         });
 
-        document.getElementById('register-form').addEventListener('submit', async(event) => {
-            event.preventDefault();
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+            document.body.appendChild(toast);
 
-            if (emailExists) {
-                    // Focus the email input and scroll to it if the email already exists
-                    document.getElementById('email').focus();
-                    document.getElementById('email').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                    // If email doesn't exist, submit the form
-                    event.target.submit();
-                }
-        });
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
 
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+    });
     </script>
+    <style>
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: white;
+            color: red;
+            text-align: center;
+            border-radius: 20px;
+            border: 2px solid red;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 40px;
+            font-size: 17px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
 </body>
 </html>
