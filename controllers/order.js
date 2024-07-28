@@ -104,11 +104,21 @@ exports.getOrders = [checkDBConnection, async (req, res) => {
 // Get order by ID
 exports.getOrderById = [checkDBConnection, async (req, res) => {
     try {
+        const user = await User.findById(req.session.userId);
+        console.log(user);
+        if (!user) {
+            return res.status(401).json({ error: 'User not authenticated' });
+        }
         const order = await Order.findById(req.params.id);
+        console.log(order);
         if (!order) {
             return res.status(404).send('Order not found');
         }
-        res.json(order);
+        if (user._id.toString() !== order.userId.toString() && user.access !== 'staff' && user.access !== 'admin') {
+            return res.status(403).send('Access denied');
+        } else {
+            return res.json(order);
+        }
     } catch (err) {
         console.error('Error getting order by ID:', err);
         res.status(500).send('Server error');
