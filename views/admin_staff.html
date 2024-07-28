@@ -19,7 +19,7 @@
         .col-12.col-xl-6 {
             display: flex;
         }
-        .admin-card {
+        .user-card {
             position: relative;
             background-color: #ffffff;
             border: 1px solid #ddd;
@@ -36,35 +36,24 @@
             max-height: 30rem;
             flex: 1;
         }
-        .cardBtn {
-            position: absolute;
-            top: 0;
-            right: 0;
-            padding: 0.5rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .admin-card img {
+        .user-card img {
             border-radius: 50%;
             margin-right: 20px;
             width: 100px;
             height: 100px;
         }
-        .admin-card .admin-info {
+        .user-card .admin-info {
             flex-grow: 1;
         }
-        .admin-card .admin-info h2 {
+        .user-card .admin-info h2 {
             margin: 0;
             margin-bottom: 1rem;
             font-size: 1.5em;
         }
-        .admin-card .admin-info p {
+        .user-card .admin-info p {
             margin: 0;
         }
-        .admin-card .admin-info div {
+        .user-card .admin-info div {
             margin-bottom: 10px;
             display: flex;
             align-items: flex-start;
@@ -72,19 +61,19 @@
             flex-wrap: nowrap;
             justify-content: start;
         }
-        .admin-card .admin-info div .label {
+        .user-card .admin-info div .label {
             margin-right: 1rem;
             font-weight: bold;
         }
         @media (max-width: 768px) {
-            .admin-card {
+            .user-card {
                 flex-direction: column;
             }
-            .admin-card img {
+            .user-card img {
                 margin-right: 0;
                 margin-bottom: 20px;
             }
-            .admin-card .admin-info div {
+            .user-card .admin-info div {
                 flex-direction: column;
             }
         }

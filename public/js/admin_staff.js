@@ -8,7 +8,7 @@ async function loadUsers(users, totalUsers) {
     let isAdmin = await fetchData({}, '/getAccessLevel', 'GET', null);
     users.forEach((s) => {
         let staffCard = $('<div class="col-12 col-xl-6"></div>');
-        let adminCard = $('<div class="admin-card"></div>');
+        let adminCard = $('<div class="user-card"></div>');
         let img = $('<img src="https://cdn-icons-png.freepik.com/512/3135/3135715.png" alt="Profile Image">');
         let adminInfo = $('<div class="admin-info"></div>');
         let h2 = $('<h2>' + s.firstName + ' ' + s.lastName + '</h2>');
@@ -22,20 +22,43 @@ async function loadUsers(users, totalUsers) {
             access.find('#access').css({ 'color': 'rgb(0, 102, 255)' });
         }
 
-        if (isAdmin === 'admin') {
-            let cardBtn = $('<button class="cardBtn">Change Access</button>');
-            cardBtn.click(() => {
-                let newAccess = '';
-                if (s.access === 'admin') {
-                    newAccess = 'staff';
-                } else if (s.access === 'staff') {
-                    newAccess = 'user';
-                } else {
-                    newAccess = 'admin';
-                }
-                changeAccess(s.email, newAccess, adminCard);
+        if (isAdmin.access === 'admin') {
+            let changeBtn = $('<button class="btn btn-outline-primary" style="position:absolute; top:10px; right:10px;">Change Access</button>');
+            let cancelBtn = $('<button class="btn btn-outline-danger" style="position:absolute; top:10px; right:10px; display: none;">Cancel</button>');
+            let saveBtn = $('<button class="btn btn-outline-success" style="position:absolute; top:10px; right:110px; display: none;">Save</button>');
+        
+            changeBtn.on('click', (e) => {
+                e.preventDefault();
+                changeBtn.css('display', 'none');
+                let originalAccess = s.access;
+                let select = $('<select class="form-select" style="max-width: 10rem"><option value="admin" style="color: rgb(204, 0, 0)">Admin</option><option value="staff" style="color: rgb(0, 102, 255)">Staff</option><option value="user">User</option></select>');
+                select.val(s.access);
+                access.find('#access').replaceWith(select);
+                cancelBtn.show();
+                saveBtn.show();
+        
+                saveBtn.on('click', (e) => {
+                    e.preventDefault();
+                    let newAccess = select.val();
+                    changeAccess(s.email, newAccess, adminCard);
+                    select.replaceWith($('<p id="access">' + newAccess + '</p>'));
+                    changeBtn.text('Change Access');
+                    changeBtn.show();
+                    cancelBtn.hide();
+                    saveBtn.hide();
+                });
+        
+                cancelBtn.on('click', (e) => {
+                    e.preventDefault();
+                    select.replaceWith($('<p id="access">' + originalAccess + '</p>'));
+                    changeBtn.text('Change Access');
+                    changeBtn.show();
+                    cancelBtn.hide();
+                    saveBtn.hide();
+                });
             });
-            adminCard.append(cardBtn);
+        
+            adminCard.append(changeBtn, cancelBtn, saveBtn);
         }
         
         adminInfo.append(h2, email, access, address, bio);
