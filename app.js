@@ -124,10 +124,6 @@ app.get('/orderhistory', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
 });
 
-app.get('/product/new-form', ensureAuthenticated, ensureAccess, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
-});
-
 app.get('/viewCart', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'cart.html'));
 });
