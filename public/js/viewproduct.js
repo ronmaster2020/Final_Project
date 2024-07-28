@@ -13,14 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    document.getElementById('sort').addEventListener('change', updateFilters);
+    // Removed event listeners from inputs
+    // document.getElementById('sort').addEventListener('change', updateFilters);
+    // document.querySelectorAll('input[name="gender"]').forEach(radio => {
+    //     radio.addEventListener('change', updateFilters);
+    // });
+    // document.getElementById('min-price').addEventListener('change', updateFilters);
+    // document.getElementById('max-price').addEventListener('change', updateFilters);
 
-    document.querySelectorAll('input[name="gender"]').forEach(radio => {
-        radio.addEventListener('change', updateFilters);
-    });
-
-    document.getElementById('min-price').addEventListener('change', updateFilters);
-    document.getElementById('max-price').addEventListener('change', updateFilters);
+    // Added event listener for the apply filters button
+    document.getElementById('applyFiltersBtn').addEventListener('click', updateFilters);
 });
 
 function initializeFiltersFromURL() {
@@ -141,47 +143,72 @@ async function loadProducts() {
             apiUrl += `&priceMax=${maxPrice}`;
         }
 
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error('Failed to fetch products');
-        }
-
-        const products = await response.json();
+        const products = await fetchJson(apiUrl);
         displayProducts(products);
     } catch (error) {
         console.error('Error fetching products:', error);
     }
 }
 
+async function fetchJson(url) {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        console.error(`Error fetching URL: ${url}`);
+        if (response.status === 404) {
+            throw new Error('Resource not found (404)');
+        }
+        throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+        console.error('Response:', await response.text());
+        throw new Error('Expected JSON response but received something else');
+    }
+
+    return await response.json();
+}
+
 async function showProductModal(productId) {
     try {
-        const response = await fetch(`/products/${productId}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch product details');
-        }
-
-        const product = await response.json();
-        const modalContent = document.getElementById('modalProductContent');
+        console.log(`Fetching product details for ID: ${productId}`);
+        const product = await fetchJson(`/product/${productId}`);
         const genderLabel = getGenderLabel(product.gender);
 
-        modalContent.innerHTML = `
-            <img src="${product.images[0]}" alt="${product.name}" style="width: 100%; height: auto; margin-bottom: 15px;">
-            <div>
-                <h2>${product.name}</h2>
-                <p>${product.DESC}</p>
-                <div class="product-details">
-                    <span class="gender">${genderLabel}</span>
-                    <span class="price">$${product.price}</span>
-                </div>
-            </div>
-        `;
-
+        const modalProductImage = document.getElementById('modalProductImage');
+        const modalProductName = document.getElementById('modalProductName');
+        const modalProductDescription = document.getElementById('modalProductDescription');
+        const modalProductGender = document.getElementById('modalProductGender');
+        const modalProductPrice = document.getElementById('modalProductPrice');
         const modalAddToCartBtn = document.getElementById('modalAddToCartBtn');
-        modalAddToCartBtn.setAttribute('data-product-id', product._id);
 
-        const productModal = new bootstrap.Modal(document.getElementById('productModal'));
-        productModal.show();
+        if (modalProductImage) {
+            modalProductImage.src = product.images[0];
+        }
+        if (modalProductName) {
+            modalProductName.textContent = product.name;
+        }
+        if (modalProductDescription) {
+            modalProductDescription.textContent = product.DESC;
+        }
+        if (modalProductGender) {
+            modalProductGender.textContent = `Gender: ${genderLabel}`;
+        }
+        if (modalProductPrice) {
+            modalProductPrice.textContent = `$${product.price}`;
+        }
+        if (modalAddToCartBtn) {
+            modalAddToCartBtn.setAttribute('data-product-id', product._id);
+        }
+
+        const productModalElement = document.getElementById('productModal');
+        if (productModalElement) {
+            const productModal = new bootstrap.Modal(productModalElement);
+            productModal.show();
+        }
     } catch (error) {
         console.error('Error fetching product details:', error);
+        alert('Error fetching product details. Please try again later.');
     }
 }
