@@ -161,13 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            if (!addToCartResponse.ok) {
-                if (addToCartResponse.status === 401) {
+            if (addToCartResponse.ok) {
+                if (addToCartResponse.redirected === true && addToCartResponse.url.includes('/login')) {
                     alert('Please login to add products to cart.');
                     return;
-                } else {
-                    throw new Error(`Failed to add product to cart, status: ${addToCartResponse.status}`);
                 }
+            } else {
+                throw new Error(`Failed to add product to cart, status: ${addToCartResponse.status}`);
             }
 
             console.log(addToCartResponse); // Debug log
