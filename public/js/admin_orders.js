@@ -21,12 +21,14 @@ $(document).ready(function() {
 
                 const sortOrder = $('#dateSort').val();
                 const statusFilter = $('#statusFilter').val();
+                const startDate = $('#startDate').val();
+                const endDate = $('#endDate').val();
 
                 // Sort orders by date
                 data = sortOrdersByDate(data, sortOrder);
 
-                // Filter orders by status
-                data = filterOrdersByStatus(data, statusFilter);
+                // Filter orders by status and date range
+                data = filterOrders(data, statusFilter, startDate, endDate);
 
                 // Populate orders table
                 $('#ordersBody').empty();
@@ -80,13 +82,14 @@ $(document).ready(function() {
         });
     }
 
-    // Function to filter orders by status
-    function filterOrdersByStatus(orders, status) {
-        if (!status) {
-            return orders; // No filtering needed
-        }
+    // Function to filter orders by status and date range
+    function filterOrders(orders, status, startDate, endDate) {
         return orders.filter(order => {
-            return getStatusText(order.status).toLowerCase() === status.toLowerCase();
+            const orderDate = new Date(order.order_date);
+            const isStatusMatch = !status || getStatusText(order.status).toLowerCase() === status.toLowerCase();
+            const isInDateRange = (!startDate || orderDate >= new Date(startDate)) &&
+                                  (!endDate || orderDate <= new Date(endDate));
+            return isStatusMatch && isInDateRange;
         });
     }
 
@@ -207,6 +210,8 @@ $(document).ready(function() {
         e.preventDefault();
         $('#statusFilter').val('');
         $('#dateSort').val('all');
+        $('#startDate').val('');
+        $('#endDate').val('');
         fetchOrders();
     });
 

@@ -30,8 +30,16 @@
                         <option value="asc">Ascending</option>
                         <option value="desc">Descending</option>
                     </select>
-                    <button class="btn btn-outline-secondary" type="submit">Filter</button>
-                    <button class="btn btn-outline-secondary mx-3" id="resetBtn">Reset</button>
+                    <div class="mt-2">
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" id="startDate" name="startDate" class="form-control">
+                    </div>
+                    <div class="mt-2">
+                        <label for="endDate">End Date:</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control">
+                    </div>
+                    <button class="btn btn-outline-secondary mt-2" type="submit">Filter</button>
+                    <button class="btn btn-outline-secondary mx-3 mt-2" id="resetBtn">Reset</button>
                 </div>
             </form>
             <div id="ordersTable">
