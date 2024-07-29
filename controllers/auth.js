@@ -139,7 +139,7 @@ const login = (req, res, next) => {
                 if (user.access === 'admin' || user.access === 'staff') {
                     return res.status(200).redirect('/admin/dashboard');
                 } else {
-                    return res.status(200).redirect('/userPage');
+                    return res.status(200).redirect('/');
                 }
             } catch (err) {
                 console.error('Error fetching cart items:', err);
