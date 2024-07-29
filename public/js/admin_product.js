@@ -41,7 +41,7 @@ async function loadProducts(products, totalProducts) {
                 <td>${product.size}<span style="color: rgb(0, 51, 153)">ml</span></td>
                 <td>
                     <div class="d-flex align-items-center justify-content-center" style="max-width: 150px;">
-                        <button class="action-btn" onclick="editProduct('${product._id}')">
+                        <button class="action-btn" onclick="fillModelFields('${product._id}');$('#productUpdateModal').modal('show');">
                             <span class="material-symbols-sharp">edit</span>     
                         </button>
                         <button style="color: rgb(169, 0, 0);" class="action-btn delete" onclick="deleteProduct('${product._id}')">
@@ -173,10 +173,10 @@ function deleteProduct(productId) {
     });
 }
 
-function addProducts(event) {
+function addProduct(event) {
     event.preventDefault(); // Prevent the default form submission
 
-    var formData = new FormData(document.getElementById('productForm'));
+    var formData = new FormData($('#productModal .productForm')[0]);
     var maxTotalFileSize = 10 * 1024 * 1024; // 10 MB
     var files = formData.getAll('productImage');
     var totalFileSize = 0;
@@ -197,13 +197,91 @@ function addProducts(event) {
         processData: false,
         contentType: false,
         success: function(response) {
-            showToast('Success', 'Product created successfully.', 'success');
             $('#productModal').modal('hide');
+            showToast('Success', 'Product created successfully.', 'success');
             filterProducts();
         },
         error: function(xhr, status, error) {
-            showToast('Error', 'Failed to create product.', 'error');
             $('#productModal').modal('hide');
+            showToast('Error', 'Failed to create product.', 'error');
+        }
+    });
+}
+
+function updateProduct(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    let productID = $('#updateProductID').val();
+    let name = $('#updateName').val();
+    let DESC = $('#updateDescription').val();
+    let price = $('#updatePrice').val();
+    let size = $('#updateSize').val();
+    let stock = $('#updateStock').val();
+    let gender = $('#updateGender').val();
+
+    // Debugging logs
+    console.log('Form field values:');
+    console.log('productID:', productID);
+    console.log('name:', name);
+    console.log('DESC:', DESC);
+    console.log('price:', price);
+    console.log('size:', size);
+    console.log('stock:', stock);
+    console.log('gender:', gender);
+
+    let formData = {
+        name: name,
+        DESC: DESC,
+        price: price,
+        size: size,
+        stock: stock,
+        gender: gender
+    };
+    
+    // Perform the AJAX request
+    $.ajax({
+        url: `/product/update/${productID}`,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function(response) {
+            $('#productUpdateModal').modal('hide');
+            showToast('Success', 'Product updated successfully.', 'success');
+            filterProducts();
+        },
+        error: function(error) {
+            $('#productUpdateModal').modal('hide');
+            showToast('Error', 'Failed to update product.', 'error');
+        }
+    });
+}
+
+function fillModelFields(productId) {
+    $.ajax({
+        url: `/product/${productId}`,
+        method: 'GET',
+        success: function(response) {
+            const product = response.product;
+            console.log(product);
+            // $('$productModal .btn-close').
+            $('#productUpdateModal input[name="productID"]').val(product._id);
+            $('#productUpdateModal input[name="name"]').val(product.name);
+            $('#productUpdateModal textarea[name="DESC"]').val(product.DESC);
+            $('#productUpdateModal input[name="price"]').val(product.price);
+            $('#productUpdateModal input[name="size"]').val(product.size);
+            $('#productUpdateModal input[name="stock"]').val(product.stock);
+            $('#productUpdateModal select[name="gender"]').val(product.gender);
+            // Handle product images
+            const imagePreviewContainer = $('#productImagePreview');
+            imagePreviewContainer.empty(); // Clear any existing previews
+            product.images.forEach(function(imagePath) {
+                const imgElement = $('<img>').attr('src', '/' + imagePath).addClass('img-thumbnail').attr('alt', product.name);
+                imagePreviewContainer.append(imgElement);
+            }); 
+        },
+        error: function(xhr, status, error) {
+            $('#productUpdateModal').modal('hide');
+            showToast('Error', 'Failed to load product details.', 'error');
         }
     });
 }

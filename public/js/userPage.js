@@ -15,6 +15,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.getElementById('userName').innerText = `Welcome back ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}!`;
 
+        // Initialize the map
+        await customElements.whenDefined('gmp-map');
+
+        const map = document.querySelector("gmp-map");
+        const marker = document.getElementById("marker");
+        const placePicker = document.getElementById("place-picker");
+        const infowindowContent = document.getElementById("infowindow-content");
+        const infowindow = new google.maps.InfoWindow();
+
+        map.innerMap.setOptions({mapTypeControl: false});
+        infowindow.setContent(infowindowContent);
+
+        placePicker.addEventListener('gmpx-placechange', () => {
+            const place = placePicker.value;
+
+            if (!place.location) {
+                window.alert("No details available for input: '" + place.name + "'");
+                infowindow.close();
+                marker.position = null;
+                return;
+            }
+
+            if (place.viewport) {
+                map.innerMap.fitBounds(place.viewport);
+            } else {
+                map.center = place.location;
+                map.zoom = 17;
+            }
+
+            marker.position = place.location;
+            infowindowContent.children["place-name"].textContent = place.displayName;
+            infowindowContent.children["place-address"].textContent = place.formattedAddress;
+            infowindow.open(map.innerMap, marker);
+        });
+
         // Event listener for form submission
         const userForm = document.getElementById('user-form');
         userForm.addEventListener('submit', async (event) => {
@@ -57,45 +92,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // Initialize the map
-        let map = L.map('map').setView([51.505, -0.09], 13);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
         // Function to validate the address and display it on the map
         async function validateAndShowAddress(address) {
-            console.log(`Validating address: ${address}`); // Debugging line to check the address input
-
             try {
-                // Use the Nominatim API to get the address details
-                const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
-                console.log('Nominatim response:', response); // Debugging line to check the API response
-
-                if (response.data.length > 0) {
-                    const location = response.data[0];
-                    const latLng = [parseFloat(location.lat), parseFloat(location.lon)];
-
-                    console.log(`Coordinates: ${latLng}`); // Debugging line to check the coordinates
-
-                    // Clear existing markers
-                    map.eachLayer((layer) => {
-                        if (layer instanceof L.Marker) {
-                            map.removeLayer(layer);
-                        }
-                    });
-
-                    // Set map view and add a marker
-                    map.setView(latLng, 13);
-                    L.marker(latLng).addTo(map)
-                        .bindPopup(`<b>${location.display_name}</b>`).openPopup();
-                } else {
-                    console.error('No results found'); // Debugging line to log if no results are found
-                    alert('Address not found');
-                }
+                // Simulating the validation and display process
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'address': address }, (results, status) => {
+                    if (status == 'OK') {
+                        map.innerMap.setCenter(results[0].geometry.location);
+                        marker.position = results[0].geometry.location;
+                        infowindowContent.children["place-name"].textContent = results[0].formatted_address;
+                        infowindowContent.children["place-address"].textContent = address;
+                        infowindow.open(map.innerMap, marker);
+                    } else {
+                        alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
             } catch (error) {
-                console.error('Error fetching address:', error); // Debugging line to log errors
+                console.error('Error fetching address:', error);
                 alert('Error fetching address');
             }
         }
