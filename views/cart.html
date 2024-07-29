@@ -31,7 +31,7 @@
         <!-- navbar -->
         <nav id="navbar-placeholder"></nav>
         
-        <div class="container-fluid" id="main-content">
+        <div class="container-fluid" id="main-content" style="display: none;">
             <!-- <button onclick="displayCartItems()">Get items</button> -->
         
             <!-- <form action="/cart/create" method="post">
@@ -128,9 +128,7 @@
         $('document').ready(async function() {
             const cartItems = await getCartItems();
             displayCartItems(cartItems);
-            
-
-
+        
 
 
            async function getProducts() {
@@ -207,6 +205,9 @@
                    window.location.href = '/emptyCart';
                    return;
                }
+               else {
+                   mainContent.style.display = 'block';
+               }
                const cartListContainer = document.createElement('ul'); // Use an unordered list for cart items
                cartListContainer.classList.add('cart-list'); // Apply the cart-list class
 
@@ -267,6 +268,33 @@
                    const total = item.quantity * parseFloat(product.price);
                    totalSpan.textContent = "$" + total;
                    listItem.appendChild(totalSpan);
+
+                    // Delete button
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.textContent = "Delete";
+                    deleteButton.addEventListener('click', async () => {
+                        // Handle product deletion
+                        const response = await fetch('/deleteProduct', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                productId: item.product._id,
+                            })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.message || 'Cart update failed');
+                        }
+
+                        const data = await response.json();
+
+                        window.location.href = '/viewCart';
+                    });
+                    listItem.appendChild(deleteButton);
 
                    cartListContainer.appendChild(listItem);
                });
@@ -418,7 +446,27 @@
 
                 if (result.message == '') {
                     // Redirect to viewCart if order creation was successful
-                    window.location.href = '/viewCart';
+                    alert('Order created successfully!');
+                    for (let i = 0; i < cartItems.length; i++) {
+                        const response = await fetch('/deleteProduct', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                productId: cartItems[i].product._id,
+                            })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.message || 'Cart update failed');
+                        }
+
+                        const data = await response.json();
+                        console.log(data);
+                    }
+                    window.location.href = '/emptyCart';
                 }
 
             } catch (error) {

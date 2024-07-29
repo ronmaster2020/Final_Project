@@ -181,7 +181,8 @@ app.post('/cart/add/:productId/:quantity', ensureAuthenticated, cartController.a
 app.get('/getCart', ensureAuthenticated, cartController.getCart);
 app.post('/cart/update', ensureAuthenticated, cartController.updateCart);
 app.post('/cart/delete', ensureAuthenticated, cartController.deleteCart);
-app.get('/cart/all', ensureAccess, cartController.getAllCarts);
+app.get('/cart/all', ensureAuthenticated, ensureAccess, cartController.getAllCarts);
+app.post('/deleteProduct', ensureAuthenticated, cartController.deleteProductFromCart);
 
 // Settings Routes
 const settingsController = require('./controllers/SettingsController');
