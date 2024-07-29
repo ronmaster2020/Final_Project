@@ -1,3 +1,4 @@
+
 body {
     background-color: #f5f3f1;
     color: #333;
@@ -58,7 +59,7 @@ body {
     color: #333;
 }
 
-.sort-container select {
+sort-container select {
     padding: 5px;
     font-size: 1em;
     border: 1px solid #ccc;
@@ -183,7 +184,6 @@ body {
 }
 
 /* Modal Styles */
-/* Modal Styles */
 .modal-dialog {
     max-width: 90%;
     width: auto;
@@ -278,7 +278,7 @@ body {
     }
 }
 
-  /* Custom CSS for the modal */
+/* Custom CSS for the modal */
 #modalProductImage {
     max-width: 100%;
     height: auto;
@@ -313,6 +313,7 @@ body {
 .modal-footer .btn-primary {
     order: 2;
 }
+
 [aria-label="Page navigation"] {
     padding: 1rem 0;
     margin: 0;
@@ -330,4 +331,41 @@ body {
 #paginationControls ul a {
     display: inline-block;
     font-size: 1.2rem;
+}
+
+/* Quantity Button Styles */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    background-color: #ddd; /* Set a light grey background color */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border-radius: 5px;
+    margin: 0 5px;
+    color: #333; /* Ensures the buttons have a dark color */
+    transition: background-color 0.3s;
+}
+
+.quantity-btn:hover {
+    background-color: #ccc; /* Set a slightly darker grey background color for hover */
+}
+
+.quantity-input {
+    width: 50px; /* Increased width for better visibility */
+    text-align: center;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    border-radius: 5px;
+    margin: 0 5px;
 }

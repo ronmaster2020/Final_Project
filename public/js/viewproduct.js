@@ -8,7 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('click', async (event) => {
         if (event.target.classList.contains('add-to-cart-btn')) {
             const productId = event.target.getAttribute('data-product-id');
-            const quantity = event.target.getAttribute('data-product-quantity') || 1;
+            let quantity = event.target.getAttribute('data-product-quantity') || 1;
+            if (event.target.id === 'modalAddToCartBtn') {
+                quantity = document.getElementById('quantity-input').value;
+            }
             await addToCart(productId, quantity);
         } else if (event.target.closest('.product-card')) {
             const productId = event.target.closest('.product-card').getAttribute('data-product-id');
@@ -147,8 +150,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 <button class="add-to-cart-btn" data-product-id="${product._id}" data-product-quantity="1">Add to Cart</button>
             `;
 
+            document.querySelectorAll('.quantity-btn').forEach(button => {
+                button.addEventListener('click', handleQuantityChange);
+            });
+
             container.appendChild(productDiv);
         });
+    }
+
+    function handleQuantityChange(event) {
+        const button = event.target;
+        const action = button.getAttribute('data-action');
+        const productId = button.getAttribute('data-product-id');
+        const input = document.getElementById(`quantity-input`);
+        let currentValue = parseInt(input.value);
+
+        if (action === 'increment') {
+            input.value = currentValue + 1;
+        } else if (action === 'decrement' && currentValue > 1) {
+            input.value = currentValue - 1;
+        }
     }
 
     async function addToCart(productId, quantity) {
