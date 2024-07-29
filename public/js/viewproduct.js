@@ -162,8 +162,15 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (!addToCartResponse.ok) {
-                throw new Error('Failed to add product to cart');
+                if (addToCartResponse.status === 401) {
+                    alert('Please login to add products to cart.');
+                    return;
+                } else {
+                    throw new Error(`Failed to add product to cart, status: ${addToCartResponse.status}`);
+                }
             }
+
+            console.log(addToCartResponse); // Debug log
 
             alert('Product added to cart!');
         } catch (error) {
