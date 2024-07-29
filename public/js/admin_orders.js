@@ -107,7 +107,7 @@ $(document).ready(function() {
                                 <div class="product-item">
                                     <p><strong>${product.name}</strong></p>
                                     <p>Price: ${item.price}, Quantity: ${item.quantity}</p>
-                                    <img src="http://localhost:8080/${product.images[0]}" alt="Product Image">
+                                    <img src="/${product.images[0]}" alt="Product Image">
                                 </div>
                             `);
                         }
@@ -131,17 +131,20 @@ $(document).ready(function() {
 
     // Function to fetch product details using async/await
     async function getProductDetails(productId) {
-        try {
-            const response = await fetch(`/product/${productId}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch product');
-            }
-            const product = await response.json();
-            return product;
-        } catch (err) {
-            console.error('Error fetching product details:', err);
-            throw err;
-        }
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: `/product/${productId}`,
+                method: 'GET',
+                success: function(response) {
+                    const product = response.product;
+                    resolve(product);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching product details:', errorThrown);
+                    reject(errorThrown);
+                }
+            });
+        });
     }
 
     // Function to delete an order
