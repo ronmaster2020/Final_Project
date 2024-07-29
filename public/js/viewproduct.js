@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const limit = 10; // Define the limit variable
-    let page = 1; // Initialize the page variable
+    const limit = 10;
+    let page = 1;
 
     initializeFiltersFromURL();
     loadProducts();
@@ -8,13 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('click', async (event) => {
         if (event.target.classList.contains('add-to-cart-btn')) {
             const productId = event.target.getAttribute('data-product-id');
-            const quantity = event.target.getAttribute('data-product-quantity') || 1;
+            const quantity = document.querySelector(`#quantity-input-${productId}`).value || 1;
             await addToCart(productId, quantity);
-        } else if (event.target.closest('.product-card')) {
+        } else if (event.target.closest('.product-card') && !event.target.classList.contains('quantity-btn')) {
             const productId = event.target.closest('.product-card').getAttribute('data-product-id');
             showProductModal(productId);
         }
     });
+    
 
     document.getElementById('applyFiltersBtn').addEventListener('click', updateFilters);
 
@@ -143,12 +144,31 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span class="gender">${genderLabel}</span>
                         <span class="price">$${product.price}</span>
                     </div>
+                   
                 </div>
-                <button class="add-to-cart-btn" data-product-id="${product._id}" data-product-quantity="1">Add to Cart</button>
+                <button class="add-to-cart-btn" data-product-id="${product._id}">Add to Cart</button>
             `;
 
             container.appendChild(productDiv);
         });
+
+        document.querySelectorAll('.quantity-btn').forEach(button => {
+            button.addEventListener('click', handleQuantityChange);
+        });
+    }
+
+    function handleQuantityChange(event) {
+        const button = event.target;
+        const action = button.getAttribute('data-action');
+        const productId = button.getAttribute('data-product-id');
+        const input = document.getElementById(`quantity-input-${productId}`);
+        let currentValue = parseInt(input.value);
+
+        if (action === 'increment') {
+            input.value = currentValue + 1;
+        } else if (action === 'decrement' && currentValue > 1) {
+            input.value = currentValue - 1;
+        }
     }
 
     async function addToCart(productId, quantity) {
@@ -161,9 +181,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            if (!addToCartResponse.ok) {
-                throw new Error('Failed to add product to cart');
+            if (addToCartResponse.ok) {
+                if (addToCartResponse.redirected === true && addToCartResponse.url.includes('/login')) {
+                    alert('Please login to add products to cart.');
+                    return;
+                }
+            } else {
+                throw new Error(`Failed to add product to cart, status: ${addToCartResponse.status}`);
             }
+
+            console.log(addToCartResponse); // Debug log
 
             alert('Product added to cart!');
         } catch (error) {
@@ -175,11 +202,25 @@ document.addEventListener("DOMContentLoaded", () => {
     async function showProductModal(productId) {
         try {
             console.log(`Fetching product details for ID: ${productId}`);
-            const response = await fetch(`/product/${productId}`);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch product details, status: ${response.status}`);
+            let product = null;
+            $.ajax({
+                url: `/product/${productId}`,
+                method: 'GET',
+                success: function(response) {
+                    product = response.product;
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching product details:', errorThrown);
+                    alert('Error fetching product details. Please try again later.');
+                },
+                async: false
+            });
+
+            if (!product) {
+                console.error('Invalid product data:', product);
+                alert('Error fetching product details. Please try again later.');
+                return;
             }
-            const product = await response.json();
             const genderLabel = getGenderLabel(product.gender);
 
             const modalProductImage = document.getElementById('modalProductImage');
@@ -188,11 +229,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const modalProductGender = document.getElementById('modalProductGender');
             const modalProductPrice = document.getElementById('modalProductPrice');
             const modalAddToCartBtn = document.getElementById('modalAddToCartBtn');
+            const modalQuantityInput = document.getElementById('modalQuantityInput');
 
             if (modalProductImage) {
                 modalProductImage.src = product.images[0];
             }
             if (modalProductName) {
+                modalProductName.text
+
                 modalProductName.textContent = product.name;
             }
             if (modalProductDescription) {

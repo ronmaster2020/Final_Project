@@ -1,250 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Shop</title>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <head>
+        <title>shop</title>
+        <!-- Bootstrap -->
+        <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.x/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <!-- JQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/common.js"></script>
+        <script type="text/javascript" src="/js/login.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/cart.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
-</head>
-<body>
-    <!-- Navbar -->
-    <nav id="navbar-placeholder">
-        <ul class="navbar-nav"></ul>
-    </nav>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/cart.css">
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+
+    </head>
+
     
-    <div class="container-fluid" id="main-content">
-        <div id="blur-effect">
-            <h2 class="cart-title" id="cart-title">Your Shopping Cart</h2>
 
-            <div class="cart-info" id="cart-info">
-                <div class="left-part">
-                    <p>Explore our latest arrivals</p>
-                    <a href="/">Continue Shopping</a>
-                </div>                  
+    <body>
 
-                <div class="right-part">
-                    <p>Discover what makes us unique! <a href="/about">Learn About Us</a>.</p>
-                    <p>ALL TRANSACTIONS ARE SAFE AND SECURE.</p>
+
+
+
+        <!-- navbar -->
+        <nav id="navbar-placeholder"></nav>
+        
+        <div class="container-fluid" id="main-content" style="display: none;">
+            <!-- <button onclick="displayCartItems()">Get items</button> -->
+        
+            <!-- <form action="/cart/create" method="post">
+                <input type="hidden" name="productId" value="12345">
+                <button type="submit">Create a cart</button>
+            </form> -->
+
+
+
+            <div id="blur-effect">
+
+                <h2 class="cart-title" id="cart-title">Your Shopping Cart</h2>
+
+                <div class="cart-info" id="cart-info">
+                    <div class="left-part">
+                        <p>Explore our latest arrivals</p>
+                        <a href="/">Continue Shopping</a>
+                    </div>                  
+
+                    <div class="right-part">
+                        <p>Discover what makes us unique! <a href="/about">Learn About Us</a>.</p>
+                        <p>ALL TRANSACTIONS ARE SAFE AND SECURE.</p>
+                    </div>
                 </div>
-            </div>
+                
+                
+                <div class="list-title" id="list-title"></div>
 
-            <div class="list-title" id="list-title"></div>
-
-            <div class="params">
-                <p class="perfume">Perfume</p>
-                <p>Quantity</p>
-                <p>Price</p>
-                <p>Total</p>
-            </div>
-
-            <div id="cart-list"></div>
-            
-            <div class="cart-footer" style="margin-top: 20px;">
-                <div class="footer-left">
-                    <p>No promo codes available yet.</p>
-                    <p>Sign up for our newsletter to be notified of future promotions!</p>
+                <!--
+                <form action="/cart/item/update" method="post">
+                    <input type="hidden" name="productId" value="668c095007d18a6c9e4a7cbe">
+                    <input type="hidden" name="quantity" value="15">
+                    <button type="submit">Cart update</button>
+                </form>-->
+                
+                <div class="params">
+                    <p class="perfume">Perfume</p>
+                    <p>Quantity</p>
+                    <p>Price</p>
+                    <p>Total</p>
                 </div>
-                <div class="footer-right">
+
+
+                <div id="cart-list"></div>
+                
+                
+                <div class="cart-footer" style="margin-top: 20px;">
+                    <div class="footer-left">
+                        <p>No promo codes available yet.</p>
+                        <p>Sign up for our newsletter to be notified of future promotions!</p>
+                    </div>
+                    <div class="footer-right">
+                    <!-- <button type="submit" onclick="getTotal()">Get total</button> -->
                     <h3 id="subtotal"></h3>
                     <h3 id="est-total"></h3>
+
                     <form id="checkoutForm">
                         <button type="submit" class="btn btn-primary">Proceed to checkout</button>
                     </form>
+                    </div>
                 </div>
+
+                <footer id="footer-placeholder">
+                    <ul class="footer-foot"></ul>
+                </footer>
             </div>
 
-            <footer id="footer-placeholder">
-                <ul class="footer-foot"></ul>
-            </footer>
+            
+
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="checkoutToast">
+                    <div class="toast-header">
+                        <img src="https://i.pinimg.com/564x/4b/67/b2/4b67b221dad53e271950e25cc92736e0.jpg" class="rounded me-2" alt="...">
+                        <strong class="me-auto" style="font-weight: bold;">Your order</strong>
+                        <small class="text-body-secondary">Seamless Checkout, Speedy Delivery!</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div id="toast-body" class="toast-body">
+                        <div id="overall-payment" class="overall"></div>
+                        <div id="item-list" class="pop-up-items"></div>
+                    </div>
+                    <div id="messageContainer" style="margin-top: 5px;"></div>
+                    <form action="order/create" method="post" id="createOrder">
+                        <button type="submit">Make an order</button>
+                    </form>
+                </div>
+
+
+                <br>
         </div>
 
-        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" id="checkoutToast">
-            <div class="toast-header">
-                <img src="https://i.pinimg.com/564x/4b/67/b2/4b67b221dad53e271950e25cc92736e0.jpg" class="rounded me-2" alt="...">
-                <strong class="me-auto" style="font-weight: bold;">Your order</strong>
-                <small class="text-body-secondary">Seamless Checkout, Speedy Delivery!</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div id="toast-body" class="toast-body">
-                <div id="overall-payment" class="overall"></div>
-                <div id="item-list" class="pop-up-items"></div>
-            </div>
-            <div id="messageContainer" style="margin-top: 5px;"></div>
-            <form action="order/create" method="post" id="createOrder">
-                <button type="submit">Make an order</button>
-            </form>
-        </div>
-    </div>
 
-    <script>
-        window.onload = function() {
-            displayCartItems();
-        };
+        <script>
 
-        async function fetchWithErrorHandling(url) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            } catch (error) {
-                console.error('Fetch error:', error);
-                return null;
-            }
-        }
-
-        async function getProducts() {
-            return await fetchWithErrorHandling('/product/all');
-        }
-
-        async function getCartItems() {
-            const cartResponse = await fetchWithErrorHandling('/api/cart');
-            if (!cartResponse) return [];
-
-            const cartId = cartResponse.cartId;
-            if (!cartId) {
-                console.error('No cart ID found. Please log in first.');
-                return [];
-            }
-
-            const cartData = await fetchWithErrorHandling(`/cart/${cartId}`);
-            console.log('Cart Data:', cartData);
-
-            if (cartData && cartData.products) {
-                return cartData.products;
-            } else {
-                console.error('No products found in cart data.');
-                return [];
-            }
-        }
-
-        async function displayCartItems() {
+        $('document').ready(async function() {
             const cartItems = await getCartItems();
-            const products = await getProducts();
+            displayCartItems(cartItems);
+        
 
-            console.log('Cart Items:', cartItems);
-            console.log('Products:', products);
 
-            if (!cartItems || !products) {
-                document.getElementById('cart-list').innerHTML = '<li>Error: Cart data unavailable.</li>';
-                return;
+           async function getProducts() {
+               try {
+                   const response = await fetch('/product/all');
+                   if (!response.ok) {
+                   throw new Error(`HTTP error! status: ${response.status}`);
+                   }
+                   const productData = await response.json();
+                   return productData; // Return the cart data
+               } catch (error) {
+                   console.error('Error fetching cart data:', error);
+                   // Handle errors gracefully (e.g., display an error message)
+               }
+           }
+
+            async function getCartItems() {
+                try {
+                    const products = await getProducts();
+                    console.log('Fetched products:', products);
+
+                    // Fetch the cart data from the server
+                    const response = await fetch('/getCart');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch cart data');
+                    }
+
+                    const cartData = await response.json();
+                    console.log('Cart data:', cartData);
+
+                    const cartItems = cartData.products.map(item => {
+                        const productIdStr = item.productId._id.toString();
+
+                        const product = products.find(p => p._id.toString() === productIdStr);
+                        if (!product) {
+                            console.warn(`Product with ID ${productIdStr} not found`);
+                        } else {
+                            console.log(`Found product: ${product}`);
+                        }
+
+                        return {
+                            quantity: item.quantity,
+                            product: product
+                        };
+                    });
+
+                    console.log('Cart items:', cartItems);
+
+                    return cartItems; // Return the cart items
+                } catch (error) {
+                    console.error('Error fetching cart data:', error);
+                    // Handle errors gracefully (e.g., display an error message)
+                }
             }
 
-            if (cartItems.length === 0) {
-                window.location.href = '/emptyCart';
-                return;
-            }
+       
+           async function displayCartItems(cartItems) {
+               console.log(cartItems);
+
+               const listTitle = document.getElementById('list-title');
+               listTitle.innerHTML = '';
+               listTitle.textContent = "Shopping bag  (" + cartItems.length + ")";
+
+               const cartList = document.getElementById('cart-list');
+               const mainContent = document.getElementById('main-content');
+
+               if (!cartItems) {
+                   // Handle case where cartItems or cartItems.products is missing or empty
+                   cartList.innerHTML = '<li>Error: Cart data unavailable.</li>';
+                   return;
+               }
+
+               if (cartItems.length === 0) {
+                   window.location.href = '/emptyCart';
+                   return;
+               }
+               else {
+                   mainContent.style.display = 'block';
+               }
+               const cartListContainer = document.createElement('ul'); // Use an unordered list for cart items
+               cartListContainer.classList.add('cart-list'); // Apply the cart-list class
+
+               cartItems.forEach(item => {
+                   const listItem = document.createElement('li');
+                   listItem.classList.add('cart-item', 'row'); // Apply cart-item and row classes
+
+                   let product = item.product;
+
+                   // Assuming you have a product image URL property in item:
+                   const image = document.createElement('img');
+                   image.src = '/' + product.images[0];
+                   image.classList.add('image'); // Responsive image
+                   listItem.appendChild(image);
+
+                   //const detailsContainer = document.createElement('div');
+                   //detailsContainer.classList.add('col-md-9');
+
+                   const qty_change = false;
+                   const productNameSpan = document.createElement('span');
+                   productNameSpan.classList.add('product-name');
+                   productNameSpan.textContent = product.name;
+                   listItem.appendChild(productNameSpan);
+
+                   const quantityButton = document.createElement('button');
+                   quantityButton.classList.add('quantity-button');
+                   quantityButton.textContent = `${item.quantity}`;
+
+                   // Option 1: Add click event listener for manual quantity change
+                   quantityButton.addEventListener('click', () => {
+                       // Handle quantity update logic here (e.g., prompt, increment/decrement)
+                       const newQuantity = prompt("How many do you want to order?"); // Prompt for new quantity
+                       if (newQuantity && !isNaN(newQuantity)) { // Validate numeric input
+                           if(newQuantity > product.stock) {
+                               alert("We are not able to provide you with that amount of parfumes. There are only " + 
+                               + product.stock + " left.");
+                           }
+                           else {
+                               quantityButton.textContent = newQuantity; // Update button text with new quantity
+                               item.quantity = newQuantity;
+                               console.log("Changed Qty - " + item.quantity);
+                               const new_total = item.quantity * parseFloat(priceSpan.textContent.slice(1));
+                               totalSpan.textContent = "$" + new_total;
+                               getTotal();
+                           }
+                           // Update your cart data with the new quantity (implementation depends on your setup)
+                       } 
+                   });
+                   listItem.appendChild(quantityButton);
+
+                   const priceSpan = document.createElement('span');
+                   priceSpan.classList.add('price');
+                   priceSpan.textContent = "$" + parseFloat(product.price);
+                   listItem.appendChild(priceSpan);
+
+                   const totalSpan = document.createElement('span');
+                   totalSpan.classList.add('total');
+                   const total = item.quantity * parseFloat(product.price);
+                   totalSpan.textContent = "$" + total;
+                   listItem.appendChild(totalSpan);
+
+                    // Delete button
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.textContent = "Delete";
+                    deleteButton.addEventListener('click', async () => {
+                        // Handle product deletion
+                        const response = await fetch('/deleteProduct', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                productId: item.product._id,
+                            })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.message || 'Cart update failed');
+                        }
+
+                        const data = await response.json();
+
+                        window.location.href = '/viewCart';
+                    });
+                    listItem.appendChild(deleteButton);
+
+                   cartListContainer.appendChild(listItem);
+               });
+
+               cartList.appendChild(cartListContainer);
+
+               getTotal();
+           }
+
+       
+           // Call the display function (e.g., on page load)
+           //displayCartItems();
+
+           function getTotal() {
+               const cartList = document.getElementById('cart-list');
+
+               final_price = 0;
+               cartItems.forEach(item => {
+                   final_price += item.product.price * item.quantity;
+               });
+               const subtotal = document.getElementById('subtotal');
+               subtotal.textContent = "Subtotal ------ $" + final_price;
+
+               const estTotal = document.getElementById('est-total');
+               estTotal.textContent = "Estimated total $" + final_price;
+
+               console.log("Total amount - " + final_price); // Logs the text content of each item
+           }
+
+           async function updateCart(event) {
+            event.preventDefault(); // Prevent default form submission
 
             const cartList = document.getElementById('cart-list');
-            cartList.innerHTML = '';
+            const listItems = cartList.querySelectorAll('li');
+            const cartItems = await getCartItems();
+            let qty_array = [];
 
-            const cartListContainer = document.createElement('ul');
-            cartListContainer.classList.add('cart-list');
+            try {
+                listItems.forEach(async (listItem) => {
+                    const new_qty = listItem.querySelector('.quantity-button').textContent;
+                    qty_array.push(new_qty);
+                })
 
-            let subtotal = 0;
+                const response = await fetch('/cart/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ qty_array })
+                });
 
-            cartItems.forEach(item => {
-                const product = products.find(p => p._id === item.productId._id);
-                if (!product) {
-                    console.error(`Product not found for item: ${item.productId._id}`);
-                    return;
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Cart update failed');
                 }
 
-                const listItem = document.createElement('li');
-                listItem.classList.add('cart-item', 'row');
+                const data = await response.json();
+                console.log(data);
 
-                const productImage = document.createElement('img');
-                productImage.classList.add('image', 'col-sm-1');
-                productImage.src = product.imageUrl;
-                productImage.alt = product.name;
-
-                const productName = document.createElement('div');
-                productName.classList.add('product-name', 'col-sm-5');
-                productName.textContent = product.name;
-
-                const quantityButton = document.createElement('div');
-                quantityButton.classList.add('quantity-button', 'col-sm-2');
-                quantityButton.textContent = item.quantity;
-
-                const productPrice = document.createElement('div');
-                productPrice.classList.add('price', 'col-sm-2');
-                productPrice.textContent = `$${product.price.toFixed(2)}`;
-
-                const total = document.createElement('div');
-                total.classList.add('total', 'col-sm-2');
-                const totalPrice = product.price * item.quantity;
-                total.textContent = `$${totalPrice.toFixed(2)}`;
-
-                subtotal += totalPrice;
-
-                listItem.appendChild(productImage);
-                listItem.appendChild(productName);
-                listItem.appendChild(quantityButton);
-                listItem.appendChild(productPrice);
-                listItem.appendChild(total);
-                cartListContainer.appendChild(listItem);
-            });
-
-            cartList.appendChild(cartListContainer);
-
-            document.getElementById('list-title').textContent = `Shopping bag (${cartItems.length})`;
-            document.getElementById('subtotal').textContent = `Subtotal: $${subtotal.toFixed(2)}`;
-            document.getElementById('est-total').textContent = `Estimated Total: $${subtotal.toFixed(2)}`;
-        }
-
-        function getTotal() {
-            const cartList = document.getElementById('cart-list');
-
-            let final_price = 0;
-            const listItems = cartList.querySelectorAll('li');
-            listItems.forEach(listItem => {
-                const totalSpan = listItem.querySelector('.total');
-                const priceString = totalSpan.textContent.slice(1);
-                const price = parseFloat(priceString);
-                final_price += price;
-            });
-            const subtotal = document.getElementById('subtotal');
-            subtotal.textContent = "Subtotal ------ $" + final_price;
-
-            const estTotal = document.getElementById('est-total');
-            estTotal.textContent = "Estimated total $" + final_price;
-
-            console.log("Total amount - " + final_price);
-        }
-
-        async function updateCart(event) {
-            event.preventDefault();
-            const form = document.querySelector('#update-cart');
-            const data = new URLSearchParams(new FormData(form));
-
-            const response = await fetch('/api/cart/update', {
-                method: 'POST',
-                body: data
-            });
-
-            if (response.ok) {
-                displayCartItems();
-            } else {
-                console.error('Failed to update cart:', response.statusText);
+            } catch (error) {
+                console.error('Error during cart update:', error);
+                alert('An error occurred during cart update. Please try again.');
             }
         }
 
-        document.querySelector('#checkoutForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+        // Adding event listener to the button
+        document.getElementById('checkoutForm').addEventListener('submit', updateCart); 
 
-            const toast = new bootstrap.Toast(document.getElementById('checkoutToast'));
-            toast.show();
 
-            document.getElementById('checkoutToast').scrollIntoView({ behavior: 'smooth' });
+           
+
+           function buildToast() {
+               const toastBody = document.getElementById('toast-body');
+
+               const total = document.querySelector('#est-total');
+               const overall = document.getElementById('overall-payment');
+               const textContent = total.textContent;
+               const dollarIndex = textContent.indexOf('$');
+               const slicedText = textContent.slice(dollarIndex); // Slice from dollar sign index
+               overall.textContent = "Overall payment is " + slicedText; // Set the toast body text
+
+
+               const itemList = document.getElementById('item-list');
+               const cartList = document.getElementById('cart-list');
+               const listItems = cartList.querySelectorAll('li');
+   
+               // Clear the previous list items
+               itemList.innerHTML = '';
+
+               // Iterate through list items to collect product names and quantities
+               listItems.forEach(item => {
+                   const productName = item.querySelector('.product-name').textContent.trim();
+                   const quantity = item.querySelector('.quantity-button').textContent.trim();
+                   
+                   if (productName && quantity) {
+                       const newItem = document.createElement('li');
+                       newItem.textContent = `${productName} (Qty: ${quantity})`; // Combine name and qty with formatting
+                       itemList.appendChild(newItem);
+                   }
+
+               })
+           }
+
+           $(document).ready(function() {
+            $('#checkoutForm').submit(function(event) {
+                event.preventDefault(); // Prevent form from submitting normally
+
+                // Optional: Call a function to build your toast content
+                buildToast();
+
+            // Initialize toast (assuming element exists in DOM)
+                $('#checkoutToast').toast();
+
+                // Event listener for toast hidden state
+                $('#checkoutToast').on('hidden.bs.toast', function () {
+                    $('#blur-effect').removeClass('disabled');
+                    $('#blur-effect').removeClass('blur-effect');
+                });
+
+                $('#checkoutToast').toast('show');
+
+                $('#blur-effect').addClass('disabled'); 
+                $('#blur-effect').addClass('blur-effect');
+
+
+
+                document.getElementById('cart-title').focus;
+                document.getElementById('cart-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+            });
+            });
+
+
+            document.getElementById('createOrder').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            try {
+                const response = await fetch('/order/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({}) // Include necessary data here
+                });
+
+                const result = await response.json();
+                const messageContainer = document.getElementById('messageContainer');
+                messageContainer.innerHTML = result.message;
+
+                if (result.message == '') {
+                    // Redirect to viewCart if order creation was successful
+                    alert('Order created successfully!');
+                    for (let i = 0; i < cartItems.length; i++) {
+                        const response = await fetch('/deleteProduct', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                productId: cartItems[i].product._id,
+                            })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.message || 'Cart update failed');
+                        }
+
+                        const data = await response.json();
+                        console.log(data);
+                    }
+                    window.location.href = '/emptyCart';
+                }
+
+            } catch (error) {
+                console.error('Error creating order:', error);
+                const messageContainer = document.getElementById('messageContainer');
+                messageContainer.innerHTML = 'An error occurred. Please try again.';
+            }
         });
-    </script>
-</body>
+
+    });
+
+       </script>
+
+    </body>
+    
 </html>

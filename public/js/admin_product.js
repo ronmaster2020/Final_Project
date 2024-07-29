@@ -41,7 +41,7 @@ async function loadProducts(products, totalProducts) {
                 <td>${product.size}<span style="color: rgb(0, 51, 153)">ml</span></td>
                 <td>
                     <div class="d-flex align-items-center justify-content-center" style="max-width: 150px;">
-                        <button class="action-btn" onclick="editProduct('${product._id}')">
+                        <button class="action-btn" onclick="fillModelFields('${product._id}');$('#productUpdateModal').modal('show');">
                             <span class="material-symbols-sharp">edit</span>     
                         </button>
                         <button style="color: rgb(169, 0, 0);" class="action-btn delete" onclick="deleteProduct('${product._id}')">
@@ -65,7 +65,7 @@ $(document).ready(async function() {
     });
 
     // Prevent form submission on Enter key press in the name input field
-    $('input[name="name"]').on('keypress', function(event) {
+    $('#filterForm input[name="name"]').on('keypress', function(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
             page = 1;
@@ -74,7 +74,7 @@ $(document).ready(async function() {
     });
 
     // Event listener for other form inputs
-    $("form").on('change', function(event) {
+    $("#filterForm").on('change', function(event) {
         if (event.target.name === 'name') {
             return;
         }
@@ -94,7 +94,6 @@ $(document).ready(async function() {
         const newPage = parseInt($(this).text(), 10);
         changePage(newPage);
     });
-    
 });
 
 async function filterProducts() {
@@ -161,52 +160,161 @@ function deleteProduct(productId) {
             success: function(response) {
                 const product = response.product;
                 filterProducts();
-                const toast = $(`
-                    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="toast-header" style="background-color: rgb(230, 255, 230)">
-                            <strong class="me-auto">Product deleted successfully</strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                        <div class="toast-body">
-                            <div>ID: ${product._id}</div>
-                            <div>Name: ${product.name}</div>
-                        </div>
-                    </div>`);
-                $('.toast-container').append(toast)
-                toast.toast('show');
-                setTimeout(() => {
-                    toast.toast('hide');
-                    setTimeout(() => {
-                        toast.remove();
-                    }, 300);
-                }, 3000);
-
+                showToast('Product deleted successfully', `<div>ID: ${product._id}</div><div>Name: ${product.name}</div>`, 'success');
                 resolve(response);
             },
             error: function(xhr, status, error) {
                 console.error('Error deleting a product', error);
                 // error deleting toast
-                const toast = $(`
-                    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="toast-header" style="background-color: rgb(255, 230, 230)">
-                            <strong class="me-auto">Error deleting product</strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                        <div class="toast-body">
-                            <div>ID: ${productId}</div>
-                            <div>Error: ${error}</div>
-                        </div>
-                    </div>`);
-                $('.toast-container').append(toast)
-                toast.toast('show');
-                setTimeout(() => {
-                    toast.toast('hide');
-                    setTimeout(() => {
-                        toast.remove();
-                    }, 300);
-                }, 3000);
+                showToast('Error deleting product', 'Please try again later', 'error');
                 reject(error);
             }
         });
     });
+}
+
+function addProduct(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var formData = new FormData($('#productModal .productForm')[0]);
+    var maxTotalFileSize = 10 * 1024 * 1024; // 10 MB
+    var files = formData.getAll('productImage');
+    var totalFileSize = 0;
+    
+    for (var i = 0; i < files.length; i++) {
+        totalFileSize += files[i].size;
+    }
+    
+    if (totalFileSize > maxTotalFileSize) {
+        showToast('Error', 'The total size of all files exceeds the maximum limit of 10 MB.');
+        return;
+    }
+    
+    $.ajax({
+        url: '/product/create',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            $('#productModal').modal('hide');
+            showToast('Success', 'Product created successfully.', 'success');
+            filterProducts();
+        },
+        error: function(xhr, status, error) {
+            $('#productModal').modal('hide');
+            showToast('Error', 'Failed to create product.', 'error');
+        }
+    });
+}
+
+function updateProduct(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    let productID = $('#updateProductID').val();
+    let name = $('#updateName').val();
+    let DESC = $('#updateDescription').val();
+    let price = $('#updatePrice').val();
+    let size = $('#updateSize').val();
+    let stock = $('#updateStock').val();
+    let gender = $('#updateGender').val();
+
+    // Debugging logs
+    console.log('Form field values:');
+    console.log('productID:', productID);
+    console.log('name:', name);
+    console.log('DESC:', DESC);
+    console.log('price:', price);
+    console.log('size:', size);
+    console.log('stock:', stock);
+    console.log('gender:', gender);
+
+    let formData = {
+        name: name,
+        DESC: DESC,
+        price: price,
+        size: size,
+        stock: stock,
+        gender: gender
+    };
+    
+    // Perform the AJAX request
+    $.ajax({
+        url: `/product/update/${productID}`,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function(response) {
+            $('#productUpdateModal').modal('hide');
+            showToast('Success', 'Product updated successfully.', 'success');
+            filterProducts();
+        },
+        error: function(error) {
+            $('#productUpdateModal').modal('hide');
+            showToast('Error', 'Failed to update product.', 'error');
+        }
+    });
+}
+
+function fillModelFields(productId) {
+    $.ajax({
+        url: `/product/${productId}`,
+        method: 'GET',
+        success: function(response) {
+            const product = response.product;
+            console.log(product);
+            // $('$productModal .btn-close').
+            $('#productUpdateModal input[name="productID"]').val(product._id);
+            $('#productUpdateModal input[name="name"]').val(product.name);
+            $('#productUpdateModal textarea[name="DESC"]').val(product.DESC);
+            $('#productUpdateModal input[name="price"]').val(product.price);
+            $('#productUpdateModal input[name="size"]').val(product.size);
+            $('#productUpdateModal input[name="stock"]').val(product.stock);
+            $('#productUpdateModal select[name="gender"]').val(product.gender);
+            // Handle product images
+            const imagePreviewContainer = $('#productImagePreview');
+            imagePreviewContainer.empty(); // Clear any existing previews
+            product.images.forEach(function(imagePath) {
+                const imgElement = $('<img>').attr('src', '/' + imagePath).addClass('img-thumbnail').attr('alt', product.name);
+                imagePreviewContainer.append(imgElement);
+            }); 
+        },
+        error: function(xhr, status, error) {
+            $('#productUpdateModal').modal('hide');
+            showToast('Error', 'Failed to load product details.', 'error');
+        }
+    });
+}
+
+function showToast(title, message, status) {
+    let color;
+    switch (status) {
+        case 'success':
+            color = 'rgb(230, 255, 230)';
+            break;
+        case 'error':
+            color = 'rgb(255, 230, 230)';
+            break;
+        default:
+            color = 'rgb(0, 0, 0)';
+    }
+    const toast = $(`
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+            <div class="toast-header" style="background-color: ${color}">
+                <strong class="mr-auto">${title}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                ${message}
+            </div>
+        </div>
+    `);
+    $('.toast-container').append(toast);
+    toast.toast('show');
+    setTimeout(() => {
+        toast.toast('hide');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
 }

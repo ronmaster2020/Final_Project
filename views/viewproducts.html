@@ -88,12 +88,17 @@
                             <p id="modalProductDescription" class="text-muted"></p>
                             <p id="modalProductGender" class="text-muted"></p>
                             <p id="modalProductPrice" class="fw-bold"></p>
+                            <div class="quantity-control">
+                                <button class="quantity-btn transparent-btn" data-action="decrement" data-product-id="${product._id}" style="background-color: #ddd;">-</button>
+                                <input type="number" id="quantity-input-${product._id}" value="1" min="1" class="quantity-input">
+                                <button class="quantity-btn transparent-btn" data-action="increment" data-product-id="${product._id}" style="background-color: #ddd;">+</button>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="modalAddToCartBtn" class="btn btn-primary">Add to Cart</button>
+                    <button id="modalAddToCartBtn" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
                 </div>
             </div>
         </div>

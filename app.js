@@ -7,6 +7,7 @@ const multer = require('multer');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+
 const app = express();
 
 const PORT = process.env.PORT || 8080;
@@ -123,10 +124,6 @@ app.get('/orderhistory', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'orderHistory.html'));
 });
 
-app.get('/product/new-form', ensureAuthenticated, ensureAccess, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'productForm.html'));
-});
-
 app.get('/viewCart', ensureAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'cart.html'));
 });
@@ -184,7 +181,8 @@ app.post('/cart/add/:productId/:quantity', ensureAuthenticated, cartController.a
 app.get('/getCart', ensureAuthenticated, cartController.getCart);
 app.post('/cart/update', ensureAuthenticated, cartController.updateCart);
 app.post('/cart/delete', ensureAuthenticated, cartController.deleteCart);
-app.get('/cart/all', ensureAccess, cartController.getAllCarts);
+app.get('/cart/all', ensureAuthenticated, ensureAccess, cartController.getAllCarts);
+app.post('/deleteProduct', ensureAuthenticated, cartController.deleteProductFromCart);
 
 // Settings Routes
 const settingsController = require('./controllers/SettingsController');

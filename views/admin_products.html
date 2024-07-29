@@ -9,105 +9,58 @@
     <link rel="stylesheet" href="/css/admin.css">
     <!-- admin page js -->
     <script type="text/javascript" src="/js/admin.js"></script>
-    <!-- products page js -->
-    <script type="text/javascript" src="/js/admin_product.js"></script>
+    <!-- dashboard js -->
+    <script type="text/javascript" src="/js/admin_dashboard.js"></script>
+    <!-- D3.js library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
     <div id="main-content">
-        <h1>Products</h1>
+        <h1>Dashboard</h1>
         <div class="my-4">
-            <form class="mb-3">
-
             <form class="border-bottom pb-2 mb-3">
                 <div class="input-group m-3">
-                    <label class="form-label" for="name">Search by first letters</label>
-                    <input type="text" class="form-control" name="name" id="name">
-                </div>
-                <div class="input-group m-3">
-                    <label class="form-label" for="priceRange">Price Range</label>
-                    <select class="form-select" id="priceRange" name="priceRange">
-                        <option selected>all</option>
-                        <option data-min="0" data-max="19">0-19 $</option>
-                        <option data-min="20" data-max="49">20-49 $</option>
-                        <option data-min="50" data-max="99">50-99 $</option>
-                        <option data-min="100" data-max="149">100-149 $</option>
-                        <option data-min="150" data-max="199">150-199 $</option>
-                        <option data-min="200">200+ $</option>
+                    <label class="form-label" for="dateRange">Date Range</label>
+                    <select class="form-select" id="dateRange" name="dateRange">
+                        <option id="custom">Manual</option>
+                        <option id="lastWeek" dateUnit="yearMonthDay">last week</option>
+                        <option id="lastMonth" dateUnit="yearMonthDay">last month</option>
+                        <option id="lastQuarter" dateUnit="yearWeek">last quarter</option>
+                        <option id="lastHalfYear" dateUnit="yearWeek">last half year</option>
+                        <option id="lastYear" dateUnit="yearMonth">last year</option>
+                        <option id="last2Years" dateUnit="yearMonth">last 2 years</option>
+                        <option id="allTime" dateUnit="yearMonth" selected>all time</option>
                     </select>
+                    <div id="customDateRange" class="d-none">
+                        <div class="input-group m-3">
+                            <label class="form-label" for="startDate">From date (MM/DD/YYYY)</label>
+                            <input type="date" class="form-control" name="startDate" id="startDate">
+                        </div>
+                        <div class="input-group m-3">
+                            <label class="form-label" for="endDate">To date (MM/DD/YYYY)</label>
+                            <input type="date" class="form-control" name="endDate" id="endDate">
+                        </div>
+                        <div class="input-group m-3">
+                            <button type="button" class="btn btn-primary" id="applyDateRange">Apply</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group m-3">
-                    <label class="form-label" for="genderCategory">Gender category</label>
-                    <select class="form-select" id="genderCategory" name="genderCategory">
-                        <option value="" selected>all</option>
-                        <option value="1">male</option>
-                        <option value="2">female</option>
-                        <option value="3">unisex</option>
-                    </select>
-                </div>
-                <div class="input-group m-3">
-                    <label class="form-label" for="sizeRange">Size Range</label>
-                    <select class="form-select" id="sizeRange" name="sizeRange">
-                        <option selected>all</option>
-                        <option data-min="0" data-max="19">0-19 ml</option>
-                        <option data-min="20" data-max="49">20-49 ml</option>
-                        <option data-min="50" data-max="99">50-99 ml</option>
-                        <option data-min="100" data-max="149">100-149 ml</option>
-                        <option data-min="150" data-max="199">150-199 ml</option>
-                        <option data-min="200">200+ ml</option>
-                    </select>
-                </div>
-                <div class="input-group m-3">
-                    <label class="form-label" for="stockRange">Stock Range</label>
-                    <select class="form-select" id="stockRange" name="stockRange">
-                        <option selected>all</option>
-                        <option data-max="0" class="outOfStock">out of stock</option>
-                        <option data-min="1" data-max="99">1-99 units</option>
-                        <option data-min="100" data-max="299">100-299 units</option>
-                        <option data-min="300" data-max="599">300-599 units</option>
-                        <option data-min="600" data-max="999">600-999 units</option>
-                        <option data-min="1000">1000+ units</option>
+                <div class="input-group m-3 d-flex justify-content-start" style="max-height: 4rem;">
+                    <label class="form-label" for="dateUnit">Date Unit</label>
+                    <select class="form-select" id="dateUnit" name="dateUnit">
+                        <option value="yearMonthDay">By Days</option>
+                        <option value="yearWeek">By Weeks</option>
+                        <option value="yearMonth" selected>By Months</option>
                     </select>
                 </div>
             </form>
-            <div class="pb-2 m-3 w-100 border-bottom">
-                <button class="btn btn-outline-secondary" id="searchBtn">search</button>
-                <button class="btn btn-outline-danger mx-3" id="resetBtn">Reset</button>
-            </div>
-            <div id="productsTable">
-                <h2 class="mb-3"></h2>
-                <!-- Progress Bar -->
-                <div class="progress" id="loadingBar">
-                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Loading...</div>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Product ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Stock</th>
-                            <th scope="col">Size</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-                <!-- Pagination -->
-                <div aria-label="Page navigation">
-                    <ul class="pagination justify-content-center" id="paginationControls">
-                    </ul>
-                </div>
+            <div id="graph-sales" style="width: 100%;height: auto;overflow-x: auto;box-sizing: border-box;"></div>
+            <!-- Progress Bar -->
+            <div class="progress" id="loadingBar">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Loading...</div>
             </div>
         </div>
     </div>
-    <style>
-        .toast {
-            transition: all 0.3s ease-in-out;
-        }
-    </style>
-    <div class="toast-container" style="position: fixed; bottom: 20px; right: 20px;"></div>
-    <div id="footer-placeholder"></div>
 </body>
 </html>
