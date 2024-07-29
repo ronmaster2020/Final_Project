@@ -43,7 +43,7 @@ $(document).ready(function() {
                                 <p>Product: ${item.productId.name}</p>
                                 <p>Quantity: ${item.quantity}</p>
                                 <p>Price: $${item.price.toFixed(2)}</p>
-                                <button class="buy-again-btn" onclick="reorderItem('${item.productId._id}')">Buy It Again</button>
+                               
                             </div>
                         `).join('')}
                     </div>
