@@ -1,90 +1,59 @@
 body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     margin: 0;
-    padding: 0;
-    display: flex; /* Center content vertically */
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Align content vertically in the center */
-    min-height: 100vh; /* Set minimum viewport height for full-screen view */
 }
 
-.empty-cart-container {
-    text-align: center;
-}
-
-.empty-cart-title {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    color: #343a40;
-    font-family: 'Open Sans', Arial, sans-serif;
-}
-
-.empty-cart-message {
-    font-size: 1.2rem;
-    line-height: 1.5;
-    color: #555;
-}
-
-.continue-shopping-link {
-    font-size: 20px; /* Make the link bigger */
-    color: rgb(78, 78, 78);
-    padding: 0.75rem 1.5rem; /* Add padding */
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
-    font-family: 'Open Sans', Arial, sans-serif;
-}
-
-.continue-shopping-link:hover {
-    background-color: #eee;
-    color: #333;
-}
-
-.empty-cart-actions {
-    margin-top: 2rem;
-    text-align: center;
-}
-
-.empty-cart-actions a {
-    display: inline-block;
-    margin: 0 1rem;
-    padding: 0.8rem 1.5rem;
-    border: 1px solid #ddd;
+.help-center {
+    background-color: #fff;
+    padding: 20px;
     border-radius: 5px;
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    transition: all 0.2s ease-in-out;
-    font-family: 'Open Sans', Arial, sans-serif;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
 }
 
-.empty-cart-actions a:hover {
-    background-color: #eee;
-}
-
-.login-container {
-    margin-top: 2rem;
+h1 {
     text-align: center;
-}
-
-.login-title {
-    font-size: 1.5rem;
-    color: #343a40;
-    margin-bottom: 2rem;
-    font-family: 'Roboto', Arial, sans-serif;
-}
-
-.login-link {
-    font-size: 1.25rem;
-    color: rgb(78, 78, 78);
-    text-decoration: none;
-    padding: 0.75rem 1.5rem; /* Add padding */
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: all 0.2s ease-in-out;
-    font-family: 'Open Sans', Arial, sans-serif;
-}
-
-.login-link:hover {
-    background-color: #eee;
     color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 10px;
+    color: #333;
+}
+
+input, textarea {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+#response {
+    margin-top: 20px;
+    text-align: center;
+    color: #28a745;
 }
