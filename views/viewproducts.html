@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Products</title>
     <link rel="stylesheet" href="/css/viewproduct.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="/js/common.js" defer></script>
@@ -27,18 +28,19 @@
                     <h4>Filters</h4>
                     <div class="filter-section">
                         <h5>Gender</h5>
-                        <label><input type="radio" name="gender" value="all" onchange="updateFilters()" checked> All</label>
-                        <label><input type="radio" name="gender" value="1" onchange="updateFilters()"> Male</label>
-                        <label><input type="radio" name="gender" value="2" onchange="updateFilters()"> Female</label>
-                        <label><input type="radio" name="gender" value="3" onchange="updateFilters()"> Unisex</label>
+                        <label><input type="radio" name="gender" value="all"> All</label>
+                        <label><input type="radio" name="gender" value="1"> Male</label>
+                        <label><input type="radio" name="gender" value="2"> Female</label>
+                        <label><input type="radio" name="gender" value="3"> Unisex</label>
                     </div>
                     <div class="filter-section">
                         <h5>Price Range</h5>
                         <label for="min-price">Min Price:</label>
-                        <input type="number" id="min-price" min="0" onchange="updateFilters()"><br>
+                        <input type="number" id="min-price" min="0"><br>
                         <label for="max-price">Max Price:</label>
-                        <input type="number" id="max-price" min="0" onchange="updateFilters()">
+                        <input type="number" id="max-price" min="0">
                     </div>
+                    <button id="applyFiltersBtn" class="btn btn-primary" style="width: 100%;">Apply Filters</button>
                 </div>
             </aside>
             <div class="col-md-9">
@@ -66,6 +68,35 @@
             </div>
         </div>
         <div id="footer-placeholder"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Product Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <img id="modalProductImage" src="" alt="Product Image" class="img-fluid rounded">
+                        </div>
+                        <div class="col-8">
+                            <h5 id="modalProductName" class="fw-bold"></h5>
+                            <p id="modalProductDescription" class="text-muted"></p>
+                            <p id="modalProductGender" class="text-muted"></p>
+                            <p id="modalProductPrice" class="fw-bold"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="modalAddToCartBtn" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

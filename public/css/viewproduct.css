@@ -145,6 +145,10 @@ body {
     transition: background-color 0.3s;
 }
 
+.product-card:hover {
+    cursor: pointer;
+}
+
 .product-card button:hover {
     background-color: #555;
 }
@@ -178,6 +182,137 @@ body {
     padding: 0;
 }
 
+/* Modal Styles */
+/* Modal Styles */
+.modal-dialog {
+    max-width: 90%;
+    width: auto;
+    max-height: 80%;
+    margin: 0 auto;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.modal-header {
+    width: 100%;
+    border-bottom: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-header h5 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.modal-body {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+#modalProductContent {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.modal-footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-top: none;
+}
+
+.modal-footer button {
+    width: 45%;
+    font-size: 1em;
+    padding: 10px;
+}
+
+.modal-product-image {
+    flex: 1;
+    max-width: 40%;
+    margin-right: 20px;
+}
+
+.modal-product-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.modal-product-details {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 100%;
+    }
+
+    .modal-body {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .modal-product-image, .modal-product-details {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+  /* Custom CSS for the modal */
+#modalProductImage {
+    max-width: 100%;
+    height: auto;
+}
+
+.modal-md {
+    max-width: 600px;
+}
+
+.modal-body .row {
+    align-items: center;
+}
+
+.modal-body h5 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.modal-body p {
+    margin-bottom: 0.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-footer .btn-secondary {
+    order: 1;
+}
+
+.modal-footer .btn-primary {
+    order: 2;
+}
 [aria-label="Page navigation"] {
     padding: 1rem 0;
     margin: 0;

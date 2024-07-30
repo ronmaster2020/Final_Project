@@ -7,7 +7,7 @@ const ensureAuthenticated = (req, res, next) => {
     
     req.session.userId = null;
     req.flash('error', 'Please log in to view this resource');
-    res.redirect('/login');
+    res.status(401).json({ error: 'User is not authenticated' });
 };
 
 const ensureAccess = (req, res, next) => {
