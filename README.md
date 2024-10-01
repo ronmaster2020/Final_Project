@@ -3,7 +3,7 @@
 ![image](https://github.com/ronmaster2020/Final_Project/assets/57640413/4a0fe62b-1d0c-4a5b-b8ca-d54f477619f7)
 
 # Including buisness management tools
-![image]()
+![image](https://github.com/ronmaster2020/Final_Project/blob/main/Blank%204%20Panel%20Rectangles%20Comic%20Strip.png)
 
 The Process - planning every sprint ahead and dividing tasks between team members
 
